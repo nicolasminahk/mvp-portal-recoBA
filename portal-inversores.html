@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal de Inversores · recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   recoBA — design tokens (extraídos del deck de inversores, jul-2026)
+   Identidad: premium, cálida, editorial. Serif para display, sans para UI.
+   ============================================================ */
+:root {
+  /* Paleta core */
+  --copper:      #C46A4A;   /* acción, marca, acentos */
+  --copper-dark: #A9563A;   /* hover/estados */
+  --copper-soft: #D08D6B;   /* acentos secundarios */
+  --copper-tint: #E2B39E;   /* fondos suaves de acento */
+  --ink:         #1C2331;   /* texto principal / superficies dark */
+  --ink-soft:    rgba(28,35,49,.68);
+  --ink-mute:    rgba(28,35,49,.52);
+  --cream:       #FAF6F0;   /* fondo principal light */
+  --paper:       #F4EEE4;   /* superficie secundaria */
+  --paper-card:  #FFFDF9;   /* cards */
+  --sand:        #F2EBDF;
+  --sage:        #5F7161;   /* verde salvia — éxito/positivo */
+  --gold:        #C9A96A;   /* dorado — destacados premium */
+  --line:        rgba(28,35,49,.14);
+  --line-strong: rgba(28,35,49,.24);
+
+  /* Dark mode (superficies = ink) */
+  --dark-bg:    #1C2331;
+  --dark-card:  #242D40;
+  --dark-text:  #F4EEE4;
+  --dark-soft:  rgba(244,238,228,.72);
+  --dark-mute:  rgba(244,238,228,.55);
+  --dark-line:  rgba(244,238,228,.16);
+
+  /* Tipografía */
+  --serif: "Fraunces", Georgia, serif;         /* display, cifras hero, títulos */
+  --sans:  "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;  /* UI, tablas */
+
+  /* Geometría */
+  --radius: 14px;
+  --maxw: 1080px;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--sans); cursor: pointer; }
+ul { margin: 0; padding: 0; list-style: none; }
+
+:focus-visible {
+  outline: 2px solid var(--copper);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.numeral { font-family: var(--serif); font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   Views
+   ============================================================ */
+.view {
+  display: none;
+  animation: view-in .5s ease;
+}
+.view.active { display: block; }
+@keyframes view-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* ============================================================
+   Wordmark
+   ============================================================ */
+.wordmark {
+  font-family: var(--serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.wordmark .ba { color: var(--copper); }
+
+/* ============================================================
+   Login
+   ============================================================ */
+.login-screen { display: none; }
+.login-screen.active {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  background: var(--cream);
+}
+.login-decor {
+  position: absolute;
+  right: -6vw;
+  top: -8vw;
+  font-family: var(--serif);
+  font-size: 46vw;
+  line-height: 1;
+  font-weight: 300;
+  color: rgba(196,106,74,.06);
+  user-select: none;
+  pointer-events: none;
+}
+.login-decor-line {
+  position: absolute;
+  left: 0;
+  bottom: 12%;
+  width: 42%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(196,106,74,0), rgba(196,106,74,.35));
+  pointer-events: none;
+}
+.login-decor-arc {
+  position: absolute;
+  left: -12vw;
+  bottom: -14vw;
+  width: 34vw;
+  height: 34vw;
+  border-radius: 50%;
+  border: 1px solid rgba(196,106,74,.16);
+  pointer-events: none;
+}
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.login-card .wordmark {
+  font-size: 44px;
+  margin-bottom: 18px;
+}
+.login-tagline {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.login-sub {
+  font-size: 15px;
+  color: var(--ink-soft);
+  max-width: 340px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+.btn-google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  box-shadow: 0 1px 2px rgba(28,35,49,.04);
+}
+.btn-google:hover {
+  box-shadow: 0 6px 20px rgba(28,35,49,.10);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+}
+.btn-google:active { transform: translateY(0); }
+.login-secondary {
+  display: block;
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--copper);
+  font-weight: 600;
+}
+.login-secondary:hover { color: var(--copper-dark); text-decoration: underline; }
+.login-note {
+  margin-top: 46px;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  letter-spacing: .02em;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(250,246,240,.88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  max-width: var(--maxw);
+  margin: 0 auto;
+}
+.header-inner .wordmark { font-size: 21px; }
+.header-left { display: flex; align-items: center; gap: 44px; }
+.main-nav { display: flex; gap: 30px; }
+.main-nav a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 6px 0;
+  border-bottom: 2px solid transparent;
+  transition: color .2s ease, border-color .2s ease;
+}
+.main-nav a:hover { color: var(--ink); }
+.main-nav a.active { color: var(--ink); border-color: var(--copper); }
+
+.user-menu { position: relative; }
+.avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 999px;
+}
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--copper), var(--copper-soft));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 14px;
+}
+.avatar-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+.avatar-caret { color: var(--ink-mute); font-size: 10px; }
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(28,35,49,.14);
+  min-width: 190px;
+  padding: 6px;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  border-radius: 8px;
+}
+.dropdown-item:hover { background: var(--sand); }
+.dropdown-hint { padding: 8px 12px 4px; font-size: 11.5px; color: var(--ink-mute); border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+
+/* ============================================================
+   Dashboard
+   ============================================================ */
+.page { padding: 40px 0 90px; }
+.greeting-block { margin-bottom: 34px; }
+.greeting-block h1 { font-size: 34px; margin-bottom: 8px; }
+.greeting-sub { color: var(--ink-soft); font-size: 15.5px; max-width: 560px; }
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--ink-mute);
+  margin: 46px 0 16px;
+}
+.section-title:first-of-type { margin-top: 0; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.stat-card {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 22px 20px;
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+.stat-card:hover { box-shadow: 0 14px 30px rgba(28,35,49,.08); transform: translateY(-2px); }
+.stat-label { font-size: 12.5px; color: var(--ink-mute); font-weight: 600; margin-bottom: 10px; letter-spacing: .01em; }
+.stat-value { font-family: var(--serif); font-size: 30px; font-weight: 600; color: var(--ink); }
+.stat-value.accent { color: var(--copper); }
+.stat-sub { font-size: 12px; color: var(--sage); font-weight: 600; margin-top: 6px; }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.project-card {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow .28s ease, transform .28s ease, border-color .28s ease;
+  display: flex;
+  flex-direction: column;
+}
+.project-card:hover { box-shadow: 0 20px 44px rgba(28,35,49,.12); transform: translateY(-3px); border-color: var(--line-strong); }
+
+.photo-ph {
+  position: relative;
+  height: 190px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 16px;
+  color: #fff;
+  overflow: hidden;
+}
+.ph-1 { background: linear-gradient(135deg, #C46A4A 0%, #A9563A 55%, #1C2331 130%); }
+.ph-2 { background: linear-gradient(135deg, #D08D6B 0%, #5F7161 90%); }
+.ph-3 { background: linear-gradient(135deg, #C9A96A 0%, #C46A4A 70%, #1C2331 140%); }
+.ph-4 { background: linear-gradient(135deg, #A9563A 0%, #1C2331 100%); }
+.ph-5 { background: linear-gradient(135deg, #E2B39E 0%, #C46A4A 60%, #5F7161 140%); }
+.photo-ph::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 90% at 15% 10%, rgba(255,255,255,.20), rgba(255,255,255,0) 55%);
+  pointer-events: none;
+}
+.photo-tag {
+  position: relative;
+  z-index: 1;
+  font-size: 11.5px;
+  font-weight: 600;
+  background: rgba(28,35,49,.38);
+  backdrop-filter: blur(3px);
+  padding: 6px 10px;
+  border-radius: 999px;
+  letter-spacing: .01em;
+}
+.photo-icon { position: relative; z-index: 1; opacity: .92; }
+
+.project-body { padding: 20px 22px 22px; }
+.project-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.project-name { font-size: 19px; font-weight: 600; }
+.project-loc { font-size: 13.5px; color: var(--ink-soft); margin-top: 3px; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.chip-copper { background: rgba(196,106,74,.13); color: var(--copper-dark); }
+.chip-sage { background: rgba(95,113,97,.14); color: var(--sage); }
+.chip-gold { background: rgba(201,169,106,.18); color: #96793E; }
+.chip-ink { background: rgba(28,35,49,.09); color: var(--ink-soft); }
+
+.project-meta-row {
+  display: flex;
+  gap: 22px;
+  margin: 16px 0 14px;
+}
+.meta-item .meta-label { font-size: 11.5px; color: var(--ink-mute); font-weight: 600; margin-bottom: 3px; }
+.meta-item .meta-value { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+
+.progress-track {
+  height: 6px;
+  background: var(--sand);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--copper-soft), var(--copper));
+  width: 0%;
+  transition: width 1.1s cubic-bezier(.22,.9,.3,1);
+}
+.progress-fill.sage { background: linear-gradient(90deg, #7c9080, var(--sage)); }
+.progress-fill.gold { background: linear-gradient(90deg, #ddc596, var(--gold)); }
+.progress-label { font-size: 12px; color: var(--ink-soft); display: flex; justify-content: space-between; margin-bottom: 10px; }
+
+.project-next {
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.project-next strong { color: var(--ink); font-weight: 600; }
+.project-cta-link { font-size: 13.5px; font-weight: 700; color: var(--copper); }
+
+/* ============================================================
+   Buttons generic
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  transition: background .2s ease, transform .18s ease, box-shadow .2s ease;
+}
+.btn-copper { background: var(--copper); color: #fff; }
+.btn-copper:hover { background: var(--copper-dark); box-shadow: 0 8px 20px rgba(196,106,74,.28); transform: translateY(-1px); }
+.btn-ghost { background: transparent; border: 1px solid var(--line-strong); color: var(--ink); }
+.btn-ghost:hover { background: var(--sand); }
+.btn:disabled { opacity: .5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* ============================================================
+   Back link / breadcrumb
+   ============================================================ */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+.back-link:hover { color: var(--copper); }
+
+/* ============================================================
+   Project detail — hero
+   ============================================================ */
+.detail-hero {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper-card);
+  margin-bottom: 30px;
+}
+.detail-hero-photo {
+  height: 300px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+  color: #fff;
+}
+.detail-hero-info { padding: 24px 28px 28px; }
+.detail-hero-info .top-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+.detail-hero-info h1 { font-size: 30px; }
+.detail-hero-info .desc { color: var(--ink-soft); font-size: 14.5px; margin-top: 6px; }
+
+/* ============================================================
+   Pipeline stepper
+   ============================================================ */
+.stepper-wrap {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 30px 28px 26px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+}
+.stepper {
+  display: flex;
+  align-items: flex-start;
+  min-width: 720px;
+}
+.step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 0 4px;
+}
+.step-line {
+  position: absolute;
+  top: 15px;
+  left: -50%;
+  width: 100%;
+  height: 2px;
+  background: var(--line-strong);
+  z-index: 0;
+}
+.step:first-child .step-line { display: none; }
+.step.done .step-line { background: var(--sage); }
+.step-dot {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--paper-card);
+  border: 2px solid var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-mute);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.step.done .step-dot { background: var(--sage); border-color: var(--sage); color: #fff; }
+.step.current .step-dot {
+  background: var(--copper);
+  border-color: var(--copper);
+  color: #fff;
+  box-shadow: 0 0 0 0 rgba(196,106,74,.55);
+  animation: pulse-dot 2.2s infinite;
+}
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(196,106,74,.45); }
+  70% { box-shadow: 0 0 0 10px rgba(196,106,74,0); }
+  100% { box-shadow: 0 0 0 0 rgba(196,106,74,0); }
+}
+.step-label { font-size: 12.5px; font-weight: 700; color: var(--ink); max-width: 92px; line-height: 1.25; }
+.step:not(.done):not(.current) .step-label { color: var(--ink-mute); }
+.step-date { font-size: 11px; color: var(--ink-mute); margin-top: 4px; }
+.step.current .step-date { color: var(--copper-dark); font-weight: 700; }
+
+/* ============================================================
+   Tabs
+   ============================================================ */
+.tabs-nav {
+  display: flex;
+  gap: 6px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 26px;
+  overflow-x: auto;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-mute);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  margin-bottom: -1px;
+  transition: color .2s ease;
+}
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--ink); border-color: var(--copper); }
+.tab-panel { display: none; animation: view-in .4s ease; }
+.tab-panel.active { display: block; }
+
+/* ============================================================
+   Timeline (Avances)
+   ============================================================ */
+.timeline { position: relative; padding-left: 26px; }
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 5px; top: 6px; bottom: 6px;
+  width: 2px;
+  background: var(--line);
+}
+.timeline-item { position: relative; padding-bottom: 34px; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -26px; top: 4px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--copper);
+  border: 3px solid var(--cream);
+  box-shadow: 0 0 0 1px var(--line-strong);
+}
+.timeline-date { font-size: 12.5px; font-weight: 700; color: var(--copper-dark); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+.timeline-text { font-size: 15px; color: var(--ink); margin-bottom: 14px; line-height: 1.55; max-width: 620px; }
+.media-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.media-ph {
+  width: 150px;
+  height: 106px;
+  border-radius: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 9px;
+  color: #fff;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.media-ph::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120% 90% at 15% 10%, rgba(255,255,255,.18), rgba(255,255,255,0) 55%);
+}
+.media-ph .media-label { position: relative; z-index: 1; font-size: 10.5px; font-weight: 600; line-height: 1.3; }
+.media-ph .media-icon { position: relative; z-index: 1; align-self: flex-end; margin-bottom: auto; margin-top: -2px; opacity: .95; }
+.media-ph.video { width: 260px; }
+.media-ph.video .play-circle {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink);
+}
+
+/* ============================================================
+   Gastos
+   ============================================================ */
+.budget-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 30px;
+}
+.budget-summary .stat-card { padding: 20px 20px 18px; }
+.budget-note { font-size: 12.5px; color: var(--ink-mute); margin: -14px 0 24px; }
+
+.budget-table { width: 100%; border-collapse: collapse; }
+.budget-table th {
+  text-align: left;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--ink-mute);
+  font-weight: 700;
+  padding: 0 10px 10px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.budget-table td { padding: 12px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.budget-table tr.row-total td { border-bottom: none; padding-top: 16px; font-weight: 700; }
+.budget-table tr.row-sub td:first-child { padding-left: 30px; font-size: 13.5px; color: var(--ink-soft); }
+.budget-table tr.row-sub { font-size: 13px; }
+.row-main td:first-child { font-weight: 700; }
+.budget-amt { font-family: var(--serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.budget-bar-cell { width: 160px; }
+.mini-bar { height: 6px; border-radius: 999px; background: var(--sand); overflow: hidden; }
+.mini-bar-fill { height: 100%; background: var(--copper); border-radius: 999px; }
+.mini-bar-fill.full { background: var(--sage); }
+.mini-bar-fill.zero { background: var(--line-strong); }
+.budget-pct { font-size: 11.5px; color: var(--ink-mute); margin-top: 4px; }
+
+/* ============================================================
+   Mi inversión — waterfall + scenarios
+   ============================================================ */
+.invest-summary {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  margin-bottom: 34px;
+  flex-wrap: wrap;
+}
+.invest-summary .big-num { font-size: 38px; }
+.invest-summary .divider { width: 1px; align-self: stretch; background: var(--line-strong); }
+
+.waterfall { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 40px; }
+.waterfall-step {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+  position: relative;
+}
+.waterfall-step .wf-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-weight: 600; font-size: 14px;
+  margin-bottom: 14px;
+}
+.waterfall-step:nth-child(1) .wf-num { background: var(--ink); }
+.waterfall-step:nth-child(2) .wf-num { background: var(--copper); }
+.waterfall-step:nth-child(3) .wf-num { background: var(--gold); color: #4A3B1E; }
+.waterfall-step h4 { font-size: 15.5px; margin-bottom: 8px; }
+.waterfall-step p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.55; }
+
+.scenarios-block {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 34px;
+}
+.scenario-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+  height: 170px;
+  margin-top: 26px;
+  padding: 0 10px;
+}
+.scenario-col { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; justify-content: flex-end; }
+.scenario-bar {
+  width: 56px;
+  border-radius: 8px 8px 3px 3px;
+  height: 0;
+  transition: height 1s cubic-bezier(.22,.9,.3,1);
+}
+.scenario-col:nth-child(1) .scenario-bar { background: var(--ink); }
+.scenario-col:nth-child(2) .scenario-bar { background: var(--copper); }
+.scenario-col:nth-child(3) .scenario-bar { background: var(--copper-tint); }
+.scenario-value { font-family: var(--serif); font-weight: 600; font-size: 17px; margin: 10px 0 4px; }
+.scenario-name { font-size: 12px; color: var(--ink-mute); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+
+.timeline-mini { display: flex; gap: 40px; margin-top: 6px; flex-wrap: wrap; }
+.timeline-mini-item .tm-label { font-size: 12px; color: var(--ink-mute); font-weight: 600; margin-bottom: 4px; }
+.timeline-mini-item .tm-value { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+
+/* ============================================================
+   Documentos
+   ============================================================ */
+.doc-list { display: flex; flex-direction: column; gap: 10px; }
+.doc-item {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.doc-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--sand);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+.doc-name { font-size: 14.5px; font-weight: 600; }
+.doc-meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+.doc-item .doc-info { flex: 1; }
+.tooltip-wrap { position: relative; }
+.tooltip-wrap .tooltip-bubble {
+  position: absolute; bottom: calc(100% + 8px); right: 0;
+  background: var(--ink); color: var(--cream);
+  font-size: 11.5px; font-weight: 500;
+  padding: 7px 11px; border-radius: 8px; white-space: nowrap;
+  opacity: 0; transform: translateY(4px); pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.tooltip-wrap:hover .tooltip-bubble { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   Renta stats (Güemes)
+   ============================================================ */
+.dist-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.dist-table th {
+  text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em;
+  color: var(--ink-mute); font-weight: 700; padding: 0 10px 10px; border-bottom: 1px solid var(--line-strong);
+}
+.dist-table td { padding: 13px 10px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.dist-status { color: var(--sage); font-weight: 700; font-size: 12.5px; }
+
+/* ============================================================
+   Oportunidades
+   ============================================================ */
+.opp-card {
+  background: var(--paper-card);
+  border: 1.5px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 30px;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(201,169,106,.14);
+  margin-bottom: 22px;
+}
+.opp-badge {
+  position: absolute; top: -13px; left: 30px;
+  background: var(--gold); color: #4A3B1E;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  padding: 5px 13px; border-radius: 999px;
+}
+.opp-top { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 22px; }
+.opp-top h2 { font-size: 26px; margin-bottom: 8px; }
+.opp-top .desc { color: var(--ink-soft); font-size: 14.5px; max-width: 480px; }
+.opp-score { text-align: right; }
+.opp-score .score-num { font-family: var(--serif); font-size: 34px; font-weight: 600; color: var(--copper); }
+.opp-score .score-label { font-size: 11.5px; color: var(--ink-mute); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+
+.opp-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px; }
+.opp-stat .meta-label { font-size: 11.5px; color: var(--ink-mute); font-weight: 600; margin-bottom: 4px; }
+.opp-stat .meta-value { font-family: var(--serif); font-size: 19px; font-weight: 600; }
+
+.opp-progress { margin-bottom: 24px; }
+.opp-progress-label { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-soft); margin-bottom: 8px; }
+.opp-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; }
+.opp-close { font-size: 13px; color: var(--ink-mute); }
+
+.opp-card.locked {
+  border: 1px dashed var(--line-strong);
+  box-shadow: none;
+  opacity: .62;
+  filter: grayscale(.3);
+}
+.opp-card.locked .opp-badge { background: var(--ink); color: var(--cream); }
+
+/* ============================================================
+   Modal
+   ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(28,35,49,.5);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s ease;
+  padding: 20px;
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.modal {
+  background: var(--paper-card);
+  border-radius: var(--radius);
+  max-width: 440px;
+  width: 100%;
+  padding: 30px;
+  transform: translateY(14px) scale(.98);
+  transition: transform .25s ease;
+  box-shadow: 0 30px 80px rgba(28,35,49,.3);
+}
+.modal-overlay.open .modal { transform: translateY(0) scale(1); }
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.modal-head h3 { font-size: 21px; }
+.modal-close { background: none; border: none; color: var(--ink-mute); font-size: 20px; line-height: 1; padding: 4px; }
+.modal-close:hover { color: var(--ink); }
+.modal-desc { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 20px; }
+.form-group { margin-bottom: 18px; }
+.form-group label { display: block; font-size: 12.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 8px; }
+.form-group input {
+  width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--line-strong);
+  font-size: 15px; font-family: var(--sans); background: #fff; color: var(--ink);
+}
+.form-group input:focus { border-color: var(--copper); }
+.modal .btn { width: 100%; }
+.confirm-box { text-align: center; padding: 10px 0 4px; }
+.confirm-icon {
+  width: 56px; height: 56px; border-radius: 50%; background: rgba(95,113,97,.14); color: var(--sage);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+}
+.confirm-box h3 { margin-bottom: 8px; }
+.confirm-box p { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 22px; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.app-footer {
+  border-top: 1px solid var(--line);
+  padding: 26px 0 40px;
+}
+.app-footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.footer-note { font-size: 12px; color: var(--ink-mute); }
+.footer-brand { font-size: 12.5px; color: var(--ink-mute); }
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 860px) {
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+  .budget-summary { grid-template-columns: 1fr; }
+  .waterfall { grid-template-columns: 1fr; }
+  .opp-stats { grid-template-columns: 1fr 1fr; }
+  .main-nav { display: none; }
+  .header-left { gap: 18px; }
+}
+@media (max-width: 560px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .wrap { padding: 0 18px; }
+  .invest-summary { flex-direction: column; align-items: flex-start; }
+  .invest-summary .divider { display: none; }
+  .opp-stats { grid-template-columns: 1fr 1fr; }
+  .detail-hero-info h1 { font-size: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     VISTA 1 — LOGIN
+     ============================================================ -->
+<section id="view-login" class="view active login-screen">
+  <div class="login-decor" aria-hidden="true">BA</div>
+  <div class="login-decor-line" aria-hidden="true"></div>
+  <div class="login-decor-arc" aria-hidden="true"></div>
+  <div class="login-card">
+    <div class="wordmark">reco<span class="ba">BA</span></div>
+    <div class="login-tagline">Portal de inversores</div>
+    <p class="login-sub">Seguí tus inversiones en tiempo real: avances de obra, gastos y documentos de cada flip.</p>
+
+    <button class="btn-google" id="btn-google-login" type="button">
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+      </svg>
+      Continuar con Google
+    </button>
+    <a href="#" class="login-secondary" id="btn-email-login">Ingresar con email</a>
+    <p class="login-note">Acceso privado · solo inversores invitados</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     APP (post-login)
+     ============================================================ -->
+<div id="app-shell" style="display:none;">
+
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="wordmark">reco<span class="ba">BA</span></div>
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a href="#" data-nav="dashboard" class="active">Mis inversiones</a>
+          <a href="#" data-nav="opportunities">Oportunidades</a>
+        </nav>
+      </div>
+      <div class="user-menu">
+        <button class="avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false">
+          <span class="avatar">MG</span>
+          <span class="avatar-name">Martín G.</span>
+          <span class="avatar-caret">▾</span>
+        </button>
+        <div class="dropdown" id="avatar-dropdown">
+          <div class="dropdown-hint">martin.g@investor.recoba.casa</div>
+          <button class="dropdown-item" id="btn-logout" type="button">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       VISTA 2 — DASHBOARD "Mis inversiones"
+       ============================================================ -->
+  <section id="view-dashboard" class="view page">
+    <div class="wrap">
+      <div class="greeting-block">
+        <h1>Hola, Martín</h1>
+        <p class="greeting-sub">Tenés capital comprometido en dos flips activos. Este es el estado consolidado de tu cartera al 08/08/2026.</p>
+      </div>
+
+      <div class="section-title">Resumen de cartera</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Capital invertido</div>
+          <div class="stat-value numeral" data-counter data-prefix="US$" data-value="60000">US$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Valor estimado actual</div>
+          <div class="stat-value numeral accent" data-counter data-prefix="US$" data-value="66400">US$0</div>
+          <div class="stat-sub">+10,7% sobre capital invertido</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Distribuciones recibidas</div>
+          <div class="stat-value numeral" data-counter data-prefix="US$" data-value="1912">US$0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">TIR proyectada (media)</div>
+          <div class="stat-value numeral" data-counter data-suffix="%" data-decimal="1" data-value="9.1">0%</div>
+        </div>
+      </div>
+
+      <div class="section-title">Tus proyectos</div>
+      <div class="projects-grid">
+        <!-- Ayacucho card -->
+        <article class="project-card" data-open-project="ayacucho" tabindex="0" role="button" aria-label="Ver proyecto Ayacucho 1400">
+          <div class="photo-ph ph-1">
+            <span class="photo-tag">Foto · Fachada — 05/08</span>
+            <span class="photo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg>
+            </span>
+          </div>
+          <div class="project-body">
+            <div class="project-top">
+              <div>
+                <div class="project-name">Ayacucho 1400</div>
+                <div class="project-loc">Recoleta</div>
+              </div>
+              <span class="chip chip-copper">En obra</span>
+            </div>
+            <div class="project-meta-row">
+              <div class="meta-item">
+                <div class="meta-label">Tu participación</div>
+                <div class="meta-value">25,2%</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Ticket</div>
+                <div class="meta-value">US$35.000</div>
+              </div>
+            </div>
+            <div class="progress-label"><span>Avance de obra</span><span>45%</span></div>
+            <div class="progress-track"><div class="progress-fill" data-progress="45"></div></div>
+            <div class="project-next">
+              <span>Próximo hito: <strong>Fin instalaciones — sep 2026</strong></span>
+            </div>
+            <div style="margin-top:14px; text-align:right;">
+              <span class="project-cta-link">Ver proyecto →</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Güemes card -->
+        <article class="project-card" data-open-project="guemes" tabindex="0" role="button" aria-label="Ver proyecto Güemes 3800">
+          <div class="photo-ph ph-2">
+            <span class="photo-tag">Foto · Living terminado — 01/08</span>
+            <span class="photo-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg>
+            </span>
+          </div>
+          <div class="project-body">
+            <div class="project-top">
+              <div>
+                <div class="project-name">Güemes 3800</div>
+                <div class="project-loc">Palermo</div>
+              </div>
+              <span class="chip chip-sage">En renta</span>
+            </div>
+            <div class="project-meta-row">
+              <div class="meta-item">
+                <div class="meta-label">Tu participación</div>
+                <div class="meta-value">20%</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Ticket</div>
+                <div class="meta-value">US$25.000</div>
+              </div>
+            </div>
+            <div class="progress-label"><span>Ocupación del trimestre</span><span>71%</span></div>
+            <div class="progress-track"><div class="progress-fill sage" data-progress="71"></div></div>
+            <div class="project-next">
+              <span>ADR US$74 · última distribución: <strong>US$956 (15/07)</strong></span>
+            </div>
+            <div style="margin-top:14px; text-align:right;">
+              <span class="project-cta-link">Ver proyecto →</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VISTA 3 — DETALLE AYACUCHO 1400
+       ============================================================ -->
+  <section id="view-ayacucho" class="view page">
+    <div class="wrap">
+      <a href="#" class="back-link" data-nav="dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Mis inversiones
+      </a>
+
+      <div class="detail-hero">
+        <div class="detail-hero-photo ph-1">
+          <span class="photo-tag">Foto · Fachada — 05/08/2026</span>
+        </div>
+        <div class="detail-hero-info">
+          <div class="top-row">
+            <h1>Ayacucho 1400</h1>
+            <span class="chip chip-copper">En obra</span>
+          </div>
+          <p class="desc">Recoleta · 50 m² · 2 ambientes · piso 3º</p>
+        </div>
+      </div>
+
+      <div class="stepper-wrap">
+        <div class="stepper" id="stepper-ayacucho"></div>
+      </div>
+
+      <div class="tabs-nav" role="tablist" aria-label="Secciones del proyecto Ayacucho 1400">
+        <button class="tab-btn active" data-tab="avances" role="tab" aria-selected="true">Avances</button>
+        <button class="tab-btn" data-tab="gastos" role="tab" aria-selected="false">Gastos</button>
+        <button class="tab-btn" data-tab="inversion" role="tab" aria-selected="false">Mi inversión</button>
+        <button class="tab-btn" data-tab="documentos" role="tab" aria-selected="false">Documentos</button>
+      </div>
+
+      <!-- TAB AVANCES -->
+      <div class="tab-panel active" data-tab-panel="avances" role="tabpanel">
+        <div class="timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-date">08 de agosto, 2026</div>
+            <p class="timeline-text">Avance de baño principal: colocación de revestimientos cerámicos y grifería instalada. Queda pendiente el mueble vanitory.</p>
+            <div class="media-row">
+              <div class="media-ph ph-3"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Baño, revestimiento</span></div>
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Grifería instalada</span></div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">29 de julio, 2026</div>
+            <p class="timeline-text">Colocación de porcelanato símil madera en living y dormitorio principal. Recorrida completa en video.</p>
+            <div class="media-row">
+              <div class="media-ph video ph-5">
+                <span class="play-circle"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="var(--ink)"/></svg></span>
+                <span class="media-label">Video · Recorrida de obra · 2:14</span>
+              </div>
+              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Piso living</span></div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">15 de julio, 2026</div>
+            <p class="timeline-text">Instalación eléctrica completa: tablero nuevo certificado, cableado y bocas de luz en todos los ambientes.</p>
+            <div class="media-row">
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Tablero eléctrico</span></div>
+              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Cableado</span></div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">02 de julio, 2026</div>
+            <p class="timeline-text">Cañerías nuevas de agua fría/caliente y gas terminadas y probadas. Sin observaciones del gasista matriculado.</p>
+            <div class="media-row">
+              <div class="media-ph ph-3"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Cañerías agua</span></div>
+              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Cañería gas</span></div>
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Prueba hidráulica</span></div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">18 de junio, 2026</div>
+            <p class="timeline-text">Demolición completa de cocina y baño. Retiro de escombros y liberación de espacios para la nueva distribución.</p>
+            <div class="media-row">
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Demolición cocina</span></div>
+              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Demolición baño</span></div>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">05 de junio, 2026</div>
+            <p class="timeline-text">Inicio de obra: montaje de protecciones, obrador y relevamiento final de instalaciones existentes.</p>
+            <div class="media-row">
+              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Obrador</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB GASTOS -->
+      <div class="tab-panel" data-tab-panel="gastos" role="tabpanel">
+        <div class="budget-summary">
+          <div class="stat-card">
+            <div class="stat-label">Presupuesto total</div>
+            <div class="stat-value numeral">US$138.850</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Ejecutado</div>
+            <div class="stat-value numeral accent">US$110.410</div>
+            <div class="stat-sub">79,5% del presupuesto</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Disponible</div>
+            <div class="stat-value numeral">US$28.440</div>
+          </div>
+        </div>
+        <p class="budget-note">Actualizado al 08/08/2026 · respaldado con comprobantes en Documentos.</p>
+
+        <table class="budget-table">
+          <thead>
+            <tr>
+              <th>Partida</th>
+              <th>Presupuesto / Ejecutado</th>
+              <th class="budget-bar-cell">Avance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-main">
+              <td>Compra del inmueble</td>
+              <td class="budget-amt">US$85.000 / US$85.000</td>
+              <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div><div class="budget-pct">100%</div></td>
+            </tr>
+            <tr class="row-main">
+              <td>Costos de compra <span style="color:var(--ink-mute); font-weight:400;">(escritura, comisiones)</span></td>
+              <td class="budget-amt">US$5.950 / US$5.950</td>
+              <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div><div class="budget-pct">100%</div></td>
+            </tr>
+
+            <tr class="row-main">
+              <td>Reforma</td>
+              <td class="budget-amt">US$35.000 / US$17.850</td>
+              <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:51%"></div></div><div class="budget-pct">51%</div></td>
+            </tr>
+            <tr class="row-sub"><td>Demolición</td><td class="budget-amt">US$2.400 / US$2.400</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div></td></tr>
+            <tr class="row-sub"><td>Instalaciones</td><td class="budget-amt">US$6.800 / US$6.100</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:90%"></div></div></td></tr>
+            <tr class="row-sub"><td>Baño</td><td class="budget-amt">US$4.500 / US$2.900</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:64%"></div></div></td></tr>
+            <tr class="row-sub"><td>Cocina</td><td class="budget-amt">US$5.200 / US$1.750</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:34%"></div></div></td></tr>
+            <tr class="row-sub"><td>Pisos</td><td class="budget-amt">US$4.900 / US$2.700</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:55%"></div></div></td></tr>
+            <tr class="row-sub"><td>Pintura y terminaciones</td><td class="budget-amt">US$3.400 / US$0</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div></td></tr>
+            <tr class="row-sub"><td>Carpintería</td><td class="budget-amt">US$4.300 / US$0</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div></td></tr>
+            <tr class="row-sub"><td>Dirección de obra</td><td class="budget-amt">US$3.500 / US$2.000</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:57%"></div></div></td></tr>
+
+            <tr class="row-main">
+              <td>Contingencia</td>
+              <td class="budget-amt">US$3.500 / US$610</td>
+              <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:17%"></div></div><div class="budget-pct">17%</div></td>
+            </tr>
+            <tr class="row-main">
+              <td>Equipamiento</td>
+              <td class="budget-amt">US$7.000 / US$0</td>
+              <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div><div class="budget-pct">0%</div></td>
+            </tr>
+            <tr class="row-main">
+              <td>Costos de tenencia</td>
+              <td class="budget-amt">US$2.400 / US$1.000</td>
+              <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:42%"></div></div><div class="budget-pct">42%</div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- TAB MI INVERSIÓN -->
+      <div class="tab-panel" data-tab-panel="inversion" role="tabpanel">
+        <div class="invest-summary">
+          <div>
+            <div class="stat-label">Tu ticket</div>
+            <div class="big-num numeral">US$35.000</div>
+          </div>
+          <div class="divider"></div>
+          <div>
+            <div class="stat-label">Participación en el fideicomiso</div>
+            <div class="big-num numeral accent">25,2%</div>
+          </div>
+        </div>
+
+        <div class="section-title" style="margin-top:0;">Cómo se distribuye el retorno</div>
+        <div class="waterfall">
+          <div class="waterfall-step">
+            <div class="wf-num">1</div>
+            <h4>Retorno preferente</h4>
+            <p>6% anual en USD, devengado trimestralmente y de forma acumulativa hasta la venta o distribución de renta.</p>
+          </div>
+          <div class="waterfall-step">
+            <div class="wf-num">2</div>
+            <h4>Devolución del capital</h4>
+            <p>Se restituye el 100% del capital aportado por cada inversor antes de repartir cualquier plusvalía.</p>
+          </div>
+          <div class="waterfall-step">
+            <div class="wf-num">3</div>
+            <h4>Plusvalía restante</h4>
+            <p>Se reparte 80% para los inversores (a prorrata de su participación) y 20% para recoBA como gestora.</p>
+          </div>
+        </div>
+
+        <div class="scenarios-block">
+          <div class="section-title" style="margin:0;">Escenarios de TIR proyectada</div>
+          <div class="scenario-chart">
+            <div class="scenario-col">
+              <div class="scenario-value numeral">6,4%</div>
+              <div class="scenario-bar" data-bar-height="53"></div>
+              <div class="scenario-name" style="margin-top:10px;">Conservador</div>
+            </div>
+            <div class="scenario-col">
+              <div class="scenario-value numeral">9,1%</div>
+              <div class="scenario-bar" data-bar-height="75"></div>
+              <div class="scenario-name" style="margin-top:10px;">Base</div>
+            </div>
+            <div class="scenario-col">
+              <div class="scenario-value numeral">12,1%</div>
+              <div class="scenario-bar" data-bar-height="100"></div>
+              <div class="scenario-name" style="margin-top:10px;">Optimista</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Cronograma estimado</div>
+        <div class="timeline-mini">
+          <div class="timeline-mini-item">
+            <div class="tm-label">Inicio de renta temporal</div>
+            <div class="tm-value">Marzo 2027</div>
+          </div>
+          <div class="timeline-mini-item">
+            <div class="tm-label">Venta estimada</div>
+            <div class="tm-value">2031</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB DOCUMENTOS -->
+      <div class="tab-panel" data-tab-panel="documentos" role="tabpanel">
+        <ul class="doc-list">
+          <li class="doc-item">
+            <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <div class="doc-info"><div class="doc-name">Contrato de fideicomiso</div><div class="doc-meta">PDF · firmado</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled aria-describedby="doc-tip">Descargar</button><span class="tooltip-bubble" id="doc-tip">Disponible en la versión final</span></span>
+          </li>
+          <li class="doc-item">
+            <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <div class="doc-info"><div class="doc-name">Boleto de compraventa</div><div class="doc-meta">PDF · firmado</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+          </li>
+          <li class="doc-item">
+            <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Z" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <div class="doc-info"><div class="doc-name">Escritura</div><div class="doc-meta">PDF · registrada</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+          </li>
+          <li class="doc-item">
+            <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Z" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <div class="doc-info"><div class="doc-name">Póliza de seguro de obra</div><div class="doc-meta">PDF · vigente</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+          </li>
+          <li class="doc-item">
+            <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <div class="doc-info"><div class="doc-name">Informe de dominio</div><div class="doc-meta">PDF · sin gravámenes</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+          </li>
+          <li class="doc-item">
+            <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
+            <div class="doc-info"><div class="doc-name">Rendición trimestral Q2-2026</div><div class="doc-meta">PDF · publicada 10/07/2026</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VISTA 4 — DETALLE GÜEMES 3800
+       ============================================================ -->
+  <section id="view-guemes" class="view page">
+    <div class="wrap">
+      <a href="#" class="back-link" data-nav="dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Mis inversiones
+      </a>
+
+      <div class="detail-hero">
+        <div class="detail-hero-photo ph-2">
+          <span class="photo-tag">Foto · Living terminado — 01/08/2026</span>
+        </div>
+        <div class="detail-hero-info">
+          <div class="top-row">
+            <h1>Güemes 3800</h1>
+            <span class="chip chip-sage">En renta</span>
+          </div>
+          <p class="desc">Palermo · 44 m² · 2 ambientes · piso 2º</p>
+        </div>
+      </div>
+
+      <div class="stepper-wrap">
+        <div class="stepper" id="stepper-guemes"></div>
+      </div>
+
+      <div class="section-title" style="margin-top:0;">Estado de renta</div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Ocupación del trimestre</div>
+          <div class="stat-value numeral">71%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">ADR</div>
+          <div class="stat-value numeral">US$74</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Ingreso neto del trimestre</div>
+          <div class="stat-value numeral">US$2.140</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Última distribución</div>
+          <div class="stat-value numeral accent">US$956</div>
+          <div class="stat-sub">pagada el 15/07/2026</div>
+        </div>
+      </div>
+
+      <div class="section-title">Historial de distribuciones — tu parte (20%)</div>
+      <table class="dist-table">
+        <thead>
+          <tr><th>Fecha de pago</th><th>Período</th><th>Monto</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>15/07/2026</td>
+            <td>Q2 2026</td>
+            <td class="numeral">US$956</td>
+            <td class="dist-status">Pagada</td>
+          </tr>
+          <tr>
+            <td>15/04/2026</td>
+            <td>Q1 2026</td>
+            <td class="numeral">US$956</td>
+            <td class="dist-status">Pagada</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       VISTA 5 — OPORTUNIDADES
+       ============================================================ -->
+  <section id="view-opportunities" class="view page">
+    <div class="wrap">
+      <div class="greeting-block">
+        <h1>Oportunidades</h1>
+        <p class="greeting-sub">Nuevos flips abiertos a inversión. Cupos limitados por proyecto.</p>
+      </div>
+
+      <div class="opp-card">
+        <span class="opp-badge">Abierto a inversión</span>
+        <div class="opp-top">
+          <div>
+            <h2>Junín 600 · Barrio Norte</h2>
+            <p class="desc">47 m² a reciclar · compra prevista US$45.900 · unidad con potencial de reconfiguración a 2 ambientes premium.</p>
+          </div>
+          <div class="opp-score">
+            <div class="score-num numeral">78</div>
+            <div class="score-label">Score radar</div>
+          </div>
+        </div>
+
+        <div class="opp-stats">
+          <div class="opp-stat">
+            <div class="meta-label">Inversión objetivo</div>
+            <div class="meta-value">US$97.000</div>
+          </div>
+          <div class="opp-stat">
+            <div class="meta-label">Ticket mínimo</div>
+            <div class="meta-value">US$25.000</div>
+          </div>
+          <div class="opp-stat">
+            <div class="meta-label">TIR proyectada (base)</div>
+            <div class="meta-value">9 – 11%</div>
+          </div>
+          <div class="opp-stat">
+            <div class="meta-label">Cierre estimado</div>
+            <div class="meta-value">30/09/2026</div>
+          </div>
+        </div>
+
+        <div class="opp-progress">
+          <div class="opp-progress-label"><span>Comprometido</span><span>62% de US$97.000</span></div>
+          <div class="progress-track"><div class="progress-fill gold" data-progress="62"></div></div>
+        </div>
+
+        <div class="opp-actions">
+          <span class="opp-close">Quedan US$36.860 disponibles del objetivo</span>
+          <button class="btn btn-copper" id="btn-open-interest">Quiero participar</button>
+        </div>
+      </div>
+
+      <div class="opp-card locked">
+        <span class="opp-badge">Próximamente</span>
+        <div class="opp-top">
+          <div>
+            <h2>Retiro</h2>
+            <p class="desc">Próxima oportunidad en etapa de estudio. Se habilitará la expresión de interés cuando el proyecto esté validado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="app-footer">
+    <div class="wrap">
+      <span class="footer-brand">reco<span style="color:var(--copper); font-family:var(--serif); font-weight:600;">BA</span> · Portal de inversores</span>
+      <span class="footer-note">Demo · datos ilustrativos</span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================
+     MODAL — Expresión de interés
+     ============================================================ -->
+<div class="modal-overlay" id="interest-modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="modal-form-state">
+      <div class="modal-head">
+        <h3 id="modal-title">Quiero participar</h3>
+        <button class="modal-close" id="modal-close-btn" aria-label="Cerrar">&times;</button>
+      </div>
+      <p class="modal-desc">Junín 600 · Barrio Norte. Dejanos el monto que te gustaría comprometer; un asesor de recoBA te va a contactar para avanzar con la documentación.</p>
+      <div class="form-group">
+        <label for="interest-amount">Monto a invertir (USD)</label>
+        <input type="number" id="interest-amount" min="25000" step="1000" placeholder="25.000" value="25000">
+      </div>
+      <button class="btn btn-copper" id="btn-send-interest">Enviar expresión de interés</button>
+    </div>
+    <div id="modal-confirm-state" style="display:none;">
+      <div class="confirm-box">
+        <div class="confirm-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Interés registrado</h3>
+        <p id="confirm-text">Gracias, Martín. Recibimos tu interés por US$25.000 en Junín 600. Un asesor de recoBA se va a poner en contacto en las próximas 48 horas.</p>
+        <button class="btn btn-ghost" id="modal-done-btn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ------------------------------------------------------------
+     Datos del pipeline (stepper)
+     ------------------------------------------------------------ */
+  var PIPELINE_STEPS = [
+    "En estudio", "Comprado", "Escriturado", "En obra",
+    "Equipamiento", "En renta", "En venta", "Vendido"
+  ];
+
+  var ayacuchoDates = ["Feb 2026", "Abr 2026", "May 2026", "Jun 2026", "", "", "", ""];
+  var guemesDates = ["Nov 2024", "Ene 2025", "Feb 2025", "Mar 2025", "Oct 2025", "Nov 2025", "", ""];
+
+  function buildStepper(containerId, currentIndex, dates) {
+    var el = document.getElementById(containerId);
+    if (!el) return;
+    var html = "";
+    for (var i = 0; i < PIPELINE_STEPS.length; i++) {
+      var state = "";
+      if (i < currentIndex) state = "done";
+      else if (i === currentIndex) state = "current";
+      var dot = "";
+      if (state === "done") {
+        dot = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      } else {
+        dot = (i + 1);
+      }
+      var dateHtml = "";
+      if (dates[i]) {
+        dateHtml = '<div class="step-date">' + dates[i] + '</div>';
+      } else if (state !== "current") {
+        dateHtml = '<div class="step-date">&mdash;</div>';
+      }
+      html += '<div class="step ' + state + '">' +
+                '<div class="step-line"></div>' +
+                '<div class="step-dot">' + dot + '</div>' +
+                '<div class="step-label">' + PIPELINE_STEPS[i] + '</div>' +
+                dateHtml +
+              '</div>';
+    }
+    el.innerHTML = html;
+  }
+
+  /* ------------------------------------------------------------
+     Navegación entre vistas
+     ------------------------------------------------------------ */
+  var views = document.querySelectorAll(".view");
+
+  function showView(name) {
+    for (var i = 0; i < views.length; i++) {
+      views[i].classList.remove("active");
+    }
+    var target = document.getElementById("view-" + name);
+    if (target) {
+      target.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      runCountersIn(target);
+      runProgressBarsIn(target);
+    }
+    updateNavActive(name);
+  }
+
+  function updateNavActive(name) {
+    var navLinks = document.querySelectorAll(".main-nav a");
+    var mapped = (name === "dashboard") ? "dashboard" : (name === "opportunities" ? "opportunities" : null);
+    for (var i = 0; i < navLinks.length; i++) {
+      if (mapped && navLinks[i].getAttribute("data-nav") === mapped) {
+        navLinks[i].classList.add("active");
+      } else {
+        navLinks[i].classList.remove("active");
+      }
+    }
+  }
+
+  var navTriggers = document.querySelectorAll("[data-nav]");
+  for (var n = 0; n < navTriggers.length; n++) {
+    navTriggers[n].addEventListener("click", function (e) {
+      e.preventDefault();
+      var target = this.getAttribute("data-nav");
+      showView(target);
+    });
+  }
+
+  var projectTriggers = document.querySelectorAll("[data-open-project]");
+  function openProject(key) {
+    showView(key === "ayacucho" ? "ayacucho" : "guemes");
+  }
+  for (var p = 0; p < projectTriggers.length; p++) {
+    projectTriggers[p].addEventListener("click", function () {
+      openProject(this.getAttribute("data-open-project"));
+    });
+    projectTriggers[p].addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openProject(this.getAttribute("data-open-project"));
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------
+     Login
+     ------------------------------------------------------------ */
+  var loginView = document.getElementById("view-login");
+  var appShell = document.getElementById("app-shell");
+
+  function enterApp() {
+    loginView.classList.remove("active");
+    appShell.style.display = "block";
+    showView("dashboard");
+  }
+
+  document.getElementById("btn-google-login").addEventListener("click", enterApp);
+  document.getElementById("btn-email-login").addEventListener("click", function (e) {
+    e.preventDefault();
+    enterApp();
+  });
+
+  /* ------------------------------------------------------------
+     Menú de usuario / logout
+     ------------------------------------------------------------ */
+  var avatarBtn = document.getElementById("avatar-btn");
+  var avatarDropdown = document.getElementById("avatar-dropdown");
+
+  avatarBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    var isOpen = avatarDropdown.classList.toggle("open");
+    avatarBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  });
+
+  document.addEventListener("click", function () {
+    avatarDropdown.classList.remove("open");
+    avatarBtn.setAttribute("aria-expanded", "false");
+  });
+
+  document.getElementById("btn-logout").addEventListener("click", function (e) {
+    e.stopPropagation();
+    avatarDropdown.classList.remove("open");
+    appShell.style.display = "none";
+    loginView.classList.add("active");
+  });
+
+  /* ------------------------------------------------------------
+     Tabs (dentro de detalle de proyecto)
+     ------------------------------------------------------------ */
+  var tabButtons = document.querySelectorAll(".tab-btn");
+  for (var t = 0; t < tabButtons.length; t++) {
+    tabButtons[t].addEventListener("click", function () {
+      var tabName = this.getAttribute("data-tab");
+      var nav = this.closest(".tabs-nav");
+      var container = nav.parentElement;
+
+      var btns = nav.querySelectorAll(".tab-btn");
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.remove("active");
+        btns[i].setAttribute("aria-selected", "false");
+      }
+      this.classList.add("active");
+      this.setAttribute("aria-selected", "true");
+
+      var panels = container.querySelectorAll(".tab-panel");
+      for (var j = 0; j < panels.length; j++) {
+        panels[j].classList.remove("active");
+      }
+      var activePanel = container.querySelector('[data-tab-panel="' + tabName + '"]');
+      if (activePanel) {
+        activePanel.classList.add("active");
+        runProgressBarsIn(activePanel);
+      }
+    });
+  }
+
+  /* ------------------------------------------------------------
+     Contadores animados
+     ------------------------------------------------------------ */
+  function formatNumber(value, decimals) {
+    var fixed = value.toFixed(decimals || 0);
+    var parts = fixed.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return parts.join(",");
+  }
+
+  function animateCounter(el) {
+    if (el.getAttribute("data-done") === "1") return;
+    el.setAttribute("data-done", "1");
+    var target = parseFloat(el.getAttribute("data-value"));
+    var prefix = el.getAttribute("data-prefix") || "";
+    var suffix = el.getAttribute("data-suffix") || "";
+    var decimals = parseInt(el.getAttribute("data-decimal") || "0", 10);
+    var duration = 1000;
+    var startTime = null;
+
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var progress = Math.min((timestamp - startTime) / duration, 1);
+      var eased = 1 - Math.pow(1 - progress, 3);
+      var current = target * eased;
+      el.textContent = prefix + formatNumber(current, decimals) + suffix;
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        el.textContent = prefix + formatNumber(target, decimals) + suffix;
+      }
+    }
+    window.requestAnimationFrame(step);
+  }
+
+  function runCountersIn(container) {
+    var counters = container.querySelectorAll("[data-counter]");
+    for (var i = 0; i < counters.length; i++) {
+      animateCounter(counters[i]);
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Barras de progreso / gráfico de escenarios
+     ------------------------------------------------------------ */
+  function runProgressBarsIn(container) {
+    var bars = container.querySelectorAll("[data-progress]");
+    for (var i = 0; i < bars.length; i++) {
+      (function (bar) {
+        if (bar.getAttribute("data-done") === "1") return;
+        bar.setAttribute("data-done", "1");
+        var val = bar.getAttribute("data-progress");
+        window.requestAnimationFrame(function () {
+          bar.style.width = val + "%";
+        });
+      })(bars[i]);
+    }
+    var scenarioBars = container.querySelectorAll("[data-bar-height]");
+    for (var j = 0; j < scenarioBars.length; j++) {
+      (function (bar) {
+        if (bar.getAttribute("data-done") === "1") return;
+        bar.setAttribute("data-done", "1");
+        var h = bar.getAttribute("data-bar-height");
+        window.requestAnimationFrame(function () {
+          bar.style.height = h + "%";
+        });
+      })(scenarioBars[j]);
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Modal — expresión de interés
+     ------------------------------------------------------------ */
+  var modalOverlay = document.getElementById("interest-modal");
+  var modalFormState = document.getElementById("modal-form-state");
+  var modalConfirmState = document.getElementById("modal-confirm-state");
+  var amountInput = document.getElementById("interest-amount");
+  var confirmText = document.getElementById("confirm-text");
+
+  function openModal() {
+    modalFormState.style.display = "block";
+    modalConfirmState.style.display = "none";
+    modalOverlay.classList.add("open");
+    window.setTimeout(function () { amountInput.focus(); }, 200);
+  }
+  function closeModal() {
+    modalOverlay.classList.remove("open");
+  }
+
+  document.getElementById("btn-open-interest").addEventListener("click", openModal);
+  document.getElementById("modal-close-btn").addEventListener("click", closeModal);
+  document.getElementById("modal-done-btn").addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", function (e) {
+    if (e.target === modalOverlay) closeModal();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeModal();
+  });
+
+  document.getElementById("btn-send-interest").addEventListener("click", function () {
+    var raw = parseFloat(amountInput.value) || 25000;
+    var formatted = formatNumber(raw, 0);
+    confirmText.textContent = "Gracias, Martín. Recibimos tu interés por US$" + formatted + " en Junín 600. Un asesor de recoBA se va a poner en contacto en las próximas 48 horas.";
+    modalFormState.style.display = "none";
+    modalConfirmState.style.display = "block";
+  });
+
+  /* ------------------------------------------------------------
+     Inicialización
+     ------------------------------------------------------------ */
+  buildStepper("stepper-ayacucho", 3, ayacuchoDates);
+  buildStepper("stepper-guemes", 5, guemesDates);
+
+})();
+</script>
+</body>
+</html>

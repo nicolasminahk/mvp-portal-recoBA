@@ -1,0 +1,40 @@
+/* recoBA — design tokens (extraídos del deck de inversores, jul-2026)
+   Identidad: premium, cálida, editorial. Serif para display, sans para UI. */
+:root {
+  /* Paleta core */
+  --copper:      #C46A4A;   /* acción, marca, acentos */
+  --copper-dark: #A9563A;   /* hover/estados */
+  --copper-soft: #D08D6B;   /* acentos secundarios */
+  --copper-tint: #E2B39E;   /* fondos suaves de acento */
+  --ink:         #1C2331;   /* texto principal / superficies dark */
+  --ink-soft:    rgba(28,35,49,.68);
+  --ink-mute:    rgba(28,35,49,.52);
+  --cream:       #FAF6F0;   /* fondo principal light */
+  --paper:       #F4EEE4;   /* superficie secundaria */
+  --paper-card:  #FFFDF9;   /* cards */
+  --sand:        #F2EBDF;
+  --sage:        #5F7161;   /* verde salvia — éxito/positivo */
+  --gold:        #C9A96A;   /* dorado — destacados premium */
+  --line:        rgba(28,35,49,.14);
+  --line-strong: rgba(28,35,49,.24);
+
+  /* Dark mode (superficies = ink) */
+  --dark-bg:    #1C2331;
+  --dark-card:  #242D40;
+  --dark-text:  #F4EEE4;
+  --dark-soft:  rgba(244,238,228,.72);
+  --dark-mute:  rgba(244,238,228,.55);
+  --dark-line:  rgba(244,238,228,.16);
+
+  /* Tipografía */
+  --serif: "Fraunces", Georgia, serif;         /* display, cifras hero, títulos */
+  --sans:  "Inter", -apple-system, "Segoe UI", Roboto, sans-serif;  /* UI, tablas */
+
+  /* Geometría */
+  --radius: 14px;
+  --maxw: 1080px;
+
+  /* Semántica radar (mapear sobre la paleta, NO inventar colores nuevos)
+     score alto→bajo: ink → copper → copper-soft → copper-tint (ramp secuencial cálido)
+     señal de aviso: gold (borde/badge) · éxito/cerrado: sage · alerta: copper-dark */
+}
