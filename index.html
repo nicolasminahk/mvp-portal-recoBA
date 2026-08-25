@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal de Inversores · recoBA</title>
+<meta name="description" content="Portal privado de inversores de recoBA: avances de obra en tiempo real, gastos, documentos y oportunidades de cada flip en Buenos Aires.">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Portal de Inversores · recoBA">
+<meta property="og:site_name" content="recoBA">
+<meta property="og:description" content="Acceso privado · solo inversores invitados.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231C2331'/%3E%3Cpath d='M14 50 V34 a18 18 0 0 1 36 0 V50' fill='none' stroke='%23C46A4A' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -906,6 +912,277 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer-note { font-size: 12px; color: var(--ink-mute); }
 .footer-brand { font-size: 12.5px; color: var(--ink-mute); }
 
+/* ==== CAM — cámara de obra en vivo ==== */
+/* ============================================================
+   Cámara de obra en vivo (simulada) — módulo "cam-"
+   Reutiliza tokens de :root del portal (--ink, --copper, etc.)
+   ============================================================ */
+
+/* --- Selector de cámaras -------------------------------------- */
+.cam-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.cam-select-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-card);
+  color: var(--ink-soft);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.cam-select-btn::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+}
+.cam-select-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink-soft);
+}
+.cam-select-btn.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
+  box-shadow: 0 8px 20px rgba(28,35,49,.22);
+}
+.cam-select-btn.active::before {
+  background: var(--copper);
+  opacity: 1;
+}
+
+/* --- Feed ------------------------------------------------------ */
+.cam-feed-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0E1119;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  box-shadow: 0 22px 48px rgba(28,35,49,.20);
+}
+.cam-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+/* leve reflejo de lente sobre el vidrio */
+.cam-feed-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(165deg, rgba(255,255,255,.05), rgba(255,255,255,0) 32%);
+}
+
+/* --- HUD ------------------------------------------------------- */
+.cam-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 14px 16px;
+  font-family: var(--sans);
+}
+.cam-hud-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.cam-hud-left,
+.cam-hud-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cam-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(12,15,22,.55);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 999px;
+  padding: 6px 11px;
+  color: rgba(255,255,255,.88);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.cam-live {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.cam-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #E5484D;
+  animation: cam-pulse 1.7s ease-in-out infinite;
+}
+@keyframes cam-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(229,72,77,.55); opacity: 1; }
+  60%  { box-shadow: 0 0 0 6px rgba(229,72,77,0); opacity: .55; }
+  100% { box-shadow: 0 0 0 0 rgba(229,72,77,0); opacity: 1; }
+}
+.cam-clock {
+  font-variant-numeric: tabular-nums;
+}
+.cam-signal {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+}
+.cam-signal .cam-bar {
+  width: 3px;
+  border-radius: 1.5px;
+  background: rgba(255,255,255,.85);
+}
+.cam-signal .cam-bar:nth-child(1) { height: 4px; }
+.cam-signal .cam-bar:nth-child(2) { height: 6px; }
+.cam-signal .cam-bar:nth-child(3) { height: 9px; }
+.cam-signal .cam-bar:nth-child(4) { height: 12px; animation: cam-sig 5.5s steps(1, end) infinite; }
+@keyframes cam-sig {
+  0%, 62%, 100% { opacity: .9; }
+  64%, 71%      { opacity: .28; }
+  73%, 80%      { opacity: .9; }
+  82%, 86%      { opacity: .28; }
+}
+.cam-signal-txt {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.72);
+  margin-left: 3px;
+}
+.cam-hud-bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+.cam-fs-btn {
+  pointer-events: auto;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(12,15,22,.55);
+  backdrop-filter: blur(4px);
+  color: rgba(255,255,255,.9);
+  transition: background .2s ease, transform .18s ease;
+}
+.cam-fs-btn:hover {
+  background: rgba(12,15,22,.82);
+  transform: translateY(-1px);
+}
+.cam-fs-btn:active { transform: translateY(0); }
+
+/* fullscreen: el wrap ocupa la pantalla, la escena se adapta */
+.cam-feed-wrap:fullscreen {
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+}
+.cam-feed-wrap:-webkit-full-screen {
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+}
+
+/* --- Metadatos ------------------------------------------------- */
+.cam-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 14px 2px 0;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+.cam-meta svg { flex-shrink: 0; color: var(--sage); }
+
+/* --- Capturas recientes ---------------------------------------- */
+.cam-shots {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.cam-shot {
+  margin: 0;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #12161F;
+  transition: box-shadow .25s ease, transform .25s ease;
+}
+.cam-shot:hover {
+  box-shadow: 0 12px 26px rgba(28,35,49,.16);
+  transform: translateY(-2px);
+}
+.cam-shot canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+.cam-shot-time {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  background: rgba(12,15,22,.62);
+  backdrop-filter: blur(3px);
+  color: rgba(255,255,255,.92);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* --- Responsive / accesibilidad -------------------------------- */
+@media (max-width: 700px) {
+  .cam-shots { grid-template-columns: 1fr 1fr; }
+  .cam-hud { padding: 10px 12px; }
+  .cam-pill { padding: 5px 9px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cam-live-dot { animation: none; }
+  .cam-signal .cam-bar:nth-child(4) { animation: none; }
+}
+
 /* ============================================================
    Responsive
    ============================================================ */
@@ -926,6 +1203,429 @@ ul { margin: 0; padding: 0; list-style: none; }
   .opp-stats { grid-template-columns: 1fr 1fr; }
   .detail-hero-info h1 { font-size: 24px; }
 }
+
+/* ==== OPPX — Oportunidades ampliadas ==== */
+/* ============================================================
+   OPPX — Vista Oportunidades ampliada (prefijo oppx-)
+   Solo usa tokens existentes de :root. Reutiliza opp-*, chip,
+   progress-track, btn, section-title tal cual.
+   ============================================================ */
+
+/* --- Encabezado: greeting + link al radar --- */
+.oppx-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.oppx-head .greeting-block { margin-bottom: 0; }
+.oppx-head-side { text-align: right; }
+.oppx-radar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--copper);
+  background: rgba(196,106,74,.07);
+  border: 1px solid rgba(196,106,74,.35);
+  padding: 10px 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: background .2s ease, border-color .2s ease, transform .18s ease;
+}
+.oppx-radar-link:hover {
+  background: rgba(196,106,74,.13);
+  border-color: var(--copper);
+  transform: translateY(-1px);
+}
+.oppx-radar-note {
+  font-size: 12px;
+  color: var(--ink-mute);
+  margin-top: 8px;
+}
+
+/* --- Barra de filtros --- */
+.oppx-filterbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 26px;
+}
+.oppx-chip {
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--ink-soft);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  transition: background .18s ease, color .18s ease, border-color .18s ease;
+}
+.oppx-chip:hover { background: var(--sand); color: var(--ink); }
+.oppx-chip.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--cream);
+}
+.oppx-count {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: var(--ink-mute);
+}
+
+/* --- Highlights dentro de la card --- */
+.oppx-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: -6px 0 22px;
+}
+.oppx-highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  background: var(--sand);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.oppx-highlight::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+/* --- Link "Ver análisis en el radar" dentro de la card --- */
+.oppx-card-radar {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--copper);
+}
+.oppx-card-radar:hover { color: var(--copper-dark); text-decoration: underline; }
+
+/* --- Aviso "Avisarme cuando abra" (cards próximamente) --- */
+.oppx-notify-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.oppx-notify-ok {
+  display: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sage);
+}
+.oppx-notify-ok.show {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: oppx-in .35s ease;
+}
+
+/* --- Card cerrada (track record) --- */
+.opp-card.oppx-closed {
+  border: 1px solid rgba(95,113,97,.45);
+  box-shadow: none;
+}
+.opp-card.oppx-closed .opp-badge { background: var(--sage); color: #fff; }
+.oppx-track-note {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--sage);
+  margin-bottom: 18px;
+}
+.oppx-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--copper);
+}
+.oppx-link-btn:hover { color: var(--copper-dark); }
+
+/* --- Banda "¿Cómo se originan estas oportunidades?" --- */
+.oppx-origin {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 26px 20px;
+  margin-top: 44px;
+}
+.oppx-origin h3 { font-size: 17px; margin-bottom: 18px; }
+.oppx-origin-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.oppx-origin-step { display: flex; gap: 12px; align-items: flex-start; }
+.oppx-origin-num {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 13px;
+  background: var(--ink);
+  color: var(--cream);
+}
+.oppx-origin-step:nth-child(2) .oppx-origin-num { background: var(--copper); }
+.oppx-origin-step:nth-child(3) .oppx-origin-num { background: var(--gold); color: #4A3B1E; }
+.oppx-origin-step h4 { font-size: 14px; margin-bottom: 3px; }
+.oppx-origin-step p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+.oppx-origin-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+.oppx-disclaimer { font-size: 11.5px; color: var(--ink-mute); }
+
+/* --- Filtrado con animación sutil --- */
+.oppx-hide { display: none !important; }
+.oppx-anim { animation: oppx-in .35s ease; }
+@keyframes oppx-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  .oppx-head { flex-direction: column; align-items: flex-start; }
+  .oppx-head-side { text-align: left; }
+  .oppx-count { margin-left: 0; width: 100%; }
+  .oppx-origin-steps { grid-template-columns: 1fr; }
+}
+
+
+/* ==== NTF/ADV — header + dashboard extras ==== */
+/* ============================================================
+   Módulo header + dashboard extra — ntf- (notificaciones) / adv- (asesor, novedades)
+   Solo variables CSS existentes de :root.
+   ============================================================ */
+
+/* --- Contenedor de acciones del header (campana + user-menu) --- */
+.ntf-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* --- Campana --- */
+.ntf-wrap { position: relative; }
+.ntf-bell-btn {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  padding: 0;
+  color: var(--ink-soft);
+  transition: background .2s ease, color .2s ease;
+}
+.ntf-bell-btn:hover { background: var(--sand); color: var(--ink); }
+.ntf-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--copper);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--cream);
+}
+
+/* --- Dropdown de notificaciones (mismo patrón visual que .dropdown, más ancho) --- */
+.ntf-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(28,35,49,.14);
+  padding: 6px;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
+  z-index: 50;
+}
+.ntf-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.ntf-head {
+  padding: 10px 12px 9px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-mute);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+.ntf-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 11px 26px 11px 12px;
+  border-radius: 8px;
+}
+.ntf-item:hover { background: var(--sand); }
+.ntf-item-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(196,106,74,.12);
+  color: var(--copper-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.ntf-item-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ntf-item-title { font-size: 13.5px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.ntf-item-text { font-size: 12.5px; color: var(--ink-soft); line-height: 1.4; }
+.ntf-item-time { font-size: 11px; color: var(--ink-mute); margin-top: 2px; }
+.ntf-unread .ntf-item::after {
+  content: "";
+  position: absolute;
+  right: 11px;
+  top: 17px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--copper);
+}
+.ntf-read .ntf-item { opacity: .55; }
+.ntf-read .ntf-item-icon { background: rgba(28,35,49,.07); color: var(--ink-mute); }
+.ntf-mark-read {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  padding: 11px 12px 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--copper);
+  text-align: center;
+}
+.ntf-mark-read:hover { color: var(--copper-dark); }
+.ntf-mark-read:disabled { color: var(--ink-mute); cursor: default; }
+
+/* --- Items deshabilitados en el dropdown de usuario --- */
+.ntf-dd-wrap { display: block; }
+.ntf-dd-disabled { opacity: .55; cursor: not-allowed; }
+.ntf-dd-disabled:hover { background: none; }
+
+/* --- Link externo "Radar" en la nav --- */
+.ntf-ext-link { display: inline-flex; align-items: center; gap: 5px; }
+.ntf-ext-link svg { flex-shrink: 0; opacity: .7; }
+
+/* --- Banda "Últimas novedades" (lista editorial fina) --- */
+.adv-news { border-top: 1px solid var(--line); }
+.adv-news-item {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 13px 6px;
+  border-bottom: 1px solid var(--line);
+  transition: background .2s ease;
+}
+.adv-news-item:hover { background: rgba(28,35,49,.03); }
+.adv-news-date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--copper-dark);
+  flex-shrink: 0;
+  width: 46px;
+}
+.adv-news-text { flex: 1; font-size: 14px; color: var(--ink); line-height: 1.45; }
+.adv-news-link { font-size: 13px; font-weight: 700; color: var(--copper); white-space: nowrap; }
+.adv-news-link:hover { color: var(--copper-dark); }
+
+/* --- Card "Tu asesor" --- */
+.adv-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px 26px;
+  flex-wrap: wrap;
+}
+.adv-avatar { width: 52px; height: 52px; font-size: 18px; flex-shrink: 0; }
+.adv-info { flex: 1; min-width: 220px; }
+.adv-name { font-family: var(--serif); font-size: 17px; font-weight: 600; }
+.adv-role { font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+.adv-text { font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; line-height: 1.5; }
+.adv-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.adv-actions .tooltip-wrap { display: inline-flex; }
+
+/* --- Responsive --- */
+@media (max-width: 640px) {
+  /* La campana queda visible aunque la nav se oculte (860px).
+     El dropdown pasa a fixed para no desbordar la pantalla. */
+  .ntf-dropdown {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    top: 74px;
+    width: auto;
+    max-width: none;
+  }
+  .adv-card { align-items: flex-start; }
+  .adv-actions { width: 100%; }
+  .adv-news-item { flex-wrap: wrap; row-gap: 4px; }
+  .adv-news-text { flex-basis: calc(100% - 62px); }
+  .adv-news-link { margin-left: 62px; }
+}
+
 </style>
 </head>
 <body>
@@ -968,7 +1668,68 @@ ul { margin: 0; padding: 0; list-style: none; }
         <nav class="main-nav" aria-label="Navegación principal">
           <a href="#" data-nav="dashboard" class="active">Mis inversiones</a>
           <a href="#" data-nav="opportunities">Oportunidades</a>
+          <a href="https://buscador.recoba.casa" target="_blank" rel="noopener" class="ntf-ext-link">
+            Radar
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </nav>
+      </div>
+      <div class="ntf-header-actions">
+      <div class="ntf-wrap" id="ntf-wrap">
+        <button class="ntf-bell-btn" id="ntf-bell-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Notificaciones (3 sin leer)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 4a5.5 5.5 0 0 0-5.5 5.5c0 3.6-1.1 5.1-1.9 6-.34.38-.07 1 .45 1h13.9c.52 0 .79-.62.45-1-.8-.9-1.9-2.4-1.9-6A5.5 5.5 0 0 0 12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10.2 19.5a1.9 1.9 0 0 0 3.6 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span class="ntf-badge" id="ntf-badge">3</span>
+        </button>
+
+        <div class="ntf-dropdown" id="ntf-dropdown" aria-label="Notificaciones">
+          <div class="ntf-head">Notificaciones</div>
+          <ul class="ntf-list">
+            <li class="ntf-unread">
+              <button class="ntf-item" type="button" data-ntf-nav="ayacucho">
+                <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11 12 4l9 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9.6V20h12V9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ntf-item-body">
+                  <span class="ntf-item-title">Nuevo avance de obra</span>
+                  <span class="ntf-item-text">Ayacucho 1400: baño principal terminado</span>
+                  <span class="ntf-item-time">hace 2 h</span>
+                </span>
+              </button>
+            </li>
+            <li class="ntf-unread">
+              <button class="ntf-item" type="button" data-ntf-nav="ayacucho-camara">
+                <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="7" width="13" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="m15.5 10.5 6-3.5v10l-6-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ntf-item-body">
+                  <span class="ntf-item-title">Cámara en vivo disponible</span>
+                  <span class="ntf-item-text">Ya podés ver la obra de Ayacucho 1400 en directo</span>
+                  <span class="ntf-item-time">hace 5 h</span>
+                </span>
+              </button>
+            </li>
+            <li class="ntf-unread">
+              <button class="ntf-item" type="button" data-ntf-nav="opportunities">
+                <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6-5.4-2.9-5.4 2.9 1.1-6L3.2 9.4l6.1-.8L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="ntf-item-body">
+                  <span class="ntf-item-title">Nueva oportunidad abierta</span>
+                  <span class="ntf-item-text">Aguirre 1300 · Villa Crespo ya acepta compromisos</span>
+                  <span class="ntf-item-time">hace 1 día</span>
+                </span>
+              </button>
+            </li>
+            <li class="ntf-read">
+              <button class="ntf-item" type="button" data-ntf-nav="guemes">
+                <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M14.2 9.8c-.4-.7-1.2-1.1-2.2-1.1-1.3 0-2.3.7-2.3 1.7 0 2.3 4.6 1.3 4.6 3.6 0 1-1 1.7-2.3 1.7-1 0-1.8-.4-2.2-1.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7.2v9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                <span class="ntf-item-body">
+                  <span class="ntf-item-title">Distribución pagada</span>
+                  <span class="ntf-item-text">Güemes 3800: US$956 acreditados (Q2 2026)</span>
+                  <span class="ntf-item-time">hace 6 semanas</span>
+                </span>
+              </button>
+            </li>
+          </ul>
+          <button class="ntf-mark-read" id="ntf-mark-read" type="button">Marcar todas como leídas</button>
+        </div>
       </div>
       <div class="user-menu">
         <button class="avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false">
@@ -978,9 +1739,18 @@ ul { margin: 0; padding: 0; list-style: none; }
         </button>
         <div class="dropdown" id="avatar-dropdown">
           <div class="dropdown-hint">martin.g@investor.recoba.casa</div>
+          <span class="tooltip-wrap ntf-dd-wrap">
+            <button class="dropdown-item ntf-dd-disabled" type="button" disabled title="Disponible en la versión final">Mi perfil y preferencias</button>
+            <span class="tooltip-bubble">Disponible en la versión final</span>
+          </span>
+          <span class="tooltip-wrap ntf-dd-wrap">
+            <button class="dropdown-item ntf-dd-disabled" type="button" disabled title="Disponible en la versión final">Resumen fiscal 2026 (PDF)</button>
+            <span class="tooltip-bubble">Disponible en la versión final</span>
+          </span>
           <button class="dropdown-item" id="btn-logout" type="button">Cerrar sesión</button>
         </div>
-      </div>
+      </div><!-- /.user-menu -->
+      </div><!-- /.ntf-header-actions -->
     </div>
   </header>
 
@@ -991,7 +1761,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     <div class="wrap">
       <div class="greeting-block">
         <h1>Hola, Martín</h1>
-        <p class="greeting-sub">Tenés capital comprometido en dos flips activos. Este es el estado consolidado de tu cartera al 08/08/2026.</p>
+        <p class="greeting-sub">Tenés capital comprometido en dos flips activos. Este es el estado consolidado de tu cartera al 25/08/2026.</p>
       </div>
 
       <div class="section-title">Resumen de cartera</div>
@@ -1015,12 +1785,31 @@ ul { margin: 0; padding: 0; list-style: none; }
         </div>
       </div>
 
+      <div class="section-title">Últimas novedades</div>
+      <ul class="adv-news">
+        <li class="adv-news-item">
+          <span class="adv-news-date numeral">22/08</span>
+          <span class="adv-news-text">Nuevo avance de obra en Ayacucho 1400: baño principal terminado y vanitory instalado.</span>
+          <a href="#" class="adv-news-link" data-adv-nav="ayacucho">Ver →</a>
+        </li>
+        <li class="adv-news-item">
+          <span class="adv-news-date numeral">20/08</span>
+          <span class="adv-news-text">Nueva oportunidad abierta a inversión: Aguirre 1300 · Villa Crespo.</span>
+          <a href="#" class="adv-news-link" data-adv-nav="opportunities">Ver →</a>
+        </li>
+        <li class="adv-news-item">
+          <span class="adv-news-date numeral">15/07</span>
+          <span class="adv-news-text">Distribución trimestral de Güemes 3800 pagada: US$956 correspondientes a Q2 2026.</span>
+          <a href="#" class="adv-news-link" data-adv-nav="guemes">Ver →</a>
+        </li>
+      </ul>
+
       <div class="section-title">Tus proyectos</div>
       <div class="projects-grid">
         <!-- Ayacucho card -->
         <article class="project-card" data-open-project="ayacucho" tabindex="0" role="button" aria-label="Ver proyecto Ayacucho 1400">
           <div class="photo-ph ph-1">
-            <span class="photo-tag">Foto · Fachada — 05/08</span>
+            <span class="photo-tag">Foto · Fachada — 22/08</span>
             <span class="photo-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg>
             </span>
@@ -1090,6 +1879,19 @@ ul { margin: 0; padding: 0; list-style: none; }
             </div>
           </div>
         </article>
+      </div><!-- /.projects-grid -->
+
+      <div class="section-title">Tu asesor</div>
+      <div class="adv-card">
+        <span class="avatar adv-avatar" aria-hidden="true">NM</span>
+        <div class="adv-info">
+          <div class="adv-name">Nicolás Minahk <span class="adv-role">· Socio gestor recoBA</span></div>
+          <p class="adv-text">Cualquier duda sobre tu inversión o las oportunidades abiertas, escribile directo.</p>
+        </div>
+        <div class="adv-actions">
+          <span class="tooltip-wrap"><button class="btn btn-ghost" type="button" disabled>Agendar llamada</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+          <a class="btn btn-copper" href="mailto:nicolasminahk@gmail.com?subject=Consulta%20de%20inversor%20recoBA">Escribir por email</a>
+        </div>
       </div>
     </div>
   </section>
@@ -1106,7 +1908,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
       <div class="detail-hero">
         <div class="detail-hero-photo ph-1">
-          <span class="photo-tag">Foto · Fachada — 05/08/2026</span>
+          <span class="photo-tag">Foto · Fachada — 22/08/2026</span>
         </div>
         <div class="detail-hero-info">
           <div class="top-row">
@@ -1126,11 +1928,21 @@ ul { margin: 0; padding: 0; list-style: none; }
         <button class="tab-btn" data-tab="gastos" role="tab" aria-selected="false">Gastos</button>
         <button class="tab-btn" data-tab="inversion" role="tab" aria-selected="false">Mi inversión</button>
         <button class="tab-btn" data-tab="documentos" role="tab" aria-selected="false">Documentos</button>
+        <button class="tab-btn" data-tab="camara" role="tab" aria-selected="false">Cámara en vivo</button>
       </div>
 
       <!-- TAB AVANCES -->
       <div class="tab-panel active" data-tab-panel="avances" role="tabpanel">
         <div class="timeline">
+
+          <div class="timeline-item">
+            <div class="timeline-date">22 de agosto, 2026</div>
+            <p class="timeline-text">Baño principal terminado: vanitory instalado y detalles de silicona listos. Arranca la colocación de la cocina la semana próxima.</p>
+            <div class="media-row">
+              <div class="media-ph ph-5"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Baño terminado</span></div>
+              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Vanitory</span></div>
+            </div>
+          </div>
 
           <div class="timeline-item">
             <div class="timeline-date">08 de agosto, 2026</div>
@@ -1209,7 +2021,7 @@ ul { margin: 0; padding: 0; list-style: none; }
             <div class="stat-value numeral">US$28.440</div>
           </div>
         </div>
-        <p class="budget-note">Actualizado al 08/08/2026 · respaldado con comprobantes en Documentos.</p>
+        <p class="budget-note">Actualizado al 25/08/2026 · respaldado con comprobantes en Documentos.</p>
 
         <table class="budget-table">
           <thead>
@@ -1367,6 +2179,65 @@ ul { margin: 0; padding: 0; list-style: none; }
         </ul>
       </div>
 
+      <div class="tab-panel" data-tab-panel="camara" role="tabpanel">
+
+        <div class="cam-selector" role="group" aria-label="Seleccionar cámara de obra">
+          <button class="cam-select-btn" data-cam="fachada" type="button" aria-pressed="false">Fachada</button>
+          <button class="cam-select-btn active" data-cam="living" type="button" aria-pressed="true">Living</button>
+          <button class="cam-select-btn" data-cam="bano" type="button" aria-pressed="false">Baño</button>
+        </div>
+
+        <div class="cam-feed-wrap" id="cam-feed-wrap">
+          <canvas class="cam-canvas" id="cam-canvas" role="img" aria-label="Transmisión en vivo de la obra de Ayacucho 1400"></canvas>
+          <div class="cam-hud">
+            <div class="cam-hud-top">
+              <div class="cam-hud-left">
+                <span class="cam-pill cam-live" aria-hidden="true"><span class="cam-live-dot"></span>En vivo</span>
+                <span class="cam-pill" id="cam-label">CAM 02 · Living — Ayacucho 1400</span>
+              </div>
+              <div class="cam-hud-right" aria-hidden="true">
+                <span class="cam-pill cam-signal" title="Señal 4G">
+                  <span class="cam-bar"></span><span class="cam-bar"></span><span class="cam-bar"></span><span class="cam-bar"></span>
+                  <span class="cam-signal-txt">4G</span>
+                </span>
+                <span class="cam-pill cam-clock" id="cam-clock">--/--/---- · --:--:--</span>
+              </div>
+            </div>
+            <div class="cam-hud-bottom">
+              <button class="cam-fs-btn" id="cam-fs-btn" type="button" aria-label="Ver en pantalla completa">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p class="cam-meta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.7"/></svg>
+          Cámara solar 4G instalada en obra · clip guardado cada 10 minutos · historial completo disponible para inversores
+        </p>
+
+        <div class="section-title">Capturas recientes — hoy</div>
+        <div class="cam-shots" id="cam-shots">
+          <figure class="cam-shot" data-shot-cam="living">
+            <canvas width="320" height="180" aria-hidden="true"></canvas>
+            <figcaption class="cam-shot-time">—</figcaption>
+          </figure>
+          <figure class="cam-shot" data-shot-cam="bano">
+            <canvas width="320" height="180" aria-hidden="true"></canvas>
+            <figcaption class="cam-shot-time">—</figcaption>
+          </figure>
+          <figure class="cam-shot" data-shot-cam="fachada">
+            <canvas width="320" height="180" aria-hidden="true"></canvas>
+            <figcaption class="cam-shot-time">—</figcaption>
+          </figure>
+          <figure class="cam-shot" data-shot-cam="living">
+            <canvas width="320" height="180" aria-hidden="true"></canvas>
+            <figcaption class="cam-shot-time">—</figcaption>
+          </figure>
+        </div>
+
+      </div>
+
     </div>
   </section>
 
@@ -1446,22 +2317,43 @@ ul { margin: 0; padding: 0; list-style: none; }
        ============================================================ -->
   <section id="view-opportunities" class="view page">
     <div class="wrap">
-      <div class="greeting-block">
-        <h1>Oportunidades</h1>
-        <p class="greeting-sub">Nuevos flips abiertos a inversión. Cupos limitados por proyecto.</p>
+      <div class="oppx-head">
+        <div class="greeting-block">
+          <h1>Oportunidades</h1>
+          <p class="greeting-sub">Nuevos flips abiertos a inversión. Cupos limitados por proyecto.</p>
+        </div>
+        <div class="oppx-head-side">
+          <a class="oppx-radar-link" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Explorar el radar completo →</a>
+          <p class="oppx-radar-note">Nuestro radar detecta unidades 20–30% bajo mercado.</p>
+        </div>
       </div>
 
-      <div class="opp-card">
+      <div class="oppx-filterbar" role="group" aria-label="Filtrar oportunidades por estado">
+        <button type="button" class="oppx-chip active" data-oppx-filter="all" aria-pressed="true">Todas</button>
+        <button type="button" class="oppx-chip" data-oppx-filter="open" aria-pressed="false">Abiertas</button>
+        <button type="button" class="oppx-chip" data-oppx-filter="soon" aria-pressed="false">Próximamente</button>
+        <button type="button" class="oppx-chip" data-oppx-filter="closed" aria-pressed="false">Cerradas</button>
+        <span class="oppx-count" id="oppx-count" aria-live="polite">5 de 5 oportunidades</span>
+      </div>
+
+      <!-- ABIERTA — Junín 600 (datos originales intactos) -->
+      <article class="opp-card" data-oppx-status="open">
         <span class="opp-badge">Abierto a inversión</span>
         <div class="opp-top">
           <div>
             <h2>Junín 600 · Barrio Norte</h2>
             <p class="desc">47 m² a reciclar · compra prevista US$45.900 · unidad con potencial de reconfiguración a 2 ambientes premium.</p>
+            <a class="oppx-card-radar" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Ver análisis en el radar →</a>
           </div>
           <div class="opp-score">
             <div class="score-num numeral">78</div>
             <div class="score-label">Score radar</div>
           </div>
+        </div>
+
+        <div class="oppx-highlights">
+          <span class="oppx-highlight">US$/m² 18% bajo mediana de la zona</span>
+          <span class="oppx-highlight">3 comparables vendidos en menos de 90 días</span>
         </div>
 
         <div class="opp-stats">
@@ -1490,17 +2382,143 @@ ul { margin: 0; padding: 0; list-style: none; }
 
         <div class="opp-actions">
           <span class="opp-close">Quedan US$36.860 disponibles del objetivo</span>
-          <button class="btn btn-copper" id="btn-open-interest">Quiero participar</button>
+          <button type="button" class="btn btn-copper" data-opp="Junín 600 · Barrio Norte" data-min="25000">Quiero participar</button>
         </div>
-      </div>
+      </article>
 
-      <div class="opp-card locked">
+      <!-- ABIERTA — Aguirre 1300 -->
+      <article class="opp-card" data-oppx-status="open">
+        <span class="opp-badge">Abierto a inversión</span>
+        <div class="opp-top">
+          <div>
+            <h2>Aguirre 1300 · Villa Crespo</h2>
+            <p class="desc">38 m² a reciclar · compra prevista US$38.500 · unidad con potencial de puesta en valor integral.</p>
+            <a class="oppx-card-radar" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Ver análisis en el radar →</a>
+          </div>
+          <div class="opp-score">
+            <div class="score-num numeral">71</div>
+            <div class="score-label">Score radar</div>
+          </div>
+        </div>
+
+        <div class="oppx-highlights">
+          <span class="oppx-highlight">Zona gastronómica en expansión</span>
+          <span class="oppx-highlight">Reconfiguración a 2 ambientes</span>
+        </div>
+
+        <div class="opp-stats">
+          <div class="opp-stat">
+            <div class="meta-label">Inversión objetivo</div>
+            <div class="meta-value">US$68.000</div>
+          </div>
+          <div class="opp-stat">
+            <div class="meta-label">Ticket mínimo</div>
+            <div class="meta-value">US$25.000</div>
+          </div>
+          <div class="opp-stat">
+            <div class="meta-label">TIR proyectada (base)</div>
+            <div class="meta-value">9 – 11%</div>
+          </div>
+          <div class="opp-stat">
+            <div class="meta-label">Cierre estimado</div>
+            <div class="meta-value">31/10/2026</div>
+          </div>
+        </div>
+
+        <div class="opp-progress">
+          <div class="opp-progress-label"><span>Comprometido</span><span>24% de US$68.000</span></div>
+          <div class="progress-track"><div class="progress-fill gold" data-progress="24"></div></div>
+        </div>
+
+        <div class="opp-actions">
+          <span class="opp-close">Quedan US$51.680 disponibles del objetivo</span>
+          <button type="button" class="btn btn-copper" data-opp="Aguirre 1300 · Villa Crespo" data-min="25000">Quiero participar</button>
+        </div>
+      </article>
+
+      <!-- PRÓXIMAMENTE — Retiro -->
+      <article class="opp-card locked" data-oppx-status="soon">
         <span class="opp-badge">Próximamente</span>
         <div class="opp-top">
           <div>
             <h2>Retiro</h2>
-            <p class="desc">Próxima oportunidad en etapa de estudio. Se habilitará la expresión de interés cuando el proyecto esté validado.</p>
+            <p class="desc">En estudio en el radar · score preliminar 74. Se habilitará la expresión de interés cuando el proyecto esté validado con visita y análisis de costos.</p>
           </div>
+          <div class="opp-score">
+            <div class="score-num numeral">74</div>
+            <div class="score-label">Score preliminar</div>
+          </div>
+        </div>
+        <div class="oppx-notify-wrap">
+          <button type="button" class="btn btn-ghost" data-oppx-notify>Avisarme cuando abra</button>
+          <span class="oppx-notify-ok" role="status">Listo. Te avisamos por email cuando abra.</span>
+        </div>
+      </article>
+
+      <!-- PRÓXIMAMENTE — Caballito Norte -->
+      <article class="opp-card locked" data-oppx-status="soon">
+        <span class="opp-badge">Próximamente</span>
+        <div class="opp-top">
+          <div>
+            <h2>Caballito Norte</h2>
+            <p class="desc">En estudio en el radar · score preliminar 69. Unidad amplia a reconfigurar; estamos validando comparables y costo de obra antes de abrirla al fideicomiso.</p>
+          </div>
+          <div class="opp-score">
+            <div class="score-num numeral">69</div>
+            <div class="score-label">Score preliminar</div>
+          </div>
+        </div>
+        <div class="oppx-notify-wrap">
+          <button type="button" class="btn btn-ghost" data-oppx-notify>Avisarme cuando abra</button>
+          <span class="oppx-notify-ok" role="status">Listo. Te avisamos por email cuando abra.</span>
+        </div>
+      </article>
+
+      <!-- CERRADA — Güemes 3800 (track record) -->
+      <article class="opp-card oppx-closed" data-oppx-status="closed">
+        <span class="opp-badge">Completada</span>
+        <div class="opp-top">
+          <div>
+            <h2>Güemes 3800 · Palermo</h2>
+            <p class="desc">44 m² reciclados a 2 ambientes premium. Hoy en renta temporal dentro de la cartera del fideicomiso.</p>
+          </div>
+        </div>
+        <p class="oppx-track-note">Fondeada en nov 2024 · en renta desde nov 2025 · distribuciones trimestrales al día</p>
+        <div class="opp-actions">
+          <span class="opp-close">Cerrada a nuevas inversiones</span>
+          <button type="button" class="oppx-link-btn" data-open-project="guemes">Ver proyecto →</button>
+        </div>
+      </article>
+
+      <!-- Banda: cómo se originan las oportunidades -->
+      <div class="oppx-origin">
+        <h3>¿Cómo se originan estas oportunidades?</h3>
+        <div class="oppx-origin-steps">
+          <div class="oppx-origin-step">
+            <span class="oppx-origin-num">1</span>
+            <div>
+              <h4>El radar detecta</h4>
+              <p>Nuestra herramienta escanea publicaciones y marca unidades 20–30% bajo mercado con un score objetivo.</p>
+            </div>
+          </div>
+          <div class="oppx-origin-step">
+            <span class="oppx-origin-num">2</span>
+            <div>
+              <h4>Análisis y visita</h4>
+              <p>Validamos comparables, estado real de la unidad y costo de obra con visita presencial.</p>
+            </div>
+          </div>
+          <div class="oppx-origin-step">
+            <span class="oppx-origin-num">3</span>
+            <div>
+              <h4>Se abre al fideicomiso</h4>
+              <p>Si los números cierran, la oportunidad se publica acá con tickets desde US$25.000.</p>
+            </div>
+          </div>
+        </div>
+        <div class="oppx-origin-foot">
+          <a class="oppx-card-radar" style="margin-top:0;" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Explorar el radar de deal-flow →</a>
+          <span class="oppx-disclaimer">TIRs proyectadas, no garantizadas · demo con datos ilustrativos</span>
         </div>
       </div>
     </div>
@@ -1634,6 +2652,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   function openProject(key) {
     showView(key === "ayacucho" ? "ayacucho" : "guemes");
   }
+  window.recobaNav = { showView: showView, openProject: openProject };
   for (var p = 0; p < projectTriggers.length; p++) {
     projectTriggers[p].addEventListener("click", function () {
       openProject(this.getAttribute("data-open-project"));
@@ -1715,6 +2734,10 @@ ul { margin: 0; padding: 0; list-style: none; }
         activePanel.classList.add("active");
         runProgressBarsIn(activePanel);
       }
+      if (window.recobaCam) {
+        if (tabName === "camara") { window.recobaCam.start(); }
+        else { window.recobaCam.stop(); }
+      }
     });
   }
 
@@ -1789,25 +2812,1133 @@ ul { margin: 0; padding: 0; list-style: none; }
   }
 
   /* ------------------------------------------------------------
-     Modal — expresión de interés
+     Inicialización
+     ------------------------------------------------------------ */
+  buildStepper("stepper-ayacucho", 3, ayacuchoDates);
+  buildStepper("stepper-guemes", 5, guemesDates);
+
+})();
+</script>
+<script>
+/* ============================================================
+   recoBA — Cámara de obra en vivo (simulada) · Ayacucho 1400
+   Feed procedural en <canvas>, sin assets externos.
+   Expone window.recobaCam = { start, stop, setCamera }.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var PROJECT = "Ayacucho 1400";
+  var FRAME_MS = 33;            /* ~30 fps, look "video" */
+  var STATIC_MS = 420;          /* reconexión al cambiar de cámara */
+
+  var CAM_INFO = {
+    fachada: { num: "CAM 01", name: "Fachada" },
+    living:  { num: "CAM 02", name: "Living" },
+    bano:    { num: "CAM 03", name: "Baño" }
+  };
+
+  /* lamp = foco de luz (fracciones), dust = partículas, pan = amplitud de paneo */
+  var SCENES = {
+    fachada: { lamp: [0.50, 0.34], dust: 14, pan: 0.012 },
+    living:  { lamp: [0.80, 0.46], dust: 46, pan: 0.006 },
+    bano:    { lamp: [0.70, 0.58], dust: 34, pan: 0.005 }
+  };
+
+  var canvas = null, ctx = null, wrap = null, panel = null;
+  var labelEl = null, clockEl = null, fsBtn = null;
+  var running = false, rafId = 0, lastFrame = 0, prevTick = 0;
+  var activeCam = "living";
+  var staticUntil = 0;
+  var particles = [];
+  var vw = 0, vh = 0;
+  var noiseFrames = [], scanPattern = null;
+  var flick = { until: 0, next: 0, depth: 1 };
+  var clockTimer = 0;
+  var timeFmt = null, dateFmt = null, fmtFailed = false;
+  var clockCache = { sec: -1, time: "", date: "" };
+  var reduceMotion = false;
+
+  /* ------------------------------------------------------------
+     Hora de Buenos Aires
+     ------------------------------------------------------------ */
+  function makeFormatters() {
+    try {
+      timeFmt = new Intl.DateTimeFormat("es-AR", {
+        timeZone: "America/Argentina/Buenos_Aires",
+        hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+      });
+      dateFmt = new Intl.DateTimeFormat("es-AR", {
+        timeZone: "America/Argentina/Buenos_Aires",
+        day: "2-digit", month: "2-digit", year: "numeric"
+      });
+    } catch (e) { fmtFailed = true; }
+  }
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function baTime(d) {
+    if (!fmtFailed && timeFmt) {
+      try { return timeFmt.format(d); } catch (e) { fmtFailed = true; }
+    }
+    return pad2(d.getHours()) + ":" + pad2(d.getMinutes()) + ":" + pad2(d.getSeconds());
+  }
+  function baDate(d) {
+    if (!fmtFailed && dateFmt) {
+      try { return dateFmt.format(d); } catch (e) { fmtFailed = true; }
+    }
+    return pad2(d.getDate()) + "/" + pad2(d.getMonth() + 1) + "/" + d.getFullYear();
+  }
+  function baHour(d) {
+    var t = baTime(d);
+    var h = parseInt(t.slice(0, 2), 10);
+    return isNaN(h) ? d.getHours() : h;
+  }
+  function isDayAt(d) { var h = baHour(d); return h >= 7 && h < 19; }
+
+  function refreshClockCache() {
+    var sec = (Date.now() / 1000) | 0;
+    if (sec !== clockCache.sec) {
+      var d = new Date();
+      clockCache.sec = sec;
+      clockCache.time = baTime(d);
+      clockCache.date = baDate(d);
+    }
+  }
+  function updateHudClock() {
+    refreshClockCache();
+    if (clockEl) clockEl.textContent = clockCache.date + " · " + clockCache.time;
+  }
+
+  /* ------------------------------------------------------------
+     Texturas de video (ruido, scanlines)
+     ------------------------------------------------------------ */
+  function makeNoiseFrame() {
+    var c = document.createElement("canvas");
+    c.width = 160; c.height = 90;
+    var x = c.getContext("2d");
+    var img = x.createImageData(160, 90);
+    var d = img.data, i, v;
+    for (i = 0; i < d.length; i += 4) {
+      v = (Math.random() * 255) | 0;
+      d[i] = v; d[i + 1] = v; d[i + 2] = v;
+      d[i + 3] = (Math.random() * 70) | 0;
+    }
+    x.putImageData(img, 0, 0);
+    return c;
+  }
+  function makeScanPattern(target) {
+    var c = document.createElement("canvas");
+    c.width = 2; c.height = 3;
+    var x = c.getContext("2d");
+    x.clearRect(0, 0, 2, 3);
+    x.fillStyle = "rgba(0,0,0,0.14)";
+    x.fillRect(0, 2, 2, 1);
+    return target.createPattern(c, "repeat");
+  }
+
+  /* ------------------------------------------------------------
+     Partículas de polvo
+     ------------------------------------------------------------ */
+  function buildParticles(cam) {
+    var n = SCENES[cam].dust, i;
+    particles = [];
+    for (i = 0; i < n; i++) {
+      particles.push({
+        x: Math.random(), y: Math.random(),
+        r: 0.6 + Math.random() * 1.5,
+        vx: (Math.random() - 0.5) * 0.010,
+        vy: -(0.004 + Math.random() * 0.012),
+        ph: Math.random() * 6.283
+      });
+    }
+  }
+
+  function drawParticles(c, w, h, now, env) {
+    var conf = SCENES[activeCam];
+    var lampx = conf.lamp[0] * w, lampy = conf.lamp[1] * h;
+    var dt = Math.min(0.1, (now - prevTick) / 1000);
+    prevTick = now;
+    var dayDim = (activeCam === "fachada" && env.isDay) ? 0.25 : 1;
+    var i, p, dx, dy, dist, a;
+    c.globalCompositeOperation = "lighter";
+    for (i = 0; i < particles.length; i++) {
+      p = particles[i];
+      p.x += p.vx * dt + Math.sin(now * 0.001 + p.ph) * 0.0002;
+      p.y += p.vy * dt;
+      if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+      if (p.x < -0.05) p.x = 1.05;
+      if (p.x > 1.05) p.x = -0.05;
+      dx = p.x * w - lampx; dy = p.y * h - lampy;
+      dist = Math.sqrt(dx * dx + dy * dy) / (w * 0.5);
+      a = (0.55 - dist * 0.55) * env.f * 0.6 * dayDim;
+      if (a <= 0.02) continue;
+      c.fillStyle = "rgba(240,206,160," + a.toFixed(3) + ")";
+      c.beginPath();
+      c.arc(p.x * w, p.y * h, p.r, 0, 6.283);
+      c.fill();
+    }
+    c.globalCompositeOperation = "source-over";
+  }
+
+  /* polvo estático para las miniaturas */
+  function drawStillDust(c, w, h, seed, lamp) {
+    var i, x, y, dx, dy, dist, a;
+    c.globalCompositeOperation = "lighter";
+    for (i = 0; i < 22; i++) {
+      x = frac(Math.sin((seed + i) * 127.1) * 43758.5453);
+      y = frac(Math.sin((seed + i) * 311.7) * 12543.853);
+      dx = x * w - lamp[0] * w; dy = y * h - lamp[1] * h;
+      dist = Math.sqrt(dx * dx + dy * dy) / (w * 0.5);
+      a = (0.45 - dist * 0.45) * 0.5;
+      if (a <= 0.02) continue;
+      c.fillStyle = "rgba(240,206,160," + a.toFixed(3) + ")";
+      c.beginPath();
+      c.arc(x * w, y * h, 0.6 + frac(x * 13.7) * 1.2, 0, 6.283);
+      c.fill();
+    }
+    c.globalCompositeOperation = "source-over";
+  }
+
+  function frac(v) { return v - Math.floor(v); }
+
+  /* ------------------------------------------------------------
+     Parpadeo de la lámpara de obra
+     ------------------------------------------------------------ */
+  function computeFlicker(now) {
+    if (now > flick.next) {
+      flick.until = now + 140 + Math.random() * 320;
+      flick.next = now + 2800 + Math.random() * 7000;
+      flick.depth = 0.45 + Math.random() * 0.3;
+    }
+    var f = 0.96 + 0.04 * Math.sin(now * 0.013);
+    if (now < flick.until) f *= flick.depth + Math.random() * 0.2;
+    return f;
+  }
+
+  /* ------------------------------------------------------------
+     Elementos compartidos entre escenas
+     ------------------------------------------------------------ */
+  function glowEllipse(c, x, y, rx, squash, rgb, alpha) {
+    var g;
+    c.save();
+    c.translate(x, y);
+    c.scale(1, squash);
+    g = c.createRadialGradient(0, 0, rx * 0.05, 0, 0, rx);
+    g.addColorStop(0, "rgba(" + rgb + "," + alpha.toFixed(3) + ")");
+    g.addColorStop(1, "rgba(" + rgb + ",0)");
+    c.globalCompositeOperation = "lighter";
+    c.fillStyle = g;
+    c.beginPath();
+    c.arc(0, 0, rx, 0, 6.283);
+    c.fill();
+    c.globalCompositeOperation = "source-over";
+    c.restore();
+  }
+
+  /* lona / plástico colgado que ondula */
+  function drawTarp(c, x, y, tw, th, t, f, alpha) {
+    var steps = 9, i, yy, off;
+    c.beginPath();
+    c.moveTo(x, y);
+    c.lineTo(x + tw, y);
+    for (i = 0; i <= steps; i++) {
+      yy = y + th * (i / steps);
+      off = Math.sin(t * 0.0016 + i * 0.9) * tw * 0.10 * (i / steps);
+      c.lineTo(x + tw + off, yy);
+    }
+    c.lineTo(x + Math.sin(t * 0.0013) * 2, y + th);
+    c.closePath();
+    c.fillStyle = "rgba(205,212,224," + alpha.toFixed(3) + ")";
+    c.fill();
+    c.strokeStyle = "rgba(238,242,248," + (alpha * 0.9).toFixed(3) + ")";
+    c.lineWidth = 1;
+    c.stroke();
+    /* baño cálido de la lámpara sobre el plástico */
+    c.fillStyle = "rgba(226,155,96," + (0.05 * f).toFixed(3) + ")";
+    c.fill();
+  }
+
+  function drawSawhorse(c, x, baseY, sw, sh, color) {
+    c.strokeStyle = color;
+    c.lineCap = "round";
+    c.beginPath();
+    c.moveTo(x - sw * 0.5, baseY);
+    c.lineTo(x - sw * 0.12, baseY - sh);
+    c.lineTo(x + sw * 0.12, baseY - sh);
+    c.lineTo(x + sw * 0.5, baseY);
+    c.moveTo(x - sw * 0.30, baseY - sh * 0.45);
+    c.lineTo(x + sw * 0.30, baseY - sh * 0.45);
+    c.stroke();
+  }
+
+  function drawLampTripod(c, x, headY, baseY, w, f) {
+    var lw = Math.max(2.5, w * 0.006);
+    c.strokeStyle = "#0B0E15";
+    c.lineWidth = lw;
+    c.lineCap = "round";
+    c.beginPath();
+    c.moveTo(x, headY + 6);
+    c.lineTo(x - w * 0.030, baseY);
+    c.moveTo(x, headY + 6);
+    c.lineTo(x + w * 0.030, baseY);
+    c.moveTo(x, headY + 6);
+    c.lineTo(x + w * 0.004, baseY - (baseY - headY) * 0.18);
+    c.stroke();
+    /* cabezal encendido */
+    glowEllipse(c, x, headY, w * 0.075, 1, "255,214,170", 0.55 * f);
+    c.fillStyle = "rgba(255,224,186," + (0.9 * f).toFixed(3) + ")";
+    c.beginPath();
+    c.arc(x, headY, Math.max(3, w * 0.011), 0, 6.283);
+    c.fill();
+    c.strokeStyle = "#0B0E15";
+    c.lineWidth = lw * 0.9;
+    c.strokeRect(x - w * 0.017, headY - w * 0.014, w * 0.034, w * 0.028);
+  }
+
+  /* ------------------------------------------------------------
+     ESCENA — Living (interior en obra, penumbra)
+     ------------------------------------------------------------ */
+  function drawLiving(c, w, h, t, env) {
+    var f = env.f, g, i;
+    var floorY = h * 0.70;
+    var lampX = env.lamp[0] * w, lampY = env.lamp[1] * h;
+    var sil = "#0B0E15";
+
+    g = c.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, "#1B2231");
+    g.addColorStop(0.55, "#141925");
+    g.addColorStop(1, "#0D1018");
+    c.fillStyle = g;
+    c.fillRect(-40, -40, w + 80, h + 80);
+
+    /* pared del fondo */
+    c.fillStyle = "#1D2434";
+    c.fillRect(-40, h * 0.10, w + 80, floorY - h * 0.10);
+
+    /* techo con tirantes en fuga */
+    c.fillStyle = "#141A27";
+    c.fillRect(-40, -40, w + 80, h * 0.10 + 40);
+    c.strokeStyle = "rgba(9,12,18,0.85)";
+    c.lineWidth = Math.max(3, h * 0.012);
+    for (i = 0; i < 7; i++) {
+      var jx = w * (0.02 + i * 0.16);
+      c.beginPath();
+      c.moveTo(jx, -10);
+      c.lineTo(w * 0.5 + (jx - w * 0.5) * 0.86, h * 0.105);
+      c.stroke();
+    }
+
+    /* resplandor cálido de la lámpara sobre pared y aire */
+    c.globalCompositeOperation = "lighter";
+    g = c.createRadialGradient(lampX, lampY, h * 0.02, lampX, lampY, w * 0.52);
+    g.addColorStop(0, "rgba(226,155,96," + (0.34 * f).toFixed(3) + ")");
+    g.addColorStop(0.35, "rgba(196,106,74," + (0.16 * f).toFixed(3) + ")");
+    g.addColorStop(1, "rgba(196,106,74,0)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, w, h);
+    c.globalCompositeOperation = "source-over";
+
+    /* piso de obra */
+    g = c.createLinearGradient(0, floorY, 0, h);
+    g.addColorStop(0, "#222B3D");
+    g.addColorStop(1, "#10141D");
+    c.fillStyle = g;
+    c.fillRect(-40, floorY, w + 80, h - floorY + 40);
+    c.strokeStyle = "rgba(10,13,20,0.9)";
+    c.lineWidth = 1.5;
+    c.beginPath();
+    c.moveTo(-40, floorY);
+    c.lineTo(w + 40, floorY);
+    c.stroke();
+
+    /* charco de luz en el piso */
+    glowEllipse(c, lampX - w * 0.05, h * 0.85, w * 0.30, 0.32, "226,155,96", 0.20 * f);
+
+    /* vano de puerta a la izquierda */
+    var vx = w * 0.16, vw2 = w * 0.13, vy = h * 0.20;
+    c.fillStyle = "#0A0D13";
+    c.fillRect(vx, vy, vw2, floorY - vy);
+    c.fillStyle = "rgba(226,155,96," + (0.10 * f).toFixed(3) + ")";
+    c.fillRect(vx + vw2 - 3, vy, 3, floorY - vy);
+
+    /* lona plástica colgada sobre el vano */
+    drawTarp(c, vx + vw2 * 0.42, vy - h * 0.012, w * 0.105, floorY - vy + h * 0.02, t, f, 0.10);
+
+    /* cable colgando del techo (leve balanceo) */
+    c.strokeStyle = "rgba(8,11,17,0.9)";
+    c.lineWidth = Math.max(1.5, w * 0.0025);
+    c.beginPath();
+    c.moveTo(w * 0.55, h * 0.10);
+    c.quadraticCurveTo(
+      w * 0.56 + Math.sin(t * 0.0011) * w * 0.008, h * 0.24,
+      w * 0.585, h * 0.31
+    );
+    c.stroke();
+    c.fillStyle = "rgba(255,214,170," + (0.35 * f).toFixed(3) + ")";
+    c.beginPath();
+    c.arc(w * 0.585, h * 0.315, 2.2, 0, 6.283);
+    c.fill();
+
+    /* escalera de mano (tijera) */
+    var lx = w * 0.40, baseY = h * 0.88, topY = h * 0.40;
+    c.strokeStyle = sil;
+    c.lineWidth = Math.max(3, w * 0.007);
+    c.lineCap = "round";
+    c.beginPath();
+    c.moveTo(lx - w * 0.045, baseY); c.lineTo(lx, topY);
+    c.moveTo(lx + w * 0.055, baseY); c.lineTo(lx + w * 0.012, topY);
+    for (i = 1; i <= 5; i++) {
+      var rt = i / 6;
+      c.moveTo(lx - w * 0.045 + (lx - (lx - w * 0.045)) * rt, baseY + (topY - baseY) * rt);
+      c.lineTo(lx + w * 0.055 + ((lx + w * 0.012) - (lx + w * 0.055)) * rt, baseY + (topY - baseY) * rt);
+    }
+    c.stroke();
+
+    /* caballetes + tablón */
+    c.lineWidth = Math.max(3, w * 0.006);
+    drawSawhorse(c, w * 0.52, h * 0.855, w * 0.085, h * 0.085, sil);
+    drawSawhorse(c, w * 0.66, h * 0.865, w * 0.085, h * 0.085, sil);
+    c.fillStyle = sil;
+    c.fillRect(w * 0.455, h * 0.762, w * 0.265, h * 0.018);
+
+    /* bolsas de material apiladas */
+    c.fillStyle = "#0D1017";
+    c.beginPath();
+    c.ellipse ? c.ellipse(w * 0.085, h * 0.895, w * 0.055, h * 0.038, 0, 0, 6.283)
+              : c.arc(w * 0.085, h * 0.895, w * 0.05, 0, 6.283);
+    c.fill();
+    c.beginPath();
+    c.ellipse ? c.ellipse(w * 0.145, h * 0.905, w * 0.055, h * 0.038, 0, 0, 6.283)
+              : c.arc(w * 0.145, h * 0.905, w * 0.05, 0, 6.283);
+    c.fill();
+    c.beginPath();
+    c.ellipse ? c.ellipse(w * 0.115, h * 0.845, w * 0.05, h * 0.034, -0.08, 0, 6.283)
+              : c.arc(w * 0.115, h * 0.845, w * 0.045, 0, 6.283);
+    c.fill();
+
+    /* lámpara de obra en trípode */
+    drawLampTripod(c, lampX, lampY, h * 0.88, w, f);
+  }
+
+  /* ------------------------------------------------------------
+     ESCENA — Baño (visto desde el vano de la puerta)
+     ------------------------------------------------------------ */
+  function drawBano(c, w, h, t, env) {
+    var f = env.f, g, i, j;
+    var floorY = h * 0.74;
+    var lampX = env.lamp[0] * w, lampY = env.lamp[1] * h;
+    var sil = "#0B0E15";
+
+    g = c.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, "#181F2D");
+    g.addColorStop(1, "#0C0F17");
+    c.fillStyle = g;
+    c.fillRect(-40, -40, w + 80, h + 80);
+
+    /* pared del fondo */
+    c.fillStyle = "#1E2535";
+    c.fillRect(w * 0.14, h * 0.08, w * 0.72, floorY - h * 0.08);
+
+    /* paredes laterales en fuga */
+    c.fillStyle = "#171D2B";
+    c.beginPath();
+    c.moveTo(-40, -20); c.lineTo(w * 0.14, h * 0.08);
+    c.lineTo(w * 0.14, floorY); c.lineTo(-40, h * 0.92);
+    c.closePath(); c.fill();
+    c.fillStyle = "#131826";
+    c.beginPath();
+    c.moveTo(w + 40, -20); c.lineTo(w * 0.86, h * 0.08);
+    c.lineTo(w * 0.86, floorY); c.lineTo(w + 40, h * 0.92);
+    c.closePath(); c.fill();
+
+    /* piso en fuga */
+    g = c.createLinearGradient(0, floorY, 0, h);
+    g.addColorStop(0, "#1E2534");
+    g.addColorStop(1, "#0E1119");
+    c.fillStyle = g;
+    c.beginPath();
+    c.moveTo(-40, h * 0.92); c.lineTo(w * 0.14, floorY);
+    c.lineTo(w * 0.86, floorY); c.lineTo(w + 40, h * 0.92);
+    c.lineTo(w + 40, h + 40); c.lineTo(-40, h + 40);
+    c.closePath(); c.fill();
+
+    /* resplandor de la lámpara */
+    c.globalCompositeOperation = "lighter";
+    g = c.createRadialGradient(lampX, lampY, h * 0.02, lampX, lampY, w * 0.46);
+    g.addColorStop(0, "rgba(226,155,96," + (0.32 * f).toFixed(3) + ")");
+    g.addColorStop(0.4, "rgba(196,106,74," + (0.14 * f).toFixed(3) + ")");
+    g.addColorStop(1, "rgba(196,106,74,0)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, w, h);
+    c.globalCompositeOperation = "source-over";
+
+    /* azulejos colocados (mitad izquierda de la pared del fondo) */
+    var tileW = w * 0.046, tileH = h * 0.075;
+    var ty0 = h * 0.28;
+    var rows = Math.ceil((floorY - ty0) / tileH);
+    for (i = 0; i < rows; i++) {
+      var colsRow = 7 - (i % 2);
+      for (j = 0; j < colsRow; j++) {
+        var tx = w * 0.155 + j * (tileW + 1.5);
+        var tyy = ty0 + i * (tileH + 1.5);
+        if (tyy + tileH > floorY) continue;
+        var ddx = (tx + tileW / 2 - lampX) / w;
+        var ddy = (tyy + tileH / 2 - lampY) / h;
+        var dd = Math.sqrt(ddx * ddx + ddy * ddy);
+        var sheen = Math.max(0, 0.24 - dd * 0.26) * f;
+        c.fillStyle = "#232C40";
+        c.fillRect(tx, tyy, tileW, tileH);
+        if (sheen > 0.005) {
+          c.fillStyle = "rgba(226,170,120," + sheen.toFixed(3) + ")";
+          c.fillRect(tx, tyy, tileW, tileH);
+        }
+      }
+    }
+
+    /* caños en espera (agua fría / caliente) saliendo de la pared */
+    for (i = 0; i < 2; i++) {
+      var px = w * (0.60 + i * 0.05), py = h * 0.47;
+      var pr = Math.max(3.5, w * 0.008);
+      c.fillStyle = "#0A0D14";
+      c.fillRect(px - pr * 0.7, py, pr * 1.4, h * 0.065);
+      c.beginPath(); c.arc(px, py, pr, 0, 6.283); c.fill();
+      c.strokeStyle = "rgba(226,155,96," + (0.4 * f).toFixed(3) + ")";
+      c.lineWidth = 1.2;
+      c.beginPath(); c.arc(px, py, pr, 4.2, 6.0); c.stroke();
+      c.beginPath();
+      c.moveTo(px + pr * 0.7, py + h * 0.01);
+      c.lineTo(px + pr * 0.7, py + h * 0.055);
+      c.stroke();
+    }
+
+    /* escalera corta apoyada contra la pared */
+    c.strokeStyle = sil;
+    c.lineWidth = Math.max(2.5, w * 0.006);
+    c.lineCap = "round";
+    c.beginPath();
+    c.moveTo(w * 0.755, h * 0.86); c.lineTo(w * 0.80, h * 0.26);
+    c.moveTo(w * 0.815, h * 0.86); c.lineTo(w * 0.845, h * 0.26);
+    for (i = 1; i <= 4; i++) {
+      var rr = i / 5;
+      c.moveTo(w * 0.755 + (w * 0.80 - w * 0.755) * rr, h * 0.86 + (h * 0.26 - h * 0.86) * rr);
+      c.lineTo(w * 0.815 + (w * 0.845 - w * 0.815) * rr, h * 0.86 + (h * 0.26 - h * 0.86) * rr);
+    }
+    c.stroke();
+
+    /* balde */
+    c.fillStyle = sil;
+    c.beginPath();
+    c.moveTo(w * 0.545, h * 0.80);
+    c.lineTo(w * 0.625, h * 0.80);
+    c.lineTo(w * 0.610, h * 0.90);
+    c.lineTo(w * 0.560, h * 0.90);
+    c.closePath(); c.fill();
+    c.strokeStyle = "rgba(226,155,96," + (0.25 * f).toFixed(3) + ")";
+    c.lineWidth = 1.4;
+    c.beginPath();
+    c.arc(w * 0.585, h * 0.80, w * 0.038, 3.34, 6.08);
+    c.stroke();
+
+    /* bolsa de pegamento inclinada */
+    c.save();
+    c.translate(w * 0.46, h * 0.87);
+    c.rotate(-0.16);
+    c.fillStyle = "#10141D";
+    c.fillRect(-w * 0.035, -h * 0.055, w * 0.07, h * 0.11);
+    c.restore();
+
+    /* lámpara baja en trípode */
+    drawLampTripod(c, lampX, lampY, h * 0.90, w, f);
+
+    /* marco del vano desde donde mira la cámara */
+    g = c.createLinearGradient(0, 0, w * 0.10, 0);
+    g.addColorStop(0, "rgba(6,8,13,0.92)");
+    g.addColorStop(1, "rgba(6,8,13,0)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, w * 0.10, h);
+    g = c.createLinearGradient(w, 0, w * 0.90, 0);
+    g.addColorStop(0, "rgba(6,8,13,0.92)");
+    g.addColorStop(1, "rgba(6,8,13,0)");
+    c.fillStyle = g;
+    c.fillRect(w * 0.90, 0, w * 0.10, h);
+    g = c.createLinearGradient(0, 0, 0, h * 0.09);
+    g.addColorStop(0, "rgba(6,8,13,0.9)");
+    g.addColorStop(1, "rgba(6,8,13,0)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, w, h * 0.09);
+  }
+
+  /* ------------------------------------------------------------
+     ESCENA — Fachada (exterior, día/noche según hora real)
+     ------------------------------------------------------------ */
+  function drawFachada(c, w, h, t, env) {
+    var f = env.f, day = env.isDay, g, i, j;
+    var bx = w * 0.10, bw = w * 0.80, by = h * 0.14, bb = h * 0.80;
+
+    /* cielo */
+    g = c.createLinearGradient(0, 0, 0, h * 0.6);
+    if (day) {
+      g.addColorStop(0, "#98A0AC");
+      g.addColorStop(1, "#C4C9D1");
+    } else {
+      g.addColorStop(0, "#0B0F17");
+      g.addColorStop(1, "#141A26");
+    }
+    c.fillStyle = g;
+    c.fillRect(-40, -40, w + 80, h * 0.85 + 40);
+
+    if (!day) {
+      c.fillStyle = "rgba(220,228,240,0.5)";
+      for (i = 0; i < 14; i++) {
+        var sx = frac(Math.sin(i * 127.1) * 43758.5453) * w;
+        var sy = frac(Math.sin(i * 269.5) * 28001.8) * h * 0.28;
+        c.fillRect(sx, sy, 1.2, 1.2);
+      }
+    }
+
+    /* edificio */
+    g = c.createLinearGradient(0, by, 0, bb);
+    if (day) {
+      g.addColorStop(0, "#7A818F");
+      g.addColorStop(1, "#6A7180");
+    } else {
+      g.addColorStop(0, "#1A202E");
+      g.addColorStop(1, "#141926");
+    }
+    c.fillStyle = g;
+    c.fillRect(bx, by, bw, bb - by);
+    /* cornisa */
+    c.fillStyle = day ? "#8B92A0" : "#232B3C";
+    c.fillRect(bx - w * 0.01, by - h * 0.015, bw + w * 0.02, h * 0.02);
+
+    /* pisos y ventanas: 4 niveles x 3 columnas */
+    var floors = 4, cols = 3;
+    var winW = w * 0.085, winH = h * 0.085;
+    for (i = 0; i < floors; i++) {
+      var wy = h * (0.185 + i * 0.15);
+      /* línea de losa */
+      c.fillStyle = day ? "rgba(90,97,110,0.5)" : "rgba(10,13,20,0.55)";
+      c.fillRect(bx, wy + winH + h * 0.02, bw, 2);
+      for (j = 0; j < cols; j++) {
+        var wxx = w * (0.28 + j * 0.22) - winW / 2;
+        if (day) {
+          c.fillStyle = "#4A5262";
+          c.fillRect(wxx, wy, winW, winH);
+          c.fillStyle = "rgba(200,210,220,0.30)";
+          c.fillRect(wxx, wy, winW, winH * 0.4);
+        } else {
+          c.fillStyle = "#0A0E15";
+          c.fillRect(wxx, wy, winW, winH);
+        }
+        /* nuestro piso (3º = fila 1): luz de obra encendida */
+        if (i === 1 && j === 1) {
+          c.fillStyle = "rgba(226,155,96," + ((day ? 0.25 : 0.62) * (0.6 + 0.4 * f)).toFixed(3) + ")";
+          c.fillRect(wxx, wy, winW, winH);
+          if (!day) glowEllipse(c, wxx + winW / 2, wy + winH / 2, winW * 1.6, 0.8, "226,155,96", 0.22 * f);
+        }
+        if (i === 1 && j === 2) {
+          c.fillStyle = "rgba(226,155,96," + ((day ? 0.12 : 0.28) * f).toFixed(3) + ")";
+          c.fillRect(wxx, wy, winW, winH);
+        }
+        /* un vecino con luz tenue */
+        if (!day && i === 0 && j === 2) {
+          c.fillStyle = "rgba(201,169,106,0.30)";
+          c.fillRect(wxx, wy, winW, winH);
+        }
+        /* antepecho */
+        c.fillStyle = day ? "rgba(150,156,168,0.7)" : "rgba(40,48,64,0.9)";
+        c.fillRect(wxx - 2, wy + winH, winW + 4, 2.5);
+      }
+    }
+
+    /* andamio sobre la mitad derecha */
+    var sx0 = w * 0.50, sx1 = w * 0.92;
+    c.strokeStyle = day ? "rgba(58,64,76,0.75)" : "rgba(160,168,182,0.26)";
+    c.lineWidth = Math.max(1.5, w * 0.0028);
+    c.beginPath();
+    for (i = 0; i <= 5; i++) {
+      var vx = sx0 + (sx1 - sx0) * (i / 5);
+      c.moveTo(vx, by - h * 0.01);
+      c.lineTo(vx, bb);
+    }
+    for (i = 0; i <= 5; i++) {
+      var hy = by + (bb - by) * (i / 5);
+      c.moveTo(sx0, hy);
+      c.lineTo(sx1, hy);
+    }
+    /* diagonales */
+    c.moveTo(sx0, by); c.lineTo(sx0 + (sx1 - sx0) * 0.4, by + (bb - by) * 0.4);
+    c.moveTo(sx1, bb - (bb - by) * 0.5); c.lineTo(sx1 - (sx1 - sx0) * 0.4, bb);
+    c.stroke();
+    /* tablones en dos niveles */
+    c.fillStyle = day ? "rgba(92,80,62,0.8)" : "rgba(140,120,95,0.35)";
+    c.fillRect(sx0, by + (bb - by) * 0.4 - 3, sx1 - sx0, 5);
+    c.fillRect(sx0, by + (bb - by) * 0.8 - 3, sx1 - sx0, 5);
+    /* media sombra / red de obra ondulando sobre el andamio */
+    drawTarp(c, sx0, by, (sx1 - sx0) * 0.94, (bb - by) * 0.96, t, day ? 0.3 : f, 0.06);
+
+    /* vallado de obra en la vereda */
+    var fy = h * 0.80, fh = h * 0.115;
+    c.fillStyle = day ? "#868B94" : "#1A202D";
+    c.fillRect(w * 0.05, fy, w * 0.90, fh);
+    c.fillStyle = day ? "rgba(70,76,88,0.9)" : "rgba(8,11,17,0.9)";
+    for (i = 0; i < 9; i++) {
+      c.fillRect(w * (0.05 + i * 0.111), fy, 2.5, fh);
+    }
+    c.fillRect(w * 0.05, fy, w * 0.90, 2.5);
+    /* cartel de obra */
+    c.fillStyle = "rgba(196,106,74," + (day ? 0.92 : 0.55) + ")";
+    c.fillRect(w * 0.40, fy + fh * 0.18, w * 0.20, fh * 0.55);
+    c.fillStyle = day ? "rgba(255,252,248,0.95)" : "rgba(255,240,228,0.85)";
+    c.font = "700 " + Math.max(8, h * 0.032) + "px Inter, sans-serif";
+    c.textAlign = "center";
+    c.fillText("recoBA · obra", w * 0.50, fy + fh * 0.58);
+    c.textAlign = "left";
+
+    /* vereda y calle */
+    c.fillStyle = day ? "#7E838C" : "#12161F";
+    c.fillRect(-40, fy + fh, w + 80, h - fy - fh + 40);
+    c.fillStyle = day ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.03)";
+    c.fillRect(-40, fy + fh, w + 80, 3);
+
+    if (!day) {
+      /* farola de calle a la izquierda */
+      c.strokeStyle = "#0A0D13";
+      c.lineWidth = Math.max(2.5, w * 0.005);
+      c.beginPath();
+      c.moveTo(w * 0.055, h * 0.94);
+      c.lineTo(w * 0.055, h * 0.24);
+      c.lineTo(w * 0.095, h * 0.26);
+      c.stroke();
+      glowEllipse(c, w * 0.095, h * 0.27, w * 0.16, 1, "226,170,100", 0.22);
+      c.fillStyle = "rgba(255,224,186,0.85)";
+      c.beginPath();
+      c.arc(w * 0.095, h * 0.27, Math.max(2.5, w * 0.006), 0, 6.283);
+      c.fill();
+      glowEllipse(c, w * 0.095, h * 0.93, w * 0.14, 0.22, "226,170,100", 0.12);
+    }
+  }
+
+  var SCENE_FNS = { fachada: drawFachada, living: drawLiving, bano: drawBano };
+
+  /* ------------------------------------------------------------
+     Overlays de video: viñeta, scanlines, grano, timestamp CCTV
+     ------------------------------------------------------------ */
+  function drawOverlays(c, w, h, now, camKey, tsText) {
+    var g = c.createRadialGradient(w / 2, h / 2, Math.min(w, h) * 0.42, w / 2, h / 2, Math.max(w, h) * 0.72);
+    g.addColorStop(0, "rgba(0,0,0,0)");
+    g.addColorStop(1, "rgba(5,7,12,0.55)");
+    c.fillStyle = g;
+    c.fillRect(0, 0, w, h);
+
+    if (scanPattern) {
+      c.fillStyle = scanPattern;
+      c.fillRect(0, 0, w, h);
+    }
+
+    var nf = noiseFrames[((now / 90) | 0) % noiseFrames.length];
+    c.globalAlpha = 0.07;
+    c.drawImage(nf, 0, 0, w, h);
+    c.globalAlpha = 1;
+
+    /* timestamp quemado, estilo CCTV */
+    c.save();
+    c.font = "600 " + Math.max(10, Math.round(h * 0.034)) + "px 'Courier New', monospace";
+    c.shadowColor = "rgba(0,0,0,0.85)";
+    c.shadowBlur = 3;
+    c.shadowOffsetY = 1;
+    c.fillStyle = "rgba(255,255,255,0.90)";
+    c.fillText(tsText, 14, h - 13);
+    c.restore();
+  }
+
+  function drawStatic(c, w, h, now) {
+    var i;
+    c.fillStyle = "#0A0D13";
+    c.fillRect(0, 0, w, h);
+    var nf = noiseFrames[((now / 45) | 0) % noiseFrames.length];
+    c.globalAlpha = 0.85;
+    c.drawImage(nf, 0, 0, w, h);
+    c.globalAlpha = 1;
+    /* desgarros horizontales */
+    c.fillStyle = "rgba(255,255,255,0.07)";
+    for (i = 0; i < 3; i++) {
+      c.fillRect(0, Math.random() * h, w, 2 + Math.random() * 4);
+    }
+    c.fillStyle = "rgba(255,255,255,0.80)";
+    c.font = "700 " + Math.max(10, Math.round(h * 0.034)) + "px 'Courier New', monospace";
+    c.textAlign = "center";
+    c.fillText("RECONECTANDO — " + CAM_INFO[activeCam].num, w / 2, h / 2);
+    c.textAlign = "left";
+  }
+
+  /* ------------------------------------------------------------
+     Loop principal
+     ------------------------------------------------------------ */
+  function sizeCanvas() {
+    var r = canvas.getBoundingClientRect();
+    if (r.width < 2) { vw = 0; return false; }
+    var dpr = window.devicePixelRatio || 1;
+    var bw = Math.round(r.width * dpr), bh = Math.round(r.height * dpr);
+    if (canvas.width !== bw || canvas.height !== bh) {
+      canvas.width = bw;
+      canvas.height = bh;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    vw = r.width;
+    vh = r.height;
+    return true;
+  }
+
+  function render(now) {
+    if (!running) return;
+    rafId = window.requestAnimationFrame(render);
+    var frameMs = reduceMotion ? 500 : FRAME_MS;
+    if (now - lastFrame < frameMs) return;
+    lastFrame = now;
+
+    if (!canvas.offsetParent) { stop(); return; }
+    if (vw === 0 && !sizeCanvas()) return;
+
+    var c = ctx, w = vw, h = vh;
+
+    if (now < staticUntil) {
+      drawStatic(c, w, h, now);
+      return;
+    }
+
+    var conf = SCENES[activeCam];
+    var env = {
+      f: computeFlicker(now),
+      isDay: isDayAt(new Date()),
+      lamp: conf.lamp,
+      now: now
+    };
+
+    c.save();
+    /* respiración / auto-paneo de cámara */
+    if (!reduceMotion) {
+      c.translate(
+        Math.sin(now * 0.00008) * w * conf.pan,
+        Math.sin(now * 0.00013) * h * 0.005
+      );
+    }
+    SCENE_FNS[activeCam](c, w, h, now, env);
+    drawParticles(c, w, h, now, env);
+    c.restore();
+
+    refreshClockCache();
+    drawOverlays(c, w, h, now, activeCam,
+      CAM_INFO[activeCam].num + "  " + clockCache.date + "  " + clockCache.time);
+  }
+
+  /* ------------------------------------------------------------
+     API pública
+     ------------------------------------------------------------ */
+  function start() {
+    if (!canvas || running) return;
+    running = true;
+    lastFrame = 0;
+    prevTick = window.performance && performance.now ? performance.now() : Date.now();
+    sizeCanvas();
+    updateHudClock();
+    if (!clockTimer) clockTimer = window.setInterval(updateHudClock, 1000);
+    rafId = window.requestAnimationFrame(render);
+  }
+
+  function stop() {
+    if (!running) return;
+    running = false;
+    if (rafId) { window.cancelAnimationFrame(rafId); rafId = 0; }
+    if (clockTimer) { window.clearInterval(clockTimer); clockTimer = 0; }
+  }
+
+  function setCamera(cam) {
+    if (!CAM_INFO[cam] || cam === activeCam) return;
+    activeCam = cam;
+    buildParticles(cam);
+    staticUntil = (window.performance && performance.now ? performance.now() : Date.now()) + STATIC_MS;
+    if (labelEl) {
+      labelEl.textContent = CAM_INFO[cam].num + " · " + CAM_INFO[cam].name + " — " + PROJECT;
+    }
+    var btns = document.querySelectorAll(".cam-select-btn");
+    for (var i = 0; i < btns.length; i++) {
+      var on = btns[i].getAttribute("data-cam") === cam;
+      btns[i].classList.toggle("active", on);
+      btns[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Pantalla completa (con fallback silencioso)
+     ------------------------------------------------------------ */
+  function toggleFullscreen() {
+    var d = document;
+    try {
+      if (d.fullscreenElement || d.webkitFullscreenElement) {
+        if (d.exitFullscreen) d.exitFullscreen();
+        else if (d.webkitExitFullscreen) d.webkitExitFullscreen();
+        return;
+      }
+      var p = null;
+      if (wrap.requestFullscreen) p = wrap.requestFullscreen();
+      else if (wrap.webkitRequestFullscreen) wrap.webkitRequestFullscreen();
+      if (p && p.catch) p.catch(function () {});
+    } catch (e) { /* sin soporte: no hacemos nada */ }
+  }
+
+  function onFsChange() {
+    vw = 0; /* fuerza re-medición en el próximo frame */
+    if (running) sizeCanvas();
+  }
+
+  /* ------------------------------------------------------------
+     Miniaturas "capturas recientes"
+     ------------------------------------------------------------ */
+  function renderShots() {
+    var shots = document.querySelectorAll("#cam-shots .cam-shot");
+    if (!shots.length) return;
+    var offsetsMin = [12, 74, 187, 366];
+    var nowMs = Date.now();
+    var i;
+    for (i = 0; i < shots.length; i++) {
+      var cam = shots[i].getAttribute("data-shot-cam") || "living";
+      if (!CAM_INFO[cam]) cam = "living";
+      var off = offsetsMin[i % offsetsMin.length];
+      var when = new Date(Math.floor((nowMs - off * 60000) / 600000) * 600000);
+      var cv = shots[i].querySelector("canvas");
+      var cap = shots[i].querySelector(".cam-shot-time");
+      var hhmm = baTime(when).slice(0, 5);
+      if (cap) cap.textContent = hhmm + " · " + CAM_INFO[cam].name;
+      if (!cv || !cv.getContext) continue;
+      var sc = cv.getContext("2d");
+      var sw = cv.width, sh = cv.height;
+      var conf = SCENES[cam];
+      var env = { f: 1, isDay: isDayAt(when), lamp: conf.lamp, now: 0 };
+      SCENE_FNS[cam](sc, sw, sh, 1000 + i * 4700, env);
+      drawStillDust(sc, sw, sh, i * 17 + 3, conf.lamp);
+      /* overlays estáticos */
+      var g = sc.createRadialGradient(sw / 2, sh / 2, sh * 0.5, sw / 2, sh / 2, sw * 0.72);
+      g.addColorStop(0, "rgba(0,0,0,0)");
+      g.addColorStop(1, "rgba(5,7,12,0.55)");
+      sc.fillStyle = g;
+      sc.fillRect(0, 0, sw, sh);
+      sc.fillStyle = "rgba(0,0,0,0.12)";
+      for (var y = 2; y < sh; y += 3) sc.fillRect(0, y, sw, 1);
+      sc.globalAlpha = 0.06;
+      sc.drawImage(noiseFrames[i % noiseFrames.length], 0, 0, sw, sh);
+      sc.globalAlpha = 1;
+      sc.font = "600 9px 'Courier New', monospace";
+      sc.fillStyle = "rgba(255,255,255,0.85)";
+      sc.fillText(CAM_INFO[cam].num + "  " + hhmm, 8, sh - 7);
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Sincronización defensiva con el estado del DOM
+     (por si la integración no llama start/stop explícitamente)
+     ------------------------------------------------------------ */
+  function syncFromDom() {
+    if (!canvas) return;
+    /* nota: no chequeamos document.hidden acá — si el tab del navegador está
+       oculto, el propio browser pausa/estrangula requestAnimationFrame, y el
+       listener de visibilitychange frena el loop igual. */
+    var panelActive = panel && panel.classList.contains("active");
+    if (panelActive && canvas.offsetParent) start();
+    else stop();
+  }
+  function scheduleSync() { window.setTimeout(syncFromDom, 60); }
+
+  /* ------------------------------------------------------------
+     Inicialización segura
+     ------------------------------------------------------------ */
+  function init() {
+    canvas = document.getElementById("cam-canvas");
+    if (!canvas || !canvas.getContext) return;
+    ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    wrap = document.getElementById("cam-feed-wrap");
+    panel = document.querySelector('[data-tab-panel="camara"]');
+    labelEl = document.getElementById("cam-label");
+    clockEl = document.getElementById("cam-clock");
+    fsBtn = document.getElementById("cam-fs-btn");
+
+    reduceMotion = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+    makeFormatters();
+    noiseFrames = [makeNoiseFrame(), makeNoiseFrame(), makeNoiseFrame()];
+    scanPattern = makeScanPattern(ctx);
+    buildParticles(activeCam);
+
+    var btns = document.querySelectorAll(".cam-select-btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () {
+        setCamera(this.getAttribute("data-cam"));
+      });
+    }
+
+    if (fsBtn && wrap) fsBtn.addEventListener("click", toggleFullscreen);
+    document.addEventListener("fullscreenchange", onFsChange);
+    document.addEventListener("webkitfullscreenchange", onFsChange);
+
+    window.addEventListener("resize", function () {
+      if (running) sizeCanvas();
+    });
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop();
+      else scheduleSync();
+    });
+    /* si cambian de tab o de vista con los controles existentes,
+       re-evaluamos si el feed sigue visible */
+    document.addEventListener("click", function (e) {
+      var el = e.target;
+      if (el && el.closest && el.closest(".tab-btn, [data-nav], [data-open-project]")) {
+        scheduleSync();
+      }
+    });
+
+    updateHudClock();
+    renderShots();
+    syncFromDom();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+
+  window.recobaCam = { start: start, stop: stop, setCamera: setCamera };
+
+})();
+</script>
+<script>
+/* ============================================================
+   OPPX — Módulo de la vista Oportunidades (recoBA)
+   - Filtros con chips + contador
+   - "Avisarme cuando abra" con confirmación inline
+   - Modal #interest-modal PARAMETRIZADO por data-opp / data-min
+   IMPORTANTE: este módulo REEMPLAZA el bloque viejo
+   "Modal — expresión de interés" del IIFE original (ver
+   oppx-INTEGRATION.md). No debe convivir con él: habría
+   doble binding y el viejo referencia #btn-open-interest,
+   que ya no existe (rompería el script con un TypeError).
+   Vanilla ES5, sin dependencias. Se auto-inicializa si
+   existen los elementos.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  var view = document.getElementById("view-opportunities");
+  if (!view) return;
+
+  /* Formato es-AR: punto de miles, coma decimal (copia local,
+     el formatNumber original vive dentro del otro IIFE). */
+  function formatNumber(value, decimals) {
+    var fixed = value.toFixed(decimals || 0);
+    var parts = fixed.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return parts.join(",");
+  }
+
+  /* ------------------------------------------------------------
+     1) Filtros por estado (all | open | soon | closed)
+     ------------------------------------------------------------ */
+  var chips = view.querySelectorAll("[data-oppx-filter]");
+  var cards = view.querySelectorAll("[data-oppx-status]");
+  var countEl = document.getElementById("oppx-count");
+
+  function applyFilter(key) {
+    var shown = 0;
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var match = (key === "all") || (card.getAttribute("data-oppx-status") === key);
+      if (match) {
+        card.classList.remove("oppx-hide");
+        /* re-disparar la animación de entrada */
+        card.classList.remove("oppx-anim");
+        void card.offsetWidth;
+        card.classList.add("oppx-anim");
+        shown++;
+      } else {
+        card.classList.add("oppx-hide");
+        card.classList.remove("oppx-anim");
+      }
+    }
+    for (var c = 0; c < chips.length; c++) {
+      var active = chips[c].getAttribute("data-oppx-filter") === key;
+      chips[c].classList.toggle("active", active);
+      chips[c].setAttribute("aria-pressed", active ? "true" : "false");
+    }
+    if (countEl) {
+      countEl.textContent = shown + " de " + cards.length + " oportunidades";
+    }
+  }
+
+  for (var ch = 0; ch < chips.length; ch++) {
+    chips[ch].addEventListener("click", function () {
+      applyFilter(this.getAttribute("data-oppx-filter"));
+    });
+  }
+  applyFilter("all");
+
+  /* ------------------------------------------------------------
+     2) "Avisarme cuando abra" — confirmación inline, sin modal
+     ------------------------------------------------------------ */
+  var notifyBtns = view.querySelectorAll("[data-oppx-notify]");
+  for (var nb = 0; nb < notifyBtns.length; nb++) {
+    notifyBtns[nb].addEventListener("click", function () {
+      this.disabled = true;
+      this.textContent = "Aviso activado";
+      var ok = this.parentElement.querySelector(".oppx-notify-ok");
+      if (ok) ok.classList.add("show");
+    });
+  }
+
+  /* ------------------------------------------------------------
+     3) Modal parametrizado — reemplaza los bindings originales
      ------------------------------------------------------------ */
   var modalOverlay = document.getElementById("interest-modal");
+  if (!modalOverlay) return;
+
   var modalFormState = document.getElementById("modal-form-state");
   var modalConfirmState = document.getElementById("modal-confirm-state");
   var amountInput = document.getElementById("interest-amount");
   var confirmText = document.getElementById("confirm-text");
+  var modalDesc = modalOverlay.querySelector(".modal-desc");
 
-  function openModal() {
+  var currentOpp = { name: "Junín 600 · Barrio Norte", min: 25000 };
+
+  function openModal(name, min) {
+    currentOpp.name = name;
+    currentOpp.min = min;
+    if (modalDesc) {
+      modalDesc.textContent = name + ". Dejanos el monto que te gustaría comprometer; un asesor de recoBA te va a contactar para avanzar con la documentación.";
+    }
+    if (amountInput) {
+      amountInput.min = min;
+      amountInput.value = min;
+      amountInput.placeholder = formatNumber(min, 0);
+    }
     modalFormState.style.display = "block";
     modalConfirmState.style.display = "none";
     modalOverlay.classList.add("open");
     window.setTimeout(function () { amountInput.focus(); }, 200);
   }
+
   function closeModal() {
     modalOverlay.classList.remove("open");
   }
 
-  document.getElementById("btn-open-interest").addEventListener("click", openModal);
+  /* Cada botón "Quiero participar" declara data-opp y data-min.
+     Se bindea a nivel documento por si mañana hay cards en otras vistas. */
+  var openBtns = document.querySelectorAll("[data-opp]");
+  for (var ob = 0; ob < openBtns.length; ob++) {
+    openBtns[ob].addEventListener("click", function () {
+      var min = parseInt(this.getAttribute("data-min") || "25000", 10);
+      openModal(this.getAttribute("data-opp"), min);
+    });
+  }
+
   document.getElementById("modal-close-btn").addEventListener("click", closeModal);
   document.getElementById("modal-done-btn").addEventListener("click", closeModal);
   modalOverlay.addEventListener("click", function (e) {
@@ -1818,18 +3949,153 @@ ul { margin: 0; padding: 0; list-style: none; }
   });
 
   document.getElementById("btn-send-interest").addEventListener("click", function () {
-    var raw = parseFloat(amountInput.value) || 25000;
+    var raw = parseFloat(amountInput.value);
+    if (isNaN(raw) || raw < currentOpp.min) raw = currentOpp.min;
     var formatted = formatNumber(raw, 0);
-    confirmText.textContent = "Gracias, Martín. Recibimos tu interés por US$" + formatted + " en Junín 600. Un asesor de recoBA se va a poner en contacto en las próximas 48 horas.";
+    confirmText.textContent = "Gracias, Martín. Recibimos tu interés por US$" + formatted + " en " + currentOpp.name + ". Un asesor de recoBA se va a poner en contacto en las próximas 48 horas.";
     modalFormState.style.display = "none";
     modalConfirmState.style.display = "block";
   });
 
-  /* ------------------------------------------------------------
-     Inicialización
-     ------------------------------------------------------------ */
-  buildStepper("stepper-ayacucho", 3, ayacuchoDates);
-  buildStepper("stepper-guemes", 5, guemesDates);
+})();
+</script>
+<script>
+/* ============================================================
+   Módulo notificaciones + novedades — recoBA Portal (demo)
+   IIFE independiente, vanilla ES5, sin librerías.
+   Depende (opcionalmente) de window.recobaNav = { showView, openProject }
+   expuesto por la IIFE principal. Si no existe, falla en silencio.
+   ============================================================ */
+(function () {
+  "use strict";
+
+  function init() {
+
+    /* ------------------------------------------------------------
+       Navegación vía puente global (fallback silencioso)
+       ------------------------------------------------------------ */
+    function goTo(dest) {
+      var api = window.recobaNav;
+      if (!api || typeof api.showView !== "function") return;
+      if (dest === "ayacucho-camara") {
+        api.showView("ayacucho");
+        var camTab = document.querySelector('[data-tab="camara"]');
+        if (camTab) camTab.click();
+        return;
+      }
+      api.showView(dest);
+    }
+
+    /* ------------------------------------------------------------
+       Campana de notificaciones
+       ------------------------------------------------------------ */
+    var wrap = document.getElementById("ntf-wrap");
+    var bellBtn = document.getElementById("ntf-bell-btn");
+    var dropdown = document.getElementById("ntf-dropdown");
+    var badge = document.getElementById("ntf-badge");
+    var markReadBtn = document.getElementById("ntf-mark-read");
+
+    if (wrap && bellBtn && dropdown) {
+
+      function isOpen() {
+        return dropdown.classList.contains("open");
+      }
+      function openNtf() {
+        dropdown.classList.add("open");
+        bellBtn.setAttribute("aria-expanded", "true");
+        /* cortesía: cerrar el dropdown de usuario si estaba abierto */
+        var avatarDd = document.getElementById("avatar-dropdown");
+        var avatarBtn = document.getElementById("avatar-btn");
+        if (avatarDd) avatarDd.classList.remove("open");
+        if (avatarBtn) avatarBtn.setAttribute("aria-expanded", "false");
+      }
+      function closeNtf() {
+        dropdown.classList.remove("open");
+        bellBtn.setAttribute("aria-expanded", "false");
+      }
+
+      bellBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (isOpen()) { closeNtf(); } else { openNtf(); }
+      });
+
+      /* Cerrar al click afuera. Fase de captura: corre aunque otros
+         handlers (p. ej. avatar-btn) hagan stopPropagation. */
+      document.addEventListener("click", function (e) {
+        if (!wrap.contains(e.target)) closeNtf();
+      }, true);
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeNtf();
+      });
+
+      /* Badge en función de los items no leídos */
+      function updateBadge() {
+        var unread = dropdown.querySelectorAll(".ntf-unread").length;
+        if (badge) {
+          if (unread > 0) {
+            badge.textContent = String(unread);
+            badge.style.display = "flex";
+          } else {
+            badge.style.display = "none";
+          }
+        }
+        bellBtn.setAttribute("aria-label",
+          unread > 0 ? "Notificaciones (" + unread + " sin leer)" : "Notificaciones");
+      }
+
+      function markItemRead(li) {
+        if (li && li.classList.contains("ntf-unread")) {
+          li.classList.remove("ntf-unread");
+          li.classList.add("ntf-read");
+          updateBadge();
+        }
+      }
+
+      /* Click en una notificación: marcar leída, cerrar y navegar */
+      var items = dropdown.querySelectorAll(".ntf-item");
+      for (var i = 0; i < items.length; i++) {
+        items[i].addEventListener("click", function () {
+          var li = this.parentElement;
+          markItemRead(li);
+          closeNtf();
+          goTo(this.getAttribute("data-ntf-nav"));
+        });
+      }
+
+      /* Marcar todas como leídas */
+      if (markReadBtn) {
+        markReadBtn.addEventListener("click", function () {
+          var unreadItems = dropdown.querySelectorAll(".ntf-unread");
+          for (var j = 0; j < unreadItems.length; j++) {
+            unreadItems[j].classList.remove("ntf-unread");
+            unreadItems[j].classList.add("ntf-read");
+          }
+          updateBadge();
+        });
+      }
+
+      updateBadge();
+    }
+
+    /* ------------------------------------------------------------
+       Banda "Últimas novedades" — links "Ver →"
+       ------------------------------------------------------------ */
+    var newsLinks = document.querySelectorAll("[data-adv-nav]");
+    for (var k = 0; k < newsLinks.length; k++) {
+      newsLinks[k].addEventListener("click", function (e) {
+        e.preventDefault();
+        goTo(this.getAttribute("data-adv-nav"));
+      });
+    }
+  }
+
+  /* Auto-init seguro: funciona pegado al final del body o en <head> */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 
 })();
 </script>
