@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Inversores · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ---------- Inversores (prefijo .pg-inv-) ---------- */
+  .pg-inv-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pg-inv-note { align-items: center; }
+  .pg-inv-note-main { flex: 1; min-width: 0; }
+  .pg-inv-note-link { flex-shrink: 0; }
+  .pg-inv-tabs { margin-top: 26px; }
+  .pg-inv-tabs > .tabs { margin-bottom: 18px; }
+  .pg-inv-k { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-inv-link { background: none; border: 0; padding: 0; font-size: 12px; font-weight: 600; color: var(--copper-dark); }
+  .pg-inv-link:hover { color: var(--copper); }
+  .pg-inv-dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .pg-inv-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .pg-inv-ok, .pg-inv-warn { display: inline-flex; align-items: center; gap: 5px; margin-left: 10px; font-size: 11.5px; font-weight: 600; color: var(--sage); }
+  .pg-inv-warn { color: var(--copper-dark); }
+  .pg-inv-ok .ico, .pg-inv-warn .ico { width: 14px; height: 14px; stroke-width: 2.2; }
+  @keyframes pg-inv-flash { from { background-color: rgba(196,106,74,.16); } to { background-color: transparent; } }
+  .pg-inv-new > td, .pg-inv-new.card { animation: pg-inv-flash 2.6s ease-out; }
+
+  /* Personas */
+  .pg-inv-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--line); }
+  .pg-inv-people th, .pg-inv-dist th { position: relative; }
+  .pg-inv-people th, .pg-inv-people td { padding-left: 10px; padding-right: 10px; }
+  .pg-inv-people th:first-child, .pg-inv-people td:first-child { padding-left: 20px; }
+  .pg-inv-people th:last-child, .pg-inv-people td:last-child { padding-right: 20px; }
+  .pg-inv-person { display: flex; align-items: center; gap: 12px; }
+  .pg-inv-person .cell-meta { white-space: nowrap; }
+  .pg-inv-obras { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pg-inv-obras a.chip:hover { color: var(--ink); background: rgba(28,35,49,.13); }
+  .pg-inv-obras a.chip-outline:hover { background: var(--sand); }
+  .pg-inv-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+  .pg-inv-actions .btn-text { padding-right: 2px; }
+  .pg-inv-cards-start { align-items: start; }
+  .pg-inv-dist tbody tr:nth-last-child(2) > td { border-bottom: 0; }
+
+  /* Participaciones y oportunidades: tarjetas */
+  .pg-inv-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .pg-inv-card { display: flex; flex-direction: column; overflow: hidden; }
+  .pg-inv-head-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .pg-inv-thumb { width: 44px; height: 44px; aspect-ratio: auto; padding: 0; border-radius: 10px; flex-shrink: 0; }
+  .pg-inv-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .pg-inv-total { text-align: right; flex-shrink: 0; }
+  .pg-inv-total-value { font-family: var(--serif); font-size: 22px; font-weight: 600; line-height: 1.15; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .pg-inv-stack { display: flex; gap: 2px; height: 32px; border-radius: 9px; overflow: hidden; background: var(--sand); }
+  .pg-inv-seg { flex-basis: 0; min-width: 0; display: block; padding: 0 10px; line-height: 32px; color: #fff; font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-inv-seg.on-light { color: var(--ink); }
+  .pg-inv-flush { border-top: 1px solid var(--line); }
+  .pg-inv-foot-note { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 16px; font-size: 13px; color: var(--ink-soft); }
+  .pg-inv-foot-note .ico { width: 16px; height: 16px; color: var(--ink-mute); }
+
+  /* Distribuciones */
+  .pg-inv-dist th:first-child, .pg-inv-dist td:first-child { padding-left: 20px; }
+  .pg-inv-dist th:last-child, .pg-inv-dist td:last-child { padding-right: 16px; }
+  .pg-inv-dist-row { cursor: pointer; }
+  .pg-inv-chev-btn { width: 30px; height: 30px; border-radius: 8px; }
+  .pg-inv-chev { width: 16px; height: 16px; transition: transform .2s ease; }
+  .pg-inv-dist-row[aria-expanded="true"] .pg-inv-chev { transform: rotate(180deg); }
+  .pg-inv-dist tbody tr.pg-inv-dist-row[aria-expanded="true"] > td { background: rgba(244,238,228,.55); border-bottom-color: transparent; }
+  .pg-inv-dist tbody tr.pg-inv-detail > td { background: rgba(244,238,228,.55); padding: 0; }
+  .pg-inv-reparto { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 28px; padding: 2px 20px 20px; }
+  .pg-inv-rep { border: 1px solid var(--line); border-radius: 12px; background: var(--paper-card); overflow: hidden; }
+  .pg-inv-rep-row { display: grid; grid-template-columns: minmax(0, 1fr) 104px 104px; gap: 12px; align-items: center; padding: 9px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .pg-inv-rep-row:last-child { border-bottom: 0; }
+  .pg-inv-rep-row > span:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; }
+  .pg-inv-rep-headrow { padding-top: 8px; padding-bottom: 8px; background: var(--paper); font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-inv-rep-total { background: var(--paper); font-weight: 700; }
+  .pg-inv-side { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 2px; }
+  .pg-inv-side-box { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper-card); }
+  .pg-inv-side-box p { font-size: 13px; color: var(--ink-soft); margin-top: 4px; }
+  .pg-inv-side-box b { color: var(--ink); font-weight: 600; }
+
+  /* Oportunidades */
+  .pg-inv-opp-big { font-family: var(--serif); font-size: 26px; font-weight: 600; line-height: 1.1; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .pg-inv-opp-pct { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--copper); font-variant-numeric: tabular-nums; }
+  .pg-inv-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 12px; }
+  .pg-inv-facts > div { padding: 10px 14px; border-left: 1px solid var(--line); min-width: 0; }
+  .pg-inv-facts > div:first-child { border-left: 0; }
+  .pg-inv-facts b { display: block; margin-top: 3px; font-size: 14.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-inv-facts small { display: block; font-size: 12px; color: var(--ink-mute); }
+  .pg-inv-facts small.is-soon { color: var(--copper-dark); font-weight: 600; }
+  .pg-inv-opp-list { flex: 1; padding: 0 22px 6px; }
+  .pg-inv-opp-list-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding-top: 2px; }
+  .pg-inv-opp-list .list-item { gap: 10px; }
+  .pg-inv-opp-amount { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pg-inv-empty { display: flex; align-items: center; gap: 10px; margin: 10px 0 16px; padding: 14px; border: 1px dashed var(--line-strong); border-radius: 12px; font-size: 13px; color: var(--ink-soft); }
+  .pg-inv-empty .ico { color: var(--ink-mute); }
+
+  /* Modal: invitar inversor */
+  .pg-inv-affix-end span { border-right: 0; border-left: 1px solid var(--line); }
+  .pg-inv-base { margin-top: -6px; }
+  .pg-inv-base.is-warn { color: var(--copper-dark); font-weight: 600; }
+  .pg-inv-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pg-inv-mail { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .pg-inv-mail-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .pg-inv-mail-line { display: flex; gap: 10px; min-width: 0; font-size: 13px; }
+  .pg-inv-mail-line > span:first-child { width: 50px; flex-shrink: 0; padding-top: 1px; font-size: 12px; color: var(--ink-mute); }
+  .pg-inv-mail-line > b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+
+  /* Modal: registrar distribución */
+  .pg-inv-grid3 { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: 14px 16px; }
+  .pg-inv-estado { min-height: 40px; display: flex; align-items: center; }
+  .pg-inv-reparto-box { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .pg-inv-reparto-head { padding: 11px 14px; border-bottom: 1px solid var(--line); }
+  .pg-inv-reparto-table td { padding-top: 9px; padding-bottom: 9px; }
+  .pg-inv-notify { display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--paper); }
+  .pg-inv-notify .hint { flex: 1; min-width: 220px; text-align: right; }
+
+  @media (max-width: 1180px) {
+    .pg-inv-cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 860px) {
+    .pg-inv-note { flex-wrap: wrap; }
+    .pg-inv-people { min-width: 860px; }
+    .pg-inv-dist { min-width: 760px; }
+    .pg-inv-grid3 { grid-template-columns: 1fr; }
+    .pg-inv-notify .hint { text-align: left; }
+  }
+  @media (max-width: 560px) {
+    .pg-inv-options { grid-template-columns: 1fr; }
+    .pg-inv-seg-ini { display: none; }
+    .pg-inv-card > .card-head { flex-wrap: wrap; }
+    .pg-inv-total { text-align: left; }
+    .pg-inv-facts > div { padding: 10px; }
+    .pg-inv-facts b { font-size: 13.5px; }
+    .pg-inv-opp-list { padding: 0 16px 6px; }
+  }
+</style>
+</head>
+<body data-page="inversores">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Gestión</p>
+          <h1>Inversores</h1>
+          <p class="page-sub">Quién ha puesto capital en cada obra, cuánto ha cobrado y qué ve en su portal.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" type="button" id="pg-inv-open-dist" data-open-modal="modal-distribucion"><span data-icon="wallet"></span>Registrar distribución</button>
+          <button class="btn btn-copper" type="button" id="pg-inv-open-invitar" data-open-modal="modal-invitar"><span data-icon="plus"></span>Invitar inversor</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="pg-inv-stats"></div>
+
+      <div class="alert alert-sage mt-16 pg-inv-note">
+        <span data-icon="shield"></span>
+        <div class="pg-inv-note-main">
+          <div class="alert-title">Cada inversor ve solo lo suyo</div>
+          <div class="alert-text">En su portal aparecen sus obras, su capital y lo que ha cobrado. Nunca los datos de otros inversores.</div>
+        </div>
+        <a class="btn btn-text btn-sm pg-inv-note-link" href="../index.html">Ver el portal de Martín G.<span data-icon="arrow-right"></span></a>
+      </div>
+
+      <div class="pg-inv-tabs" data-tabs id="pg-inv-tabs">
+        <div class="tabs" role="tablist" aria-label="Secciones de inversores">
+          <button class="tab active" type="button" data-tab="personas">Personas<span class="count" data-pg-count="personas"></span></button>
+          <button class="tab" type="button" data-tab="participaciones">Participaciones<span class="count" data-pg-count="participaciones"></span></button>
+          <button class="tab" type="button" data-tab="distribuciones">Distribuciones<span class="count" data-pg-count="distribuciones"></span></button>
+          <button class="tab" type="button" data-tab="oportunidades">Oportunidades<span class="count" data-pg-count="oportunidades"></span></button>
+        </div>
+
+        <!-- Personas -->
+        <div data-panel="personas">
+          <div class="card">
+            <div class="pg-inv-toolbar">
+              <div class="segmented" data-segmented id="pg-inv-filtro" aria-label="Filtrar por estado">
+                <button type="button" class="active" data-value="todos" aria-pressed="true">Todos</button>
+                <button type="button" data-value="activo" aria-pressed="false">Activos</button>
+                <button type="button" data-value="invitado" aria-pressed="false">Invitados</button>
+              </div>
+              <span class="hint" id="pg-inv-filtro-info"></span>
+            </div>
+            <div class="table-wrap">
+              <table class="table pg-inv-people">
+                <thead>
+                  <tr>
+                    <th>Persona</th>
+                    <th>Estado</th>
+                    <th>Obras</th>
+                    <th class="num">Capital</th>
+                    <th class="num">Cobrado</th>
+                    <th>Último acceso</th>
+                    <th class="num"><span class="pg-inv-sr">Acciones</span></th>
+                  </tr>
+                </thead>
+                <tbody id="pg-inv-people-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Participaciones -->
+        <div data-panel="participaciones">
+          <div class="pg-inv-cards pg-inv-cards-start" id="pg-inv-parts"></div>
+          <p class="pg-inv-foot-note" id="pg-inv-parts-note"></p>
+        </div>
+
+        <!-- Distribuciones -->
+        <div data-panel="distribuciones">
+          <div class="card">
+            <div class="table-wrap">
+              <table class="table pg-inv-dist">
+                <thead>
+                  <tr>
+                    <th>Obra</th>
+                    <th>Período</th>
+                    <th>Fecha</th>
+                    <th>Concepto</th>
+                    <th class="num">Total</th>
+                    <th>Estado</th>
+                    <th class="num"><span class="pg-inv-sr">Reparto</span></th>
+                  </tr>
+                </thead>
+                <tbody id="pg-inv-dist-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Oportunidades -->
+        <div data-panel="oportunidades">
+          <div class="pg-inv-cards" id="pg-inv-opps"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: invitar inversor -->
+<div class="modal-overlay" id="modal-invitar" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-invitar-titulo">
+    <form data-demo="Invitación enviada" id="pg-inv-form-invitar">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-invitar-titulo">Invitar inversor</h3>
+          <p class="modal-desc">Tendrá acceso a su portal: sus obras, su capital y sus cobros.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label class="field"><span class="label">Nombre</span><input class="input" name="nombre" required autocomplete="off" placeholder="Nombre y apellido"></label>
+          <label class="field"><span class="label">Email</span><input class="input" type="email" name="email" required autocomplete="off" placeholder="nombre@empresa.com"></label>
+          <label class="field span-2"><span class="label">Obra</span><select class="select" name="obra" id="pg-inv-inv-obra"></select></label>
+          <label class="field"><span class="label">Aportación</span><span class="input-affix"><span>US$</span><input name="monto" inputmode="numeric" autocomplete="off" placeholder="25.000"></span></label>
+          <div class="field">
+            <div class="row-between"><label class="label" for="pg-inv-inv-pct">Participación</label><button type="button" class="pg-inv-link" id="pg-inv-recalc" hidden>Recalcular</button></div>
+            <span class="input-affix pg-inv-affix-end"><input id="pg-inv-inv-pct" name="pct" inputmode="decimal" autocomplete="off" placeholder="0,0"><span>%</span></span>
+          </div>
+          <p class="hint span-2 pg-inv-base" id="pg-inv-inv-base"></p>
+          <div class="field span-2">
+            <span class="label">Acceso</span>
+            <div class="option-cards pg-inv-options">
+              <label class="option-card"><input type="radio" name="acceso" value="Google" checked><div><div class="option-title">Google</div><div class="option-desc">Entra con su cuenta de Google.</div></div></label>
+              <label class="option-card"><input type="radio" name="acceso" value="Enlace por correo"><div><div class="option-title">Enlace por correo</div><div class="option-desc">Recibe un enlace para entrar sin contraseña.</div></div></label>
+            </div>
+          </div>
+          <div class="span-2 pg-inv-mail">
+            <span class="list-icon tone-copper"><span data-icon="mail"></span></span>
+            <div class="pg-inv-mail-main">
+              <div class="pg-inv-mail-line"><span>Para</span><b id="pg-inv-mail-to"></b></div>
+              <div class="pg-inv-mail-line"><span>Asunto</span><b id="pg-inv-mail-subject"></b></div>
+            </div>
+          </div>
+          <label class="switch span-2"><input type="checkbox" name="enviar" checked><span class="track"></span><span>Enviar la invitación ahora</span></label>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="send"></span><span id="pg-inv-inv-submit">Enviar invitación</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: registrar distribución -->
+<div class="modal-overlay" id="modal-distribucion" aria-hidden="true">
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="modal-distribucion-titulo">
+    <form data-demo="Distribución registrada" id="pg-inv-form-dist">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-distribucion-titulo">Registrar distribución</h3>
+          <p class="modal-desc">Se reparte entre los inversores de la obra según su participación.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="pg-inv-grid3">
+          <label class="field"><span class="label">Obra</span><select class="select" name="obra" id="pg-inv-dist-obra"></select></label>
+          <label class="field"><span class="label">Período</span><input class="input" name="periodo" required autocomplete="off" placeholder="Q3 2026"></label>
+          <label class="field"><span class="label">Fecha de pago</span><input class="input" name="fecha" required inputmode="numeric" autocomplete="off" placeholder="dd/mm/aaaa" pattern="\d{1,2}/\d{1,2}/\d{4}" title="Fecha con formato dd/mm/aaaa"></label>
+          <label class="field"><span class="label">Concepto</span><select class="select" name="concepto" id="pg-inv-dist-concepto"></select></label>
+          <label class="field"><span class="label">Importe total</span><span class="input-affix"><span>US$</span><input name="total" required inputmode="numeric" autocomplete="off" placeholder="4.780"></span></label>
+          <div class="field"><span class="label">Quedará como</span><div class="pg-inv-estado" id="pg-inv-dist-estado"></div></div>
+        </div>
+        <p class="hint mt-8" id="pg-inv-dist-help"></p>
+        <div class="pg-inv-reparto-box mt-16">
+          <div class="pg-inv-reparto-head row-between"><span class="label">Reparto según participación</span><span class="hint" id="pg-inv-dist-count"></span></div>
+          <div class="table-wrap">
+            <table class="table pg-inv-reparto-table">
+              <thead><tr><th>Inversor</th><th class="num">Participación</th><th class="num">Importe</th></tr></thead>
+              <tbody id="pg-inv-dist-reparto"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pg-inv-notify mt-16">
+          <label class="switch"><input type="checkbox" name="avisar" checked><span class="track"></span><span>Avisar a los inversores</span></label>
+          <span class="hint" id="pg-inv-dist-asunto"></span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Registrar distribución</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+(function () {
+  'use strict';
+  const A = window.Admin;
+  const D = A.data;
+  const esc = A.esc;
+  const HOY = D.instalacion.hoy;
+  const ANIO = HOY.slice(0, 4);
+  const CONCEPTOS = ['Renta del trimestre', 'Retorno preferente', 'Devolución de capital', 'Plusvalía'];
+  /* Un color de marca fijo por inversor: el mismo en todas las barras y leyendas. */
+  const PALETA = [
+    { bg: 'var(--copper)', light: false },
+    { bg: 'var(--ink)', light: false },
+    { bg: 'var(--sage)', light: false },
+    { bg: 'var(--gold)', light: true },
+    { bg: 'var(--copper-tint)', light: true },
+    { bg: 'var(--copper-dark)', light: false }
+  ];
+  const tabsBox = document.getElementById('pg-inv-tabs');
+
+  let filtro = 'todos';
+  let abiertas = new Set();
+  let invPreset = null;
+  let pctManual = false;
+  let distPreset = null;
+  let distDirty = false;
+
+  /* ---------- Utilidades ---------- */
+  const suma = (arr, fn) => arr.reduce((s, x) => s + (fn(x) || 0), 0);
+  const round1 = (n) => Math.round(n * 10) / 10;
+  const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+  const lista = (arr) => (arr.length <= 1 ? arr.join('') : `${arr.slice(0, -1).join(', ')} y ${arr[arr.length - 1]}`);
+  const porMonto = (a, b) => b.monto - a.monto;
+  const porFechaDesc = (a, b) => b.fecha.localeCompare(a.fecha);
+  const colorDe = (id) => PALETA[Math.max(0, D.inversores.findIndex((i) => i.id === id)) % PALETA.length];
+  const dot = (id) => `<span class="pg-inv-dot" style="background:${colorDe(id).bg}"></span>`;
+  const quien = (id) => A.persona(id) || { id, nombre: id, iniciales: '?' };
+  const obrasConParticipaciones = () => D.obras.filter((o) => A.participaciones({ obra: o.id }).length);
+  const oportunidades = () => D.obras.filter((o) => o.oportunidad && o.oportunidad.estado === 'Abierta');
+  const reparte = (total, pctPart) => Math.round((total * pctPart) / 100);
+  const parseMonto = (v) => { const n = parseInt(String(v || '').replace(/[^\d]/g, ''), 10); return Number.isFinite(n) ? n : 0; };
+  const parsePct = (v) => { const n = parseFloat(String(v || '').replace(/[\s%]/g, '').replace(',', '.')); return Number.isFinite(n) ? n : null; };
+  const pctInput = (n) => String(round1(n)).replace('.', ',');
+  /* dd/mm/aaaa → ISO (aaaa-mm-dd). Campo de texto para que la fecha se lea igual en cualquier navegador. */
+  function parseFecha(v) {
+    const m = String(v || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) return null;
+    const d = Number(m[1]); const mo = Number(m[2]); const y = Number(m[3]);
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+    return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+  const iniciales = (nombre) => nombre.split(/\s+/).filter(Boolean).map((w) => w.charAt(0)).join('').slice(0, 2).toUpperCase() || '?';
+  function asunto(avisoId, vars) {
+    const a = D.avisos.find((x) => x.id === avisoId);
+    return a ? a.asunto.replace(/\{(\w+)\}/g, (m, k) => (vars[k] !== undefined ? vars[k] : m)) : '';
+  }
+  function flash(sel) {
+    requestAnimationFrame(() => {
+      const n = document.querySelector(sel);
+      if (!n) return;
+      n.classList.remove('pg-inv-new');
+      void n.offsetWidth;
+      n.classList.add('pg-inv-new');
+      n.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(() => n.classList.remove('pg-inv-new'), 2800);
+    });
+  }
+  function setFiltro(v) {
+    filtro = v;
+    document.querySelectorAll('#pg-inv-filtro button').forEach((b) => {
+      const on = b.dataset.value === v;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  /* ---------- Métricas ---------- */
+  function renderStats() {
+    const invitados = D.inversores.filter((i) => i.estado === 'invitado').length;
+    const capital = suma(D.participaciones, (p) => p.monto);
+    const pagadas = D.distribuciones.filter((d) => d.estado === 'Pagada' && d.total && String(d.fecha).startsWith(ANIO));
+    const proxima = D.distribuciones.filter((d) => d.estado === 'Programada').sort((a, b) => a.fecha.localeCompare(b.fecha))[0];
+    const opps = oportunidades();
+    const comprometido = suma(opps, (o) => o.oportunidad.comprometido);
+    const objetivo = suma(opps, (o) => o.oportunidad.objetivo);
+    const cards = [
+      { label: 'Inversores', value: A.group(D.inversores.length), sub: invitados ? plural(invitados, 'invitación pendiente', 'invitaciones pendientes') : 'Sin invitaciones pendientes' },
+      { label: 'Capital en obras', value: A.money(capital), sub: `${plural(obrasConParticipaciones().length, 'obra', 'obras')} · ${plural(D.participaciones.length, 'participación', 'participaciones')}` },
+      { label: `Distribuciones pagadas en ${ANIO}`, value: A.money(suma(pagadas, (d) => d.total)), accent: true, sub: proxima ? `Próxima: ${proxima.periodo} · ${A.date(proxima.fecha)}` : plural(pagadas.length, 'pago', 'pagos') },
+      { label: 'Comprometido en oportunidades', value: A.money(comprometido), sub: objetivo ? `${A.pct((comprometido / objetivo) * 100, 1)} de ${A.money(objetivo)} · ${plural(opps.length, 'abierta', 'abiertas')}` : 'Sin oportunidades abiertas' }
+    ];
+    document.getElementById('pg-inv-stats').innerHTML = cards.map((s) => `<div class="stat-card"><div class="stat-label">${esc(s.label)}</div><div class="stat-value${s.accent ? ' accent' : ''}">${esc(s.value)}</div><div class="stat-sub">${esc(s.sub)}</div></div>`).join('');
+  }
+
+  function renderCounts() {
+    const counts = { personas: D.inversores.length, participaciones: obrasConParticipaciones().length, distribuciones: D.distribuciones.length, oportunidades: oportunidades().length };
+    document.querySelectorAll('[data-pg-count]').forEach((el) => { el.textContent = counts[el.dataset.pgCount]; });
+  }
+
+  /* ---------- Personas ---------- */
+  function obraChip(obraId, outline) {
+    const o = A.obra(obraId);
+    return `<a class="chip ${outline ? 'chip-outline' : 'chip-ink'} no-dot" href="obra.html?id=${encodeURIComponent(obraId)}"${outline ? ' title="Aportación prevista"' : ''}>${esc(o ? o.nombre : obraId)}</a>`;
+  }
+  function renderPersonas() {
+    const body = document.getElementById('pg-inv-people-body');
+    const visibles = D.inversores.filter((i) => filtro === 'todos' || i.estado === filtro);
+    if (!visibles.length) {
+      body.innerHTML = `<tr><td colspan="7"><div class="empty">${A.icon('users')}No hay personas con este estado.</div></td></tr>`;
+      return;
+    }
+    const filas = visibles.map((i) => {
+      const parts = A.participaciones({ inversor: i.id });
+      const capital = A.capitalDe(i.id);
+      const invitado = i.estado === 'invitado';
+      const chips = parts.map((p) => obraChip(p.obra));
+      const metas = D.compromisos.filter((c) => c.inversor === i.id).map((c) => `${c.estado === 'Confirmado' ? 'Compromiso' : 'Interés'} en ${(A.obra(c.obra) || {}).nombre || c.obra}`);
+      if (i.prevista && i.prevista.obra) {
+        chips.push(obraChip(i.prevista.obra, true));
+        metas.push(i.prevista.monto ? `Aportación prevista ${A.money(i.prevista.monto)}${i.prevista.pct ? ' · ' + A.pct(i.prevista.pct, 1) : ''}` : 'Aportación por definir');
+      }
+      const obras = (chips.length ? `<div class="pg-inv-obras">${chips.join('')}</div>` : '<span class="muted">Sin participación</span>')
+        + (metas.length ? `<div class="cell-meta">${esc(metas.join(' · '))}</div>` : '');
+      const sinEnviar = invitado && i.invitacionEnviada === false;
+      const acceso = invitado
+        ? `<div class="soft">Sin acceso</div><div class="cell-meta">${sinEnviar ? 'Invitación sin enviar' : `Invitación: ${esc(A.ago(i.invitado))}`}</div>`
+        : `<div class="tnum">${esc(A.ago(i.ultimoAcceso))}</div><div class="cell-meta">${esc(i.acceso)}</div>`;
+      const portal = i.id === 'i-martin'
+        ? `<a class="btn btn-ghost btn-sm" href="../index.html">${A.icon('eye')}Ver su portal</a>`
+        : `<button class="btn btn-ghost btn-sm" type="button" data-toast="En esta demostración, el portal muestra la vista de Martín G." data-toast-icon="eye">${A.icon('eye')}Ver su portal</button>`;
+      const reenviar = !invitado ? ''
+        : sinEnviar
+          ? `<button class="btn btn-text btn-sm" type="button" data-pg-enviar="${esc(i.id)}">${A.icon('send')}Enviar invitación</button>`
+          : `<button class="btn btn-text btn-sm" type="button" data-toast="Invitación reenviada a ${esc(i.email)}" data-toast-icon="send">${A.icon('send')}Reenviar invitación</button>`;
+      return `<tr data-inv="${esc(i.id)}">
+        <td><div class="pg-inv-person">${A.avatar(i)}<div><div class="cell-title">${esc(i.nombre)}</div><div class="cell-meta">${esc(i.email)}</div></div></div></td>
+        <td>${invitado ? A.chip('Invitado', 'chip-gold') : A.chip('Activo', 'chip-sage')}</td>
+        <td>${obras}</td>
+        <td class="num">${capital ? `<span class="strong">${A.money(capital)}</span>` : '<span class="muted">—</span>'}</td>
+        <td class="num">${parts.length ? A.money(A.distribucionesDe(i.id)) : '<span class="muted">—</span>'}</td>
+        <td>${acceso}</td>
+        <td><div class="pg-inv-actions">${portal}${reenviar}</div></td>
+      </tr>`;
+    });
+    const totalCap = suma(visibles, (i) => A.capitalDe(i.id));
+    const totalCob = suma(visibles, (i) => A.distribucionesDe(i.id));
+    body.innerHTML = filas.join('') + `<tr class="total"><td colspan="3">${filtro === 'todos' ? 'Total' : 'Total de la selección'}</td><td class="num">${A.money(totalCap)}</td><td class="num">${A.money(totalCob)}</td><td colspan="2"></td></tr>`;
+  }
+
+  /* ---------- Participaciones ---------- */
+  function renderParticipaciones() {
+    document.getElementById('pg-inv-parts').innerHTML = obrasConParticipaciones().map((o) => {
+      const parts = A.participaciones({ obra: o.id }).slice().sort(porMonto);
+      const totalMonto = suma(parts, (p) => p.monto);
+      const totalPct = round1(suma(parts, (p) => p.pct));
+      const base = o.capital || totalMonto;
+      const cuadra = totalPct === 100 && totalMonto === base;
+      const desde = parts.map((p) => p.fecha).sort()[0];
+      const segs = parts.map((p) => {
+        const inv = quien(p.inversor);
+        const c = colorDe(p.inversor);
+        return `<span class="pg-inv-seg${c.light ? ' on-light' : ''}" style="flex-grow:${p.pct};background:${c.bg}" title="${esc(`${inv.nombre} · ${A.money(p.monto)} · ${A.pct(p.pct, 1)}`)}"><span class="pg-inv-seg-ini">${esc(inv.iniciales)} · </span>${A.pct(p.pct, 1)}</span>`;
+      }).join('');
+      const filas = parts.map((p) => {
+        const inv = quien(p.inversor);
+        return `<tr><td><div class="pg-inv-who">${dot(p.inversor)}${A.avatar(inv, 'sm')}<span class="strong">${esc(inv.nombre)}</span></div></td><td class="num">${A.money(p.monto)}</td><td class="num">${A.pct(p.pct, 1)}</td><td class="tnum soft">${A.date(p.fecha)}</td></tr>`;
+      }).join('');
+      const check = cuadra
+        ? `<span class="pg-inv-ok">${A.icon('check')}Suma el 100%</span>`
+        : `<span class="pg-inv-warn">${A.icon('alert')}No suma el 100%</span>`;
+      return `<article class="card pg-inv-card">
+        <div class="card-head">
+          <div class="pg-inv-head-main">
+            <span class="thumb ${esc(o.portada)} pg-inv-thumb" aria-hidden="true"></span>
+            <div>
+              <div class="pg-inv-title"><h3>${esc(o.nombre)}</h3>${A.estadoChip(o.estado)}</div>
+              <div class="card-sub">${esc(o.barrio)} · ${plural(parts.length, 'inversor', 'inversores')} · desde ${esc(A.date(desde, 'month').toLowerCase())}</div>
+            </div>
+          </div>
+          <div class="pg-inv-total"><div class="pg-inv-k">Capital de la obra</div><div class="pg-inv-total-value">${A.money(base)}</div></div>
+        </div>
+        <div class="card-body"><div class="pg-inv-stack" role="img" aria-label="${esc(parts.map((p) => `${quien(p.inversor).nombre} ${A.pct(p.pct, 1)}`).join(', '))}">${segs}</div></div>
+        <div class="table-wrap pg-inv-flush"><table class="table">
+          <thead><tr><th>Inversor</th><th class="num">Aportación</th><th class="num">Participación</th><th>Desde</th></tr></thead>
+          <tbody>${filas}<tr class="total"><td>Total ${check}</td><td class="num">${A.money(totalMonto)}</td><td class="num">${A.pct(totalPct, 1)}</td><td></td></tr></tbody>
+        </table></div>
+      </article>`;
+    }).join('');
+
+    const sinPart = oportunidades().filter((o) => !A.participaciones({ obra: o.id }).length);
+    document.getElementById('pg-inv-parts-note').innerHTML = sinPart.length
+      ? `${A.icon('info')}<span>${esc(lista(sinPart.map((o) => o.nombre)))} ${sinPart.length === 1 ? 'aún no tiene participaciones: está abierta' : 'aún no tienen participaciones: están abiertas'} a inversión.</span><button type="button" class="pg-inv-link" data-pg-tab="oportunidades">Ver oportunidades</button>`
+      : '';
+  }
+
+  /* ---------- Distribuciones ---------- */
+  function renderDistribuciones() {
+    document.getElementById('pg-inv-dist-body').innerHTML = D.distribuciones.slice().sort(porFechaDesc).map((d) => {
+      const o = A.obra(d.obra) || { nombre: d.obra, barrio: '' };
+      const parts = A.participaciones({ obra: d.obra }).slice().sort(porMonto);
+      const open = abiertas.has(d.id);
+      const pagada = d.estado === 'Pagada';
+      const filas = parts.map((p) => {
+        const inv = quien(p.inversor);
+        return `<div class="pg-inv-rep-row"><span class="pg-inv-who">${dot(p.inversor)}${A.avatar(inv, 'sm')}<span>${esc(inv.nombre)}</span></span><span>${A.pct(p.pct, 1)}</span><span class="strong">${d.total ? A.money(reparte(d.total, p.pct)) : '<span class="muted">—</span>'}</span></div>`;
+      }).join('');
+      const repartido = d.total ? suma(parts, (p) => reparte(d.total, p.pct)) : null;
+      const redondeo = repartido !== null && repartido !== d.total ? ` <span class="hint">· redondeo ${A.money(repartido - d.total)}</span>` : '';
+      const side = !d.total
+        ? `<div class="pg-inv-side-box"><div class="pg-inv-k">Importe a confirmar</div><p>El reparto se calcula al indicar el importe total.</p></div>
+           <button type="button" class="btn btn-copper btn-sm" data-pg-confirmar="${esc(d.id)}">${A.icon('check')}Confirmar importe</button>`
+        : `<div class="pg-inv-side-box"><div class="pg-inv-k">${pagada ? 'Aviso a los inversores' : `Programada · ${A.date(d.fecha)}`}</div>
+           <p><b>${esc(asunto('n3', { periodo: d.periodo, obra: o.nombre }))}</b></p>
+           <p>${pagada ? 'Cada inversor ve su parte en su portal.' : 'El aviso sale el día del pago.'}</p></div>`;
+      return `<tr class="pg-inv-dist-row" data-dist="${esc(d.id)}" aria-expanded="${open}">
+        <td><div class="cell-title">${esc(o.nombre)}</div><div class="cell-meta">${esc(o.barrio)} · ${plural(parts.length, 'inversor', 'inversores')}</div></td>
+        <td class="tnum">${esc(d.periodo)}</td>
+        <td class="tnum">${A.date(d.fecha)}</td>
+        <td>${esc(d.concepto)}</td>
+        <td class="num">${d.total ? `<span class="strong">${A.money(d.total)}</span>` : '<span class="muted">Importe a confirmar</span>'}</td>
+        <td>${pagada ? A.chip('Pagada', 'chip-sage') : A.chip('Programada', 'chip-gold')}</td>
+        <td class="num"><button type="button" class="icon-btn pg-inv-chev-btn" aria-expanded="${open}" aria-controls="pg-inv-rep-${esc(d.id)}" aria-label="Ver el reparto de ${esc(d.periodo)}">${A.icon('chevron-down', 'pg-inv-chev')}</button></td>
+      </tr>
+      <tr class="pg-inv-detail" id="pg-inv-rep-${esc(d.id)}"${open ? '' : ' hidden'}><td colspan="7"><div class="pg-inv-reparto">
+        <div class="pg-inv-rep">
+          <div class="pg-inv-rep-row pg-inv-rep-headrow"><span>Reparto por inversor</span><span>Participación</span><span>Importe</span></div>
+          ${filas}
+          <div class="pg-inv-rep-row pg-inv-rep-total"><span>Total${redondeo}</span><span>${A.pct(round1(suma(parts, (p) => p.pct)), 1)}</span><span>${repartido !== null ? A.money(repartido) : '—'}</span></div>
+        </div>
+        <div class="pg-inv-side">${side}</div>
+      </div></td></tr>`;
+    }).join('');
+  }
+
+  /* ---------- Oportunidades ---------- */
+  function renderOportunidades() {
+    document.getElementById('pg-inv-opps').innerHTML = oportunidades().map((o) => {
+      const op = o.oportunidad;
+      const avance = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
+      const faltan = Math.max(0, op.objetivo - op.comprometido);
+      const dias = A.daysUntil(op.cierre);
+      const cierreTxt = dias > 1 ? `Faltan ${dias} días` : dias === 1 ? 'Cierra mañana' : dias === 0 ? 'Cierra hoy' : 'Cerrada';
+      const comps = D.compromisos.filter((c) => c.obra === o.id).slice()
+        .sort((a, b) => (a.estado === 'Confirmado' ? 0 : 1) - (b.estado === 'Confirmado' ? 0 : 1) || b.monto - a.monto);
+      const confirmado = suma(comps.filter((c) => c.estado === 'Confirmado'), (c) => c.monto);
+      const interesado = suma(comps.filter((c) => c.estado !== 'Confirmado'), (c) => c.monto);
+      const resumen = [confirmado ? `Confirmado ${A.money(confirmado)}` : '', interesado ? `Interesado ${A.money(interesado)}` : ''].filter(Boolean).join(' · ');
+      const listaHtml = comps.length
+        ? `<div class="list">${comps.map((c) => {
+            const inv = quien(c.inversor);
+            return `<div class="list-item">${A.avatar(inv, 'sm')}<div class="list-main"><div class="list-title">${esc(inv.nombre)}</div><div class="list-meta">${A.date(c.fecha)}</div></div>${c.estado === 'Confirmado' ? A.chip('Confirmado', 'chip-sage') : A.chip('Interesado', 'chip-gold')}<span class="pg-inv-opp-amount">${A.money(c.monto)}</span></div>`;
+          }).join('')}</div>`
+        : `<div class="pg-inv-empty">${A.icon('info')}Sin detalle de compromisos en la demostración.</div>`;
+      return `<article class="card pg-inv-card">
+        <div class="card-head">
+          <div class="pg-inv-head-main">
+            <span class="thumb ${esc(o.portada)} pg-inv-thumb" aria-hidden="true"></span>
+            <div><div class="pg-inv-title"><h3>${esc(o.nombre)}</h3></div><div class="card-sub">${esc(o.barrio)} · ${A.group(o.m2)} m² · ${plural(o.ambientes, 'ambiente', 'ambientes')}</div></div>
+          </div>
+          ${A.chip(op.estado, 'chip-sage')}
+        </div>
+        <div class="card-body">
+          <div class="row-between" style="align-items:flex-end">
+            <div><div class="pg-inv-k">Comprometido</div><div class="pg-inv-opp-big">${A.money(op.comprometido)}</div></div>
+            <div class="pg-inv-opp-pct">${A.pct(avance, 1)}</div>
+          </div>
+          <div class="progress-track mt-8"><div class="progress-fill" style="width:${Math.min(100, avance).toFixed(1)}%"></div></div>
+          <div class="hint mt-8">${faltan ? `Faltan ${A.money(faltan)} para el objetivo` : 'Objetivo cubierto'}</div>
+          <div class="pg-inv-facts mt-16">
+            <div><span class="pg-inv-k">Objetivo</span><b>${A.money(op.objetivo)}</b></div>
+            <div><span class="pg-inv-k">Ticket mínimo</span><b>${A.money(op.ticketMinimo)}</b></div>
+            <div><span class="pg-inv-k">Cierre</span><b>${A.date(op.cierre)}</b><small class="${dias >= 0 && dias <= 21 ? 'is-soon' : ''}">${cierreTxt}</small></div>
+          </div>
+        </div>
+        <div class="pg-inv-opp-list">
+          <div class="pg-inv-opp-list-head"><span class="pg-inv-k">Compromisos</span><span class="hint">${esc(resumen)}</span></div>
+          ${listaHtml}
+        </div>
+        <div class="card-foot">
+          <button type="button" class="btn btn-ghost btn-sm" data-pg-invitar="${esc(o.id)}">${A.icon('plus')}Invitar inversor</button>
+          <a class="btn btn-text btn-sm" href="obra.html?id=${encodeURIComponent(o.id)}">Ver obra${A.icon('arrow-right')}</a>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  function renderAll() {
+    renderStats();
+    renderCounts();
+    renderPersonas();
+    renderParticipaciones();
+    renderDistribuciones();
+    renderOportunidades();
+  }
+
+  /* ---------- Estado inicial ---------- */
+  const ultimaPagada = D.distribuciones.filter((d) => d.estado === 'Pagada').sort(porFechaDesc)[0];
+  if (ultimaPagada) abiertas.add(ultimaPagada.id);
+  document.getElementById('pg-inv-filtro-info').textContent = 'Cobrado: su parte de las distribuciones pagadas';
+  renderAll();
+
+  document.getElementById('pg-inv-filtro').addEventListener('segmented:change', (e) => { filtro = e.detail; renderPersonas(); });
+
+  document.getElementById('pg-inv-dist-body').addEventListener('click', (e) => {
+    const row = e.target.closest('.pg-inv-dist-row');
+    if (!row || e.target.closest('a')) return;
+    const id = row.dataset.dist;
+    const open = !abiertas.has(id);
+    if (open) abiertas.add(id); else abiertas.delete(id);
+    row.setAttribute('aria-expanded', String(open));
+    const btn = row.querySelector('.pg-inv-chev-btn');
+    if (btn) btn.setAttribute('aria-expanded', String(open));
+    const det = document.getElementById(`pg-inv-rep-${id}`);
+    if (det) det.hidden = !open;
+  });
+
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('[data-pg-tab]');
+    if (t) { A.activateTab(tabsBox, t.dataset.pgTab); tabsBox.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
+    const inv = e.target.closest('[data-pg-invitar]');
+    if (inv) { invPreset = inv.dataset.pgInvitar; A.openModal('modal-invitar'); return; }
+    const conf = e.target.closest('[data-pg-confirmar]');
+    if (conf) { distPreset = D.distribuciones.find((d) => d.id === conf.dataset.pgConfirmar) || null; A.openModal('modal-distribucion'); return; }
+    const env = e.target.closest('[data-pg-enviar]');
+    if (env) {
+      const p = D.inversores.find((x) => x.id === env.dataset.pgEnviar);
+      if (!p) return;
+      p.invitacionEnviada = true;
+      p.invitado = HOY;
+      A.toast(`Invitación enviada a ${p.email}`, 'send');
+      renderPersonas();
+    }
+  });
+
+  const opt = (o) => `<option value="${esc(o.id)}">${esc(o.nombre)}</option>`;
+
+  /* ---------- Modal: invitar inversor ---------- */
+  const fInv = document.getElementById('pg-inv-form-invitar');
+  const iv = fInv.elements;
+  const recalc = document.getElementById('pg-inv-recalc');
+  const baseEl = document.getElementById('pg-inv-inv-base');
+  const opps = oportunidades();
+  const conInversores = obrasConParticipaciones().filter((o) => !opps.includes(o));
+  iv.obra.innerHTML = (opps.length ? `<optgroup label="Oportunidades abiertas">${opps.map(opt).join('')}</optgroup>` : '')
+    + (conInversores.length ? `<optgroup label="Obras con inversores">${conInversores.map(opt).join('')}</optgroup>` : '');
+
+  function baseDe(o) {
+    if (!o) return null;
+    if (o.capital) return { valor: o.capital, texto: 'el capital de la obra' };
+    if (o.oportunidad) return { valor: o.oportunidad.objetivo, texto: 'el objetivo' };
+    return null;
+  }
+  function syncInvitar() {
+    const o = A.obra(iv.obra.value);
+    const b = baseDe(o);
+    const monto = parseMonto(iv.monto.value);
+    if (!pctManual) iv.pct.value = monto && b ? pctInput((monto / b.valor) * 100) : '';
+    recalc.hidden = !pctManual;
+    const ticket = o && o.oportunidad ? o.oportunidad.ticketMinimo : 0;
+    const warn = !!(monto && ticket && monto < ticket);
+    const partes = [];
+    if (pctManual) partes.push('editada a mano');
+    if (b) partes.push(`sobre ${b.texto} (${A.money(b.valor)})`);
+    if (ticket) partes.push(warn ? `por debajo del ticket mínimo (${A.money(ticket)})` : `ticket mínimo ${A.money(ticket)}`);
+    const texto = partes.join(' · ');
+    baseEl.textContent = texto.charAt(0).toUpperCase() + texto.slice(1);
+    baseEl.classList.toggle('is-warn', warn);
+    const nombre = iv.nombre.value.trim();
+    const email = iv.email.value.trim();
+    document.getElementById('pg-inv-mail-to').innerHTML = nombre || email
+      ? `${esc(nombre || 'Sin nombre')} <span class="muted">· ${esc(email || 'sin email')}</span>`
+      : '<span class="muted">Nombre · email</span>';
+    document.getElementById('pg-inv-mail-subject').textContent = asunto('n6', { marca: D.instalacion.marca });
+    document.getElementById('pg-inv-inv-submit').textContent = iv.enviar.checked ? 'Enviar invitación' : 'Guardar sin enviar';
+  }
+  fInv.addEventListener('input', (e) => { if (e.target === iv.pct) pctManual = true; syncInvitar(); });
+  fInv.addEventListener('change', syncInvitar);
+  iv.monto.addEventListener('blur', () => { const n = parseMonto(iv.monto.value); iv.monto.value = n ? A.group(n) : ''; });
+  recalc.addEventListener('click', () => { pctManual = false; syncInvitar(); iv.pct.focus(); });
+  document.getElementById('modal-invitar').addEventListener('modal:open', () => {
+    if (invPreset) iv.obra.value = invPreset;
+    invPreset = null;
+    pctManual = false;
+    syncInvitar();
+  });
+  fInv.addEventListener('submit', (e) => {
+    const nombre = iv.nombre.value.trim();
+    const email = iv.email.value.trim();
+    if (!nombre) { e.preventDefault(); e.stopPropagation(); iv.nombre.value = ''; iv.nombre.reportValidity(); return; }
+    const o = A.obra(iv.obra.value);
+    const monto = parseMonto(iv.monto.value);
+    const pctV = parsePct(iv.pct.value);
+    const id = `i-${Date.now().toString(36)}`;
+    D.inversores.push({
+      id, nombre, iniciales: iniciales(nombre), email, estado: 'invitado', acceso: iv.acceso.value, invitado: HOY, invitacionEnviada: iv.enviar.checked,
+      prevista: { obra: o ? o.id : null, monto: monto || null, pct: pctV !== null ? round1(pctV) : null }
+    });
+    fInv.dataset.demo = iv.enviar.checked ? `Invitación enviada a ${email}` : `Se ha añadido a ${nombre} sin enviar la invitación`;
+    setFiltro('todos');
+    renderAll();
+    A.activateTab(tabsBox, 'personas');
+    flash(`tr[data-inv="${id}"]`);
+  });
+
+  /* ---------- Modal: registrar distribución ---------- */
+  const fDist = document.getElementById('pg-inv-form-dist');
+  const dv = fDist.elements;
+  dv.obra.innerHTML = obrasConParticipaciones().map(opt).join('');
+  dv.concepto.innerHTML = CONCEPTOS.map((c) => `<option>${esc(c)}</option>`).join('');
+
+  const pendienteDe = (obraId) => D.distribuciones.filter((d) => d.obra === obraId && d.estado === 'Programada' && !d.total).sort((a, b) => a.fecha.localeCompare(b.fecha))[0];
+  const programadaIgual = (obraId, periodo) => D.distribuciones.find((d) => d.obra === obraId && d.estado === 'Programada' && d.periodo.trim().toLowerCase() === periodo.trim().toLowerCase());
+  function prefillDist(obraId, from) {
+    dv.obra.value = obraId;
+    const p = from || pendienteDe(obraId);
+    dv.periodo.value = p ? p.periodo : '';
+    dv.fecha.value = A.date(p ? p.fecha : HOY);
+    dv.concepto.value = p && CONCEPTOS.includes(p.concepto) ? p.concepto : CONCEPTOS[0];
+  }
+  function syncDist() {
+    const o = A.obra(dv.obra.value);
+    if (!o) return;
+    const parts = A.participaciones({ obra: o.id }).slice().sort(porMonto);
+    const total = parseMonto(dv.total.value);
+    const periodo = dv.periodo.value.trim();
+    const fecha = dv.fecha.value;
+    const programada = !!fecha && A.daysUntil(fecha) > 0;
+    document.getElementById('pg-inv-dist-estado').innerHTML = programada ? A.chip('Programada', 'chip-gold') : A.chip('Pagada', 'chip-sage');
+    const igual = periodo ? programadaIgual(o.id, periodo) : null;
+    const help = [];
+    if (igual) help.push(`Completa la distribución programada ${igual.periodo} de ${o.nombre}.`);
+    help.push(programada ? `Con fecha futura queda programada para el ${A.date(fecha)}.` : 'Se suma a lo cobrado por cada inversor.');
+    document.getElementById('pg-inv-dist-help').textContent = help.join(' ');
+
+    const filas = parts.map((p) => {
+      const inv = quien(p.inversor);
+      return `<tr><td><div class="pg-inv-who">${dot(p.inversor)}${A.avatar(inv, 'sm')}<span>${esc(inv.nombre)}</span></div></td><td class="num">${A.pct(p.pct, 1)}</td><td class="num strong">${total ? A.money(reparte(total, p.pct)) : '<span class="muted">—</span>'}</td></tr>`;
+    }).join('');
+    const repartido = total ? suma(parts, (p) => reparte(total, p.pct)) : 0;
+    const dif = total ? repartido - total : 0;
+    document.getElementById('pg-inv-dist-reparto').innerHTML = filas
+      + `<tr class="total"><td>Total${dif ? ` <span class="hint">· redondeo ${A.money(dif)}</span>` : ''}</td><td class="num">${A.pct(round1(suma(parts, (p) => p.pct)), 1)}</td><td class="num">${total ? A.money(repartido) : '—'}</td></tr>`;
+    document.getElementById('pg-inv-dist-count').textContent = total ? plural(parts.length, 'inversor', 'inversores') : 'Indique el importe total';
+
+    const asEl = document.getElementById('pg-inv-dist-asunto');
+    if (!dv.avisar.checked) asEl.textContent = 'Sin aviso. Verán la distribución al entrar en su portal.';
+    else asEl.innerHTML = `Asunto: <b class="strong">${esc(asunto('n3', { periodo: periodo || '…', obra: o.nombre }))}</b> · ${plural(parts.length, 'destinatario', 'destinatarios')}${programada ? ' · el día del pago' : ''}`;
+  }
+  fDist.addEventListener('input', (e) => {
+    if (['periodo', 'fecha', 'concepto'].includes(e.target.name)) distDirty = true;
+    syncDist();
+  });
+  fDist.addEventListener('change', (e) => {
+    if (e.target === dv.obra && !distDirty) prefillDist(dv.obra.value);
+    syncDist();
+  });
+  dv.total.addEventListener('blur', () => { const n = parseMonto(dv.total.value); dv.total.value = n ? A.group(n) : ''; });
+  document.getElementById('modal-distribucion').addEventListener('modal:open', () => {
+    distDirty = false;
+    const obras = obrasConParticipaciones();
+    const def = obras.find((o) => pendienteDe(o.id)) || obras[0];
+    const preset = distPreset;
+    distPreset = null;
+    prefillDist(preset ? preset.obra : def.id, preset);
+    dv.total.value = preset && preset.total ? A.group(preset.total) : '';
+    const aviso = D.avisos.find((a) => a.id === 'n3');
+    dv.avisar.checked = !aviso || aviso.activo;
+    syncDist();
+    if (preset) setTimeout(() => dv.total.focus(), 90);
+  });
+  fDist.addEventListener('submit', (e) => {
+    const o = A.obra(dv.obra.value);
+    const periodo = dv.periodo.value.trim();
+    const fecha = dv.fecha.value;
+    const total = parseMonto(dv.total.value);
+    if (!o || !periodo || !fecha || !total) {
+      e.preventDefault();
+      e.stopPropagation();
+      const campo = !periodo ? dv.periodo : !fecha ? dv.fecha : dv.total;
+      campo.value = campo === dv.fecha ? campo.value : '';
+      campo.reportValidity();
+      campo.focus();
+      return;
+    }
+    const estado = A.daysUntil(fecha) > 0 ? 'Programada' : 'Pagada';
+    let d = programadaIgual(o.id, periodo);
+    if (d) Object.assign(d, { periodo, fecha, concepto: dv.concepto.value, total, estado });
+    else {
+      d = { id: `ds-${Date.now().toString(36)}`, obra: o.id, periodo, fecha, total, concepto: dv.concepto.value, estado };
+      D.distribuciones.push(d);
+    }
+    const n = A.participaciones({ obra: o.id }).length;
+    fDist.dataset.demo = estado === 'Pagada'
+      ? `Distribución ${periodo} de ${o.nombre} registrada${dv.avisar.checked ? ` · aviso enviado a ${plural(n, 'inversor', 'inversores')}` : ''}`
+      : `Distribución ${periodo} de ${o.nombre} programada para el ${A.date(fecha)}`;
+    abiertas = new Set([d.id]);
+    renderAll();
+    A.activateTab(tabsBox, 'distribuciones');
+    flash(`tr[data-dist="${d.id}"]`);
+  });
+})();
+</script>
+</body>
+</html>

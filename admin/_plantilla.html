@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Plantilla · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* Estilos propios de la página: siempre con prefijo (p. ej. .pg-plantilla-…). */
+  .pg-plantilla-demo { min-height: 120px; }
+</style>
+</head>
+<body data-page="resumen">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Plantilla</p>
+          <h1>Título de la pantalla</h1>
+          <p class="page-sub">Una frase que explica para qué sirve esta pantalla.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" type="button" data-toast="Exportado (demo)"><span data-icon="download"></span>Exportar</button>
+          <button class="btn btn-copper" type="button" data-open-modal="modal-ejemplo"><span data-icon="plus"></span>Acción principal</button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="pg-stats"></div>
+
+      <div class="card mt-24" data-tabs>
+        <div class="card-head" style="padding-bottom:0;border-bottom:0">
+          <div class="tabs" style="margin-bottom:0;border-bottom:0">
+            <button class="tab active" type="button" data-tab="uno">Pestaña uno</button>
+            <button class="tab" type="button" data-tab="dos">Pestaña dos</button>
+          </div>
+        </div>
+        <div class="card-body pg-plantilla-demo">
+          <div data-panel="uno"><div id="pg-lista"></div></div>
+          <div data-panel="dos"><div class="empty"><span data-icon="folder"></span>Contenido de la segunda pestaña.</div></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal de ejemplo -->
+<div class="modal-overlay" id="modal-ejemplo" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-ejemplo-titulo">
+    <form data-demo="Guardado (demostración)">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-ejemplo-titulo">Acción principal</h3>
+          <p class="modal-desc">Descripción corta de lo que hace el formulario.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label class="field span-2"><span class="label">Nombre</span><input class="input" name="nombre" required></label>
+          <label class="field"><span class="label">Importe</span><span class="input-affix"><span>US$</span><input name="importe" inputmode="decimal"></span></label>
+          <label class="field"><span class="label">Obra</span><select class="select" name="obra" id="pg-select-obra"></select></label>
+          <div class="field span-2"><span class="label">Archivos</span><div class="dropzone"><span data-icon="upload"></span><b>Arrastrar archivos aquí</b> o hacer clic para seleccionarlos</div><div class="file-list"></div></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+  (function () {
+    const A = window.Admin;
+    const D = A.data;
+    const o = A.obra('ayacucho');
+
+    document.getElementById('pg-stats').innerHTML = [
+      { label: 'Presupuesto total', value: A.money(o.presupuesto) },
+      { label: 'Ejecutado', value: A.money(o.ejecutado), accent: true, sub: A.pct((o.ejecutado / o.presupuesto) * 100, 1) + ' del presupuesto' },
+      { label: 'Avances publicados', value: A.avances('ayacucho').filter((a) => a.estado === 'publicado').length },
+      { label: 'Documentos', value: A.documentos('ayacucho').length }
+    ].map((s) => `<div class="stat-card"><div class="stat-label">${A.esc(s.label)}</div><div class="stat-value${s.accent ? ' accent' : ''}">${A.esc(s.value)}</div>${s.sub ? `<div class="stat-sub">${A.esc(s.sub)}</div>` : ''}</div>`).join('');
+
+    document.getElementById('pg-lista').innerHTML = `<div class="list">${A.gastos('ayacucho').slice(0, 4).map((g) => `
+      <div class="list-item">
+        <span class="list-icon">${A.icon('receipt')}</span>
+        <div class="list-main"><div class="list-title">${A.esc(g.concepto)}</div><div class="list-meta">${A.esc(A.partidaNombre('ayacucho', g.partida))} · ${A.date(g.fecha)}</div></div>
+        <span class="tnum strong">${A.money(g.importe)}</span>
+      </div>`).join('')}</div>`;
+
+    document.getElementById('pg-select-obra').innerHTML = D.obras.map((ob) => `<option value="${ob.id}">${A.esc(ob.nombre)}</option>`).join('');
+  })();
+</script>
+</body>
+</html>

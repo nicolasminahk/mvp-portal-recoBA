@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Obras · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ---------- Obras: métricas ---------- */
+  .pg-obras-stats { margin-bottom: 20px; }
+  a.pg-obras-stat-link { display: block; transition: border-color .15s ease, background .15s ease; }
+  a.pg-obras-stat-link:hover { border-color: var(--line-strong); background: #fff; }
+
+  /* ---------- Obras: barra de filtros ---------- */
+  .pg-obras-card { overflow: hidden; }
+  .pg-obras-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .pg-obras-seg-wrap { max-width: 100%; overflow-x: auto; }
+  .pg-obras-seg button { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .pg-obras-n { font-size: 11px; font-weight: 700; line-height: 17px; padding: 0 6px; border-radius: 999px; color: var(--ink-mute); background: rgba(28,35,49,.06); font-variant-numeric: tabular-nums; }
+  .pg-obras-seg button.active .pg-obras-n { color: var(--copper-dark); background: rgba(196,106,74,.13); }
+  .pg-obras-search { display: flex; align-items: center; gap: 8px; width: 290px; max-width: 100%; height: 36px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: #fff; color: var(--ink-mute); transition: border-color .15s ease, box-shadow .15s ease; }
+  .pg-obras-search:focus-within { border-color: var(--copper); box-shadow: 0 0 0 3px rgba(196,106,74,.16); }
+  .pg-obras-search .ico { width: 16px; height: 16px; }
+  .pg-obras-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 13.5px; color: var(--ink); }
+
+  /* ---------- Obras: tabla ---------- */
+  .pg-obras-table th:first-child, .pg-obras-table td:first-child { padding-left: 20px; }
+  .pg-obras-table th:last-child, .pg-obras-table td:last-child { padding-right: 16px; }
+  .pg-obras-table td { padding-top: 14px; padding-bottom: 14px; }
+  .pg-obras-c-fase { width: 170px; }
+  .pg-obras-c-avance { width: 132px; }
+  .pg-obras-c-presu { width: 194px; }
+  .pg-obras-c-inv { width: 138px; }
+  .pg-obras-c-resp { width: 132px; }
+  .pg-obras-c-go { width: 50px; }
+  .pg-obras-table .pg-obras-cell-go { padding-left: 4px; }
+  .pg-obras-row { cursor: pointer; }
+  .pg-obras-obra { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .pg-obras-thumb { width: 64px; height: 48px; aspect-ratio: auto; padding: 0; border-radius: 9px; flex-shrink: 0; background-size: cover; background-position: center; }
+  .pg-obras-pend { margin-top: 6px; }
+  .pg-obras-fase-meta { white-space: nowrap; }
+  .pg-obras-files:empty { display: none; }
+  .pg-obras-name { font-size: 14.5px; font-weight: 600; }
+  .pg-obras-row:hover .pg-obras-name { color: var(--copper-dark); }
+  .pg-obras-progress { display: flex; align-items: center; gap: 10px; }
+  .pg-obras-progress .progress-track { flex: 1; min-width: 56px; height: 6px; }
+  .pg-obras-progress .strong { min-width: 34px; text-align: right; }
+  .pg-obras-budget .mini-bar { margin: 6px 0 3px; min-width: 0; }
+  .pg-obras-resp { gap: 8px; font-size: 13px; white-space: nowrap; }
+  .pg-obras-noavatar { width: 26px; height: 26px; border-radius: 50%; border: 1.5px dashed var(--line-strong); display: grid; place-items: center; color: var(--ink-mute); flex-shrink: 0; }
+  .pg-obras-noavatar .ico { width: 13px; height: 13px; }
+  .pg-obras-go { width: 32px; height: 32px; }
+  .pg-obras-go .ico { width: 16px; height: 16px; }
+  .pg-obras-row:hover .pg-obras-go { color: var(--copper-dark); border-color: var(--copper-tint); }
+  .pg-obras-new td { animation: pg-obras-flash 2.8s ease; }
+  @keyframes pg-obras-flash { 0%, 35% { background: rgba(196,106,74,.10); } 100% { background: transparent; } }
+  .pg-obras-empty td { cursor: default; }
+  .pg-obras-table tbody tr.pg-obras-empty:hover td { background: transparent; }
+  .pg-obras-foot { font-size: 12.5px; color: var(--ink-mute); }
+
+  /* ---------- Obras: modal ---------- */
+  .pg-obras-grid3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px 16px; }
+  .pg-obras-grid3.pg-obras-eq { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  @media (max-width: 860px) {
+    .stats-grid.pg-obras-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pg-obras-stats .stat-card { padding: 14px 14px 13px; }
+    .pg-obras-stats .stat-value { font-size: 22px; }
+    .pg-obras-toolbar { padding: 12px 14px; }
+    .pg-obras-search { width: 100%; }
+    .pg-obras-seg-wrap { width: 100%; }
+    .pg-obras-seg { display: flex; width: 100%; }
+    .pg-obras-seg button { flex: 1; justify-content: center; padding: 6px 4px; }
+    .pg-obras-n { display: none; }
+    .pg-obras-table thead { display: none; }
+    .pg-obras-table, .pg-obras-table tbody { display: block; }
+    .pg-obras-table tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; padding: 16px 14px; border-bottom: 1px solid var(--line); }
+    .pg-obras-table tbody tr:last-child { border-bottom: 0; }
+    .pg-obras-table td, .pg-obras-table td:first-child, .pg-obras-table td:last-child { display: block; padding: 0; border: 0; }
+    .pg-obras-table tbody tr:hover td { background: transparent; }
+    .pg-obras-table td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 5px; font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
+    .pg-obras-table .pg-obras-cell-obra { grid-column: 1 / -1; }
+    .pg-obras-table td.pg-obras-cell-go { display: none; }
+    .pg-obras-table tr.pg-obras-empty { display: block; }
+    .pg-obras-grid3, .pg-obras-grid3.pg-obras-eq { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pg-obras-grid3 > :first-child { grid-column: 1 / -1; }
+  }
+</style>
+</head>
+<body data-page="obras">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Gestión</p>
+          <h1>Obras</h1>
+          <p class="page-sub">Fase, avance, presupuesto e inversores de cada obra en una sola lista.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-copper" type="button" id="pg-obras-nueva" data-open-modal="modal-nueva-obra"><span data-icon="plus"></span>Nueva obra</button>
+        </div>
+      </div>
+
+      <div class="stats-grid pg-obras-stats" id="pg-obras-stats"></div>
+
+      <section class="card pg-obras-card" aria-label="Lista de obras">
+        <div class="pg-obras-toolbar">
+          <div class="pg-obras-seg-wrap">
+            <div class="segmented pg-obras-seg" id="pg-obras-seg" data-segmented role="group" aria-label="Filtrar por estado">
+              <button type="button" class="active" aria-pressed="true" data-value="todas">Todas <span class="pg-obras-n" data-n="todas"></span></button>
+              <button type="button" aria-pressed="false" data-value="En obra">En obra <span class="pg-obras-n" data-n="En obra"></span></button>
+              <button type="button" aria-pressed="false" data-value="En renta">En renta <span class="pg-obras-n" data-n="En renta"></span></button>
+              <button type="button" aria-pressed="false" data-value="En estudio">En estudio <span class="pg-obras-n" data-n="En estudio"></span></button>
+            </div>
+          </div>
+          <label class="pg-obras-search"><span data-icon="search"></span><input type="search" id="pg-obras-search" placeholder="Buscar por nombre o barrio" aria-label="Buscar obra por nombre o barrio" autocomplete="off"></label>
+        </div>
+        <div class="table-wrap">
+          <table class="table pg-obras-table">
+            <thead>
+              <tr>
+                <th>Obra</th>
+                <th class="pg-obras-c-fase">Fase</th>
+                <th class="pg-obras-c-avance">Avance de obra</th>
+                <th class="pg-obras-c-presu">Presupuesto ejecutado</th>
+                <th class="pg-obras-c-inv">Inversión</th>
+                <th class="pg-obras-c-resp">Responsable</th>
+                <th class="pg-obras-c-go" aria-label="Abrir"></th>
+              </tr>
+            </thead>
+            <tbody id="pg-obras-body"></tbody>
+          </table>
+        </div>
+        <div class="card-foot">
+          <span class="pg-obras-foot" id="pg-obras-foot"></span>
+          <span class="pg-obras-foot" id="pg-obras-fecha"></span>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: nueva obra -->
+<div class="modal-overlay" id="modal-nueva-obra" aria-hidden="true">
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="modal-nueva-obra-titulo">
+    <form data-demo="Obra creada" id="pg-form-nueva" autocomplete="off">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-nueva-obra-titulo">Nueva obra</h3>
+          <p class="modal-desc">Dar de alta la obra para cargar avances, gastos, documentos e inversores.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label class="field"><span class="label">Nombre</span><input class="input" name="nombre" required placeholder="Ej.: Charcas 2900"></label>
+          <label class="field"><span class="label">Barrio o dirección</span><input class="input" name="barrio" placeholder="Ej.: Palermo"></label>
+          <div class="span-2 pg-obras-grid3">
+            <label class="field"><span class="label">Ciudad</span><input class="input" name="ciudad" value="Buenos Aires"></label>
+            <label class="field"><span class="label">m²</span><input class="input" name="m2" inputmode="numeric" placeholder="50"></label>
+            <label class="field"><span class="label">Ambientes</span>
+              <select class="select" name="ambientes"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select>
+            </label>
+          </div>
+          <div class="span-2 pg-obras-grid3 pg-obras-eq">
+            <label class="field"><span class="label">Fase inicial</span><select class="select" name="fase" id="pg-nueva-fase"></select></label>
+            <label class="field"><span class="label">Responsable de obra</span><select class="select" name="responsable" id="pg-nueva-resp"></select></label>
+            <label class="field"><span class="label">Presupuesto inicial</span><span class="input-affix"><span>US$</span><input name="presupuesto" inputmode="numeric" placeholder="120.000"></span></label>
+          </div>
+          <div class="field span-2">
+            <span class="label">Portada</span>
+            <div class="dropzone" id="pg-nueva-drop" data-accept="image/*" data-multiple="false"><span data-icon="image"></span><b>Arrastrar una foto aquí</b> o hacer clic para seleccionarla</div>
+            <div class="file-list pg-obras-files" id="pg-nueva-files"></div>
+            <span class="hint">Identifica la obra en esta lista y en el portal del inversor.</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Crear obra</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+(function () {
+  const A = window.Admin;
+  const D = A.data;
+  const $ = (s) => document.querySelector(s);
+  const norm = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+  const sum = (arr, fn) => arr.reduce((s, x) => s + (fn(x) || 0), 0);
+
+  let filtro = 'todas';
+  let busqueda = '';
+  let recienCreada = null;
+  let seq = 0;
+  let portadaPendiente = null;
+  const portadas = {};
+
+  const borradores = (id) => A.avances(id).filter((a) => a.estado === 'borrador');
+  const hrefDe = (o) => (o.nueva ? '#' : `obra.html?id=${encodeURIComponent(o.id)}`);
+
+  /* ---------- Métricas ---------- */
+  function renderStats() {
+    const obras = D.obras;
+    const cuenta = (e) => obras.filter((o) => o.estado === e).length;
+    const parts = D.participaciones.filter((p) => A.obra(p.obra));
+    const nInversores = new Set(parts.map((p) => p.inversor)).size;
+    const nObrasCapital = new Set(parts.map((p) => p.obra)).size;
+    const opps = obras.filter((o) => o.oportunidad && o.oportunidad.estado === 'Abierta');
+    const pend = D.avances.filter((a) => a.estado === 'borrador' && A.obra(a.obra));
+    const p0 = pend[0];
+    const pendSub = !pend.length ? 'Todo publicado'
+      : pend.length === 1 ? `${A.obra(p0.obra).nombre} · ${(A.persona(p0.autor) || {}).nombre || ''}`
+      : `En ${plural(new Set(pend.map((a) => a.obra)).size, 'obra', 'obras')}`;
+    const cards = [
+      { label: 'Obras', icon: 'building', value: A.group(obras.length), sub: `${cuenta('En obra')} en obra · ${cuenta('En renta')} en renta · ${cuenta('En estudio')} en estudio` },
+      { label: 'Capital de inversores', icon: 'wallet', value: A.money(sum(parts, (p) => p.monto)), sub: `${plural(nInversores, 'inversor', 'inversores')} en ${plural(nObrasCapital, 'obra', 'obras')}` },
+      { label: 'Captación abierta', icon: 'trend', value: A.money(sum(opps, (o) => o.oportunidad.comprometido)), sub: `de ${A.money(sum(opps, (o) => o.oportunidad.objetivo))} en ${plural(opps.length, 'oportunidad', 'oportunidades')}` },
+      { label: 'Avances por revisar', icon: 'clock', value: A.group(pend.length), sub: pendSub, accent: pend.length > 0, href: p0 ? `obra.html?id=${encodeURIComponent(p0.obra)}#diario` : null }
+    ];
+    $('#pg-obras-stats').innerHTML = cards.map((c) => {
+      const tag = c.href ? 'a' : 'div';
+      const attrs = c.href ? ` href="${A.esc(c.href)}"` : '';
+      return `<${tag} class="stat-card${c.href ? ' pg-obras-stat-link' : ''}"${attrs}>
+        <div class="stat-label"><span>${A.esc(c.label)}</span>${A.icon(c.icon)}</div>
+        <div class="stat-value${c.accent ? ' accent' : ''}">${A.esc(c.value)}</div>
+        <div class="stat-sub">${A.esc(c.sub)}</div></${tag}>`;
+    }).join('');
+  }
+
+  /* ---------- Fila de la tabla ---------- */
+  function fila(o) {
+    const href = hrefDe(o);
+    const pend = borradores(o.id).length;
+    const faseIdx = o.faseActual || 0;
+    const faseFecha = (o.fechasFases || [])[faseIdx];
+    const meta = [o.barrio, o.m2 ? `${A.group(o.m2)} m²` : '', o.ambientes ? `${o.ambientes} amb.` : ''].filter(Boolean).join(' · ');
+    const foto = portadas[o.id] ? ` style="background-image:url('${A.esc(portadas[o.id])}')"` : '';
+
+    let avance;
+    if (o.estado === 'En estudio') {
+      avance = '<span class="muted">Sin iniciar</span>';
+    } else {
+      const v = Math.max(0, Math.min(100, o.avanceObra || 0));
+      avance = `<div class="pg-obras-progress"><div class="progress-track"><div class="progress-fill${v >= 100 ? ' sage' : ''}" style="width:${v}%"></div></div><span class="tnum strong">${A.pct(v)}</span></div>`;
+    }
+
+    let presu;
+    if (o.presupuesto) {
+      const ej = o.ejecutado || 0;
+      presu = `<div class="pg-obras-budget"><div class="row-between"><span class="tnum strong">${A.money(ej)}</span><span class="tnum muted">${A.pct((ej / o.presupuesto) * 100, 1)}</span></div>${A.bar(ej, o.presupuesto)}<div class="cell-meta">de ${A.money(o.presupuesto)}</div></div>`;
+    } else if (o.oportunidad) {
+      presu = `<span class="muted">Sin cargar</span><div class="cell-meta">Compra prevista ${A.money(o.oportunidad.compraPrevista)}</div>`;
+    } else {
+      presu = '<span class="muted">Sin cargar</span>';
+    }
+
+    const parts = A.participaciones({ obra: o.id });
+    let inv;
+    if (parts.length) {
+      inv = `<span class="strong">${plural(parts.length, 'inversor', 'inversores')}</span><div class="cell-meta tnum">${A.money(sum(parts, (p) => p.monto))}</div>`;
+    } else if (o.oportunidad) {
+      const op = o.oportunidad;
+      inv = `<span class="strong tnum">${A.money(op.comprometido)}</span><div class="cell-meta tnum">${A.pct((op.comprometido / op.objetivo) * 100)} de ${A.money(op.objetivo)}</div>`;
+    } else {
+      inv = '<span class="muted">Sin inversores</span>';
+    }
+
+    const r = o.responsable ? A.persona(o.responsable) : null;
+    const resp = r
+      ? `<div class="row pg-obras-resp">${A.avatar(r, 'sm')}<span>${A.esc(r.nombre)}</span></div>`
+      : `<div class="row pg-obras-resp"><span class="pg-obras-noavatar" title="Sin responsable">${A.icon('user')}</span><span class="muted">Sin asignar</span></div>`;
+
+    const chipPend = pend ? `<span title="Avances pendientes de revisión">${A.chip(`${pend} por revisar`, 'chip-gold')}</span>` : '';
+    const faseMeta = `Fase ${faseIdx + 1} de ${D.fases.length}${faseFecha ? ' · ' + A.date(faseFecha, 'month') : ''}`;
+
+    return `<tr class="pg-obras-row${recienCreada === o.id ? ' pg-obras-new' : ''}" data-id="${A.esc(o.id)}" data-href="${A.esc(href)}">
+      <td class="pg-obras-cell-obra"><div class="pg-obras-obra">
+        <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-obras-thumb"${foto} aria-hidden="true"></div>
+        <div><a class="pg-obras-name" href="${A.esc(href)}">${A.esc(o.nombre)}</a><div class="cell-meta">${A.esc(meta || o.ciudad || '')}</div>${chipPend ? `<div class="pg-obras-pend">${chipPend}</div>` : ''}</div>
+      </div></td>
+      <td data-label="Fase">${A.estadoChip(o.estado)}<div class="cell-meta mt-4 pg-obras-fase-meta">${A.esc(faseMeta)}</div></td>
+      <td data-label="Avance de obra">${avance}</td>
+      <td data-label="Presupuesto">${presu}</td>
+      <td data-label="Inversión">${inv}</td>
+      <td data-label="Responsable">${resp}</td>
+      <td class="pg-obras-cell-go"><a class="icon-btn pg-obras-go" href="${A.esc(href)}" aria-label="Abrir ${A.esc(o.nombre)}">${A.icon('chevron-right')}</a></td>
+    </tr>`;
+  }
+
+  /* ---------- Lista ---------- */
+  function visibles() {
+    const q = norm(busqueda);
+    return D.obras.filter((o) => (filtro === 'todas' || o.estado === filtro) && (!q || norm(o.nombre).includes(q) || norm(o.barrio).includes(q)));
+  }
+
+  function renderCounts() {
+    document.querySelectorAll('#pg-obras-seg [data-n]').forEach((el) => {
+      const v = el.dataset.n;
+      el.textContent = v === 'todas' ? D.obras.length : D.obras.filter((o) => o.estado === v).length;
+    });
+  }
+
+  function render() {
+    const lista = visibles();
+    $('#pg-obras-body').innerHTML = lista.length ? lista.map(fila).join('') : `
+      <tr class="pg-obras-empty"><td colspan="7"><div class="empty">${A.icon('search')}
+        <div class="strong">Ninguna obra coincide con el filtro</div>
+        <div class="muted mt-4">Pruebe con otro nombre o con otro estado.</div>
+        <button type="button" class="btn btn-ghost btn-sm mt-12" data-pg-limpiar>Quitar filtros</button>
+      </div></td></tr>`;
+    const total = plural(D.obras.length, 'obra', 'obras');
+    $('#pg-obras-foot').textContent = lista.length === D.obras.length ? total : `Mostrando ${lista.length} de ${total}`;
+    renderCounts();
+    renderStats();
+    recienCreada = null;
+  }
+
+  function setFiltro(v) {
+    filtro = v;
+    document.querySelectorAll('#pg-obras-seg button').forEach((b) => {
+      const on = b.dataset.value === v;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  $('#pg-obras-seg').addEventListener('segmented:change', (e) => { filtro = e.detail; render(); });
+  $('#pg-obras-search').addEventListener('input', (e) => { busqueda = e.target.value; render(); });
+
+  $('#pg-obras-body').addEventListener('click', (e) => {
+    if (e.target.closest('[data-pg-limpiar]')) {
+      setFiltro('todas');
+      busqueda = '';
+      $('#pg-obras-search').value = '';
+      render();
+      return;
+    }
+    const tr = e.target.closest('tr[data-id]');
+    if (!tr) return;
+    const o = A.obra(tr.dataset.id);
+    if (o && o.nueva) {
+      e.preventDefault();
+      A.toast('La ficha de una obra nueva no se conserva en esta demostración', 'info');
+      return;
+    }
+    if (e.target.closest('a')) return;
+    window.location.href = tr.dataset.href;
+  });
+
+  /* ---------- Modal «Nueva obra» ---------- */
+  const form = $('#pg-form-nueva');
+  const files = $('#pg-nueva-files');
+  $('#pg-nueva-fase').innerHTML = D.fases.map((f, i) => `<option value="${i}">${A.esc(f)}</option>`).join('');
+  $('#pg-nueva-resp').innerHTML = '<option value="">Sin asignar</option>' +
+    D.equipo.filter((p) => p.perfil === 'obra').map((p) => `<option value="${A.esc(p.id)}">${A.esc(p.nombre)}</option>`).join('');
+
+  $('#pg-nueva-drop').addEventListener('dropzone:files', (e) => {
+    const f = (e.detail.files || [])[0];
+    if (!f) return;
+    portadaPendiente = /^image\//.test(f.type) ? URL.createObjectURL(f) : null;
+    files.innerHTML = `<div class="file-row">${A.icon('image')}<span></span></div>`;
+    files.querySelector('span').textContent = f.name;
+  });
+
+  form.addEventListener('submit', () => {
+    const fd = new FormData(form);
+    const txt = (k) => String(fd.get(k) || '').trim();
+    const num = (k) => { const n = parseInt(txt(k).replace(/\D/g, ''), 10); return Number.isFinite(n) && n > 0 ? n : null; };
+    const nombre = txt('nombre') || 'Obra sin nombre';
+    const fase = Math.max(0, Math.min(D.fases.length - 1, parseInt(txt('fase'), 10) || 0));
+    const mes = D.instalacion.hoy.slice(0, 7);
+    const presupuesto = num('presupuesto');
+    seq += 1;
+    const id = `nueva-${seq}`;
+    D.obras.unshift({
+      id, nombre, barrio: txt('barrio'), ciudad: txt('ciudad'), m2: num('m2'), ambientes: num('ambientes'), piso: null,
+      estado: D.fases[fase], faseActual: fase, fechasFases: D.fases.map((_, i) => (i === fase ? mes : null)),
+      avanceObra: 0, portada: `ph-${(D.obras.length % 5) + 1}`, responsable: txt('responsable') || null,
+      presupuesto, ejecutado: presupuesto ? 0 : null, nueva: true
+    });
+    if (portadaPendiente) portadas[id] = portadaPendiente;
+    portadaPendiente = null;
+    form.dataset.demo = `Obra «${nombre}» creada`;
+    setFiltro('todas');
+    busqueda = '';
+    $('#pg-obras-search').value = '';
+    recienCreada = id;
+    render();
+  });
+
+  $('#modal-nueva-obra').addEventListener('modal:close', () => {
+    form.reset();
+    files.innerHTML = '';
+    portadaPendiente = null;
+  });
+
+  $('#pg-obras-fecha').textContent = `Actualizado el ${A.date(D.instalacion.hoy)}`;
+  render();
+})();
+</script>
+</body>
+</html>

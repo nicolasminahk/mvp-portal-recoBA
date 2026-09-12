@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Obra · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ---------- Obra: cabecera ---------- */
+  .pg-obra-hero { display: flex; align-items: center; gap: 20px; min-width: 0; }
+  .pg-obra-cover { width: 128px; height: 96px; aspect-ratio: auto; border-radius: 12px; flex-shrink: 0; }
+  .pg-obra-titlerow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .pg-obra-hero .page-sub { margin-top: 4px; }
+  .pg-obra-owner { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-obra-owner b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- Obra: fases ---------- */
+  .pg-obra-phases-card .card-head { flex-wrap: wrap; }
+  .pg-obra-phases-card .card-body { padding: 22px 22px 20px; }
+  .pg-obra-phases-scroll { overflow-x: auto; }
+  .pg-obra-phases-scroll .phases { min-width: 640px; }
+  .pg-obra-hito { text-align: right; }
+  .pg-obra-hito-label { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-obra-hito-value { font-size: 13.5px; font-weight: 600; margin-top: 2px; }
+
+  /* ---------- Obra: métricas ---------- */
+  .pg-obra-stats { margin-top: 18px; }
+  .stats-grid.pg-obra-cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .pg-obra-stats .progress-track { height: 6px; margin-top: 12px; }
+  .pg-obra-stats .mini-bar { margin-top: 12px; min-width: 0; }
+  .pg-obra-stats .stat-sub + .progress-track, .pg-obra-stats .stat-sub + .mini-bar { margin-top: 10px; }
+
+  /* ---------- Obra: oportunidad (en estudio) ---------- */
+  .pg-obra-opp { margin-top: 18px; }
+  .pg-obra-opp-big { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .pg-obra-opp-big .numeral { font-size: 32px; font-weight: 600; line-height: 1.1; }
+  .pg-obra-opp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .pg-obra-kv-label { font-size: 12px; font-weight: 600; color: var(--ink-mute); margin-bottom: 4px; }
+  .pg-obra-kv-value { font-family: var(--serif); font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-obra-opp-note { font-size: 12.5px; color: var(--ink-mute); margin-top: 14px; }
+
+  /* ---------- Obra: pestañas ---------- */
+  .pg-obra-tabs { scroll-margin-top: 76px; }
+  .pg-obra-tabs-head { padding: 4px 22px 0; }
+  .pg-obra-tabs-head .tabs { margin-bottom: 0; border-bottom: 0; width: 100%; }
+  .pg-obra-tabs > .card-body { padding: 24px 22px; }
+
+  /* ---------- Diario ---------- */
+  .pg-obra-diario { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 32px; align-items: start; }
+  .pg-obra-diario.pg-obra-solo { grid-template-columns: minmax(0, 1fr); }
+  .pg-obra-sub { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 11.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-obra-draft { border: 1px solid rgba(201,169,106,.5); background: rgba(201,169,106,.08); border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; }
+  .pg-obra-drafts { margin-bottom: 30px; }
+  .pg-obra-draft-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .pg-obra-author { display: flex; align-items: center; gap: 10px; font-size: 13px; line-height: 1.35; }
+  .pg-obra-author b { font-weight: 600; }
+  .pg-obra-author small { display: block; font-size: 12px; color: var(--ink-mute); }
+  .pg-obra-av-title { font-size: 18px; margin: 6px 0 6px; }
+  .pg-obra-draft .pg-obra-av-title { margin-top: 0; }
+  .pg-obra-av-text { font-size: 14px; color: var(--ink-soft); line-height: 1.6; max-width: 660px; }
+  .pg-obra-media { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .pg-obra-shot { width: 136px; height: 102px; aspect-ratio: auto; background-size: cover; background-position: center; }
+  .pg-obra-shot.pg-obra-video { width: 196px; }
+  .pg-obra-shot .pg-obra-shot-label { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-obra-play { position: absolute; top: 50%; left: 50%; z-index: 1; width: 38px; height: 38px; border-radius: 50%; transform: translate(-50%, -62%); display: grid; place-items: center; background: rgba(255,255,255,.92); color: var(--ink); }
+  .thumb .pg-obra-play .ico { position: static; width: 14px; height: 14px; margin-left: 2px; fill: currentColor; opacity: 1; }
+  .pg-obra-draft-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .pg-obra-timeline .tl-item::before { box-shadow: 0 0 0 4px var(--paper-card); }
+  .pg-obra-timeline .tl-item { padding-bottom: 30px; }
+  .pg-obra-timeline .tl-item:last-child { padding-bottom: 0; }
+  .pg-obra-tl-foot { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-top: 12px; font-size: 12.5px; color: var(--ink-mute); }
+  .pg-obra-tl-foot .ico { width: 15px; height: 15px; }
+  .pg-obra-inline { display: inline-flex; align-items: center; gap: 6px; }
+  .pg-obra-flash { animation: pg-obra-flash 2.8s ease; border-radius: 10px; }
+  @keyframes pg-obra-flash { 0%, 35% { background: rgba(196,106,74,.08); box-shadow: 0 0 0 10px rgba(196,106,74,.08); } 100% { background: transparent; box-shadow: 0 0 0 10px rgba(196,106,74,0); } }
+  .pg-obra-aside { position: sticky; top: 80px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; }
+  .pg-obra-aside h4 { font-size: 15px; margin-bottom: 6px; }
+  .pg-obra-aside-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+  .pg-obra-aside-row:last-of-type { border-bottom: 0; }
+  .pg-obra-aside-row span { color: var(--ink-soft); }
+  .pg-obra-aside-row b { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .pg-obra-aside p { font-size: 12.5px; color: var(--ink-mute); margin-top: 10px; line-height: 1.5; }
+  .pg-obra-empty h4 { font-size: 18px; color: var(--ink); margin-bottom: 6px; }
+  .pg-obra-empty p { max-width: 440px; margin: 0 auto 16px; }
+
+  /* ---------- Presupuesto, documentos e inversores ---------- */
+  .pg-obra-sum { display: flex; flex-wrap: wrap; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); margin-bottom: 18px; }
+  .pg-obra-sum > div { flex: 1; min-width: 150px; padding: 14px 18px; }
+  .pg-obra-sum > div + div { border-left: 1px solid var(--line); }
+  .pg-obra-box { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .pg-obra-c-bar { width: 210px; }
+  .pg-obra-barcell { display: flex; align-items: center; gap: 10px; }
+  .pg-obra-barcell .mini-bar { flex: 1; min-width: 60px; }
+  .pg-obra-barcell .tnum { min-width: 46px; text-align: right; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-obra-over { color: var(--copper-dark); font-weight: 600; }
+  .pg-obra-tabfoot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+  .pg-obra-tabfoot .hint { max-width: 560px; }
+  .pg-obra-person { display: flex; align-items: center; gap: 10px; }
+  .pg-obra-doc-side { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+
+  /* ---------- Datos de la obra ---------- */
+  .pg-obra-datos { max-width: 820px; }
+  .pg-obra-datos-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+
+  /* ---------- Modales ---------- */
+  .pg-obra-row2 { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 14px 16px; }
+  .pg-obra-switch-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); cursor: pointer; }
+  .pg-obra-switch-row .strong, .pg-obra-switch-row .hint { display: block; }
+  .pg-obra-switch-row.is-off { cursor: default; opacity: .7; }
+  .pg-obra-files:empty { display: none; }
+  .pg-obra-foot-note { display: flex; align-items: center; gap: 6px; margin-right: auto; font-size: 12.5px; color: var(--ink-mute); }
+  .pg-obra-foot-note .ico { width: 15px; height: 15px; }
+
+  @media (max-width: 1180px) {
+    .stats-grid.pg-obra-cols-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pg-obra-diario { grid-template-columns: minmax(0, 1fr); }
+    .pg-obra-aside { position: static; }
+  }
+  @media (max-width: 860px) {
+    .pg-obra-hero { align-items: flex-start; gap: 14px; }
+    .pg-obra-cover { width: 84px; height: 64px; border-radius: 10px; }
+    .pg-obra-hito { text-align: left; }
+    .stats-grid.pg-obra-stats, .stats-grid.pg-obra-cols-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .pg-obra-stats > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+    .pg-obra-stats .stat-card { padding: 14px; }
+    .pg-obra-stats .stat-value { font-size: 22px; }
+    .pg-obra-opp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pg-obra-tabs-head { padding: 2px 8px 0; }
+    .pg-obra-tabs > .card-body { padding: 20px 14px; }
+    .pg-obra-shot { width: calc(50% - 5px); height: auto; aspect-ratio: 4 / 3; }
+    .pg-obra-shot.pg-obra-video { width: 100%; aspect-ratio: 16 / 9; }
+    .pg-obra-sum > div { flex-basis: 100%; }
+    .pg-obra-sum > div + div { border-left: 0; border-top: 1px solid var(--line); }
+    .pg-obra-docs .list-item { flex-wrap: wrap; }
+    .pg-obra-doc-side { width: 100%; padding-left: 46px; }
+    .pg-obra-row2 { grid-template-columns: minmax(0, 1fr); }
+    .pg-obra-foot-note { display: none; }
+  }
+</style>
+</head>
+<body data-page="obra">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head">
+        <div class="pg-obra-hero" id="pg-hero"></div>
+        <div class="page-actions">
+          <a class="btn btn-ghost" href="../index.html"><span data-icon="eye"></span>Ver como inversor</a>
+          <button class="btn btn-ghost" type="button" id="pg-btn-fase"><span data-icon="refresh"></span>Actualizar fase</button>
+          <button class="btn btn-copper" type="button" id="pg-btn-publicar" data-pg-publicar><span data-icon="plus"></span>Publicar avance</button>
+        </div>
+      </div>
+
+      <section class="card pg-obra-phases-card" aria-label="Fases de la obra">
+        <div class="card-head">
+          <div><h3>Fases</h3><p class="card-sub" id="pg-fase-sub"></p></div>
+          <div class="pg-obra-hito" id="pg-hito"></div>
+        </div>
+        <div class="card-body"><div class="pg-obra-phases-scroll" id="pg-phases"></div></div>
+      </section>
+
+      <div id="pg-metrics"></div>
+
+      <section class="card mt-24 pg-obra-tabs" id="pg-tabs" data-tabs>
+        <div class="card-head pg-obra-tabs-head">
+          <div class="tabs" role="tablist" aria-label="Secciones de la obra">
+            <button class="tab active" type="button" data-tab="diario">Diario de obra<span class="count" id="pg-n-diario" hidden></span></button>
+            <button class="tab" type="button" data-tab="presupuesto">Presupuesto</button>
+            <button class="tab" type="button" data-tab="documentos">Documentos<span class="count" id="pg-n-docs" hidden></span></button>
+            <button class="tab" type="button" data-tab="inversores">Inversores<span class="count" id="pg-n-inv" hidden></span></button>
+            <button class="tab" type="button" data-tab="datos">Datos de la obra</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div data-panel="diario" id="pg-diario"></div>
+          <div data-panel="presupuesto" id="pg-presupuesto"></div>
+          <div data-panel="documentos" id="pg-documentos"></div>
+          <div data-panel="inversores" id="pg-inversores"></div>
+          <div data-panel="datos" id="pg-datos"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: publicar avance -->
+<div class="modal-overlay" id="modal-publicar" aria-hidden="true">
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="pg-pub-titulo">
+    <form data-demo="Avance publicado" id="pg-form-publicar" autocomplete="off">
+      <div class="modal-head">
+        <div>
+          <h3 id="pg-pub-titulo">Publicar avance</h3>
+          <p class="modal-desc" id="pg-pub-desc">Se publica en el diario de la obra y en el portal del inversor.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="span-2 pg-obra-row2">
+            <label class="field"><span class="label">Título</span><input class="input" name="titulo" required placeholder="Ej.: Cocina: bajo mesada y alacenas"></label>
+            <label class="field"><span class="label">Fecha</span><span class="input-affix"><span><span data-icon="calendar"></span></span><input name="fecha" required inputmode="numeric" placeholder="dd/mm/aaaa" pattern="\d{2}/\d{2}/\d{4}" title="Formato dd/mm/aaaa"></span></label>
+          </div>
+          <label class="field span-2"><span class="label">Texto</span><textarea class="textarea" name="texto" required rows="4" placeholder="Qué se hizo, qué queda pendiente y cuál es el siguiente paso."></textarea></label>
+          <div class="field span-2">
+            <span class="label">Fotos y vídeos</span>
+            <div class="dropzone" id="pg-pub-drop" data-accept="image/*,video/*"><span data-icon="upload"></span><b>Arrastrar fotos y vídeos aquí</b> o hacer clic para seleccionarlos</div>
+            <div class="file-list pg-obra-files" id="pg-pub-files"></div>
+          </div>
+          <label class="span-2 pg-obra-switch-row" id="pg-pub-avisar-row" for="pg-pub-avisar">
+            <span><span class="strong" id="pg-pub-avisar-label">Avisar a los inversores de la obra</span><span class="hint" id="pg-pub-avisar-hint">Reciben un correo con el enlace al avance.</span></span>
+            <span class="switch"><input type="checkbox" name="avisar" id="pg-pub-avisar" checked><span class="track"></span></span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <span class="pg-obra-foot-note"><span data-icon="eye"></span>Visible en el portal del inversor</span>
+        <button type="button" class="btn btn-ghost" id="pg-pub-borrador">Guardar borrador</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="send"></span>Publicar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: actualizar fase -->
+<div class="modal-overlay" id="modal-fase" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pg-fase-titulo">
+    <form data-demo="Fase actualizada" id="pg-form-fase" autocomplete="off">
+      <div class="modal-head">
+        <div>
+          <h3 id="pg-fase-titulo">Actualizar fase</h3>
+          <p class="modal-desc" id="pg-fase-desc"></p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label class="field"><span class="label">Fase</span><select class="select" name="fase" id="pg-fase-sel"></select></label>
+          <label class="field"><span class="label">Mes</span><select class="select" name="mes" id="pg-fase-mes"></select></label>
+          <label class="field span-2"><span class="label">Nota</span><textarea class="textarea" name="nota" rows="3" placeholder="Ej.: escritura firmada y llaves entregadas"></textarea><span class="hint">Se incluye en el aviso a los inversores.</span></label>
+          <label class="span-2 pg-obra-switch-row" id="pg-fase-avisar-row" for="pg-fase-avisar">
+            <span><span class="strong">Avisar a los inversores</span><span class="hint" id="pg-fase-avisar-hint"></span></span>
+            <span class="switch"><input type="checkbox" name="avisar" id="pg-fase-avisar" checked><span class="track"></span></span>
+          </label>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Guardar fase</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+(function () {
+  const A = window.Admin;
+  const D = A.data;
+  const $ = (s) => document.querySelector(s);
+  const HOY = D.instalacion.hoy;
+  const o = A.obra(A.qs('id')) || A.obra('ayacucho');
+  const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+  const sum = (arr, fn) => arr.reduce((s, x) => s + (fn(x) || 0), 0);
+  const nombreDe = (id) => (A.persona(id) || {}).nombre || '';
+  const esVideo = (m) => m.tipo === 'video';
+  const parts = () => A.participaciones({ obra: o.id });
+  const nInv = () => parts().length;
+  const fmtPct = (x) => { const r = Math.round(x * 10) / 10; return A.pct(r, r % 1 ? 1 : 0); };
+
+  function grupo() {
+    if (o.estado === 'En estudio') return 'estudio';
+    if (['En renta', 'En venta', 'Vendido'].includes(o.estado)) return 'renta';
+    return 'obra';
+  }
+  function diasTexto(iso) {
+    const n = A.daysUntil(iso);
+    if (n > 1) return `en ${n} días`;
+    if (n === 1) return 'mañana';
+    if (n === 0) return 'hoy';
+    return `hace ${-n} días`;
+  }
+  function parseFecha(s) {
+    const m = String(s || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m || +m[2] < 1 || +m[2] > 12 || +m[1] < 1 || +m[1] > 31) return null;
+    return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+  }
+  // Hora de envío a revisión: se toma de la actividad del equipo si existe.
+  function enviado(av) {
+    const act = D.actividad.find((a) => a.quien === av.autor && a.fecha.slice(0, 10) === av.fecha && /revisión/.test(a.texto));
+    return act ? act.fecha : av.fecha;
+  }
+  const emptyHTML = (icono, titulo, texto, accion) => `<div class="empty pg-obra-empty">${A.icon(icono)}<h4>${A.esc(titulo)}</h4><p>${A.esc(texto)}</p>${accion || ''}</div>`;
+
+  /* ---------- Cabecera ---------- */
+  function renderHero() {
+    const r = o.responsable ? A.persona(o.responsable) : null;
+    const datos = [o.barrio, o.m2 ? `${A.group(o.m2)} m²` : '', o.ambientes ? plural(o.ambientes, 'ambiente', 'ambientes') : '', o.piso ? `piso ${o.piso}` : ''].filter(Boolean).join(' · ');
+    $('#pg-hero').innerHTML = `
+      <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-obra-cover" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow">${A.esc(o.ciudad || 'Obra')}</p>
+        <div class="pg-obra-titlerow"><h1>${A.esc(o.nombre)}</h1>${A.estadoChip(o.estado)}</div>
+        <p class="page-sub">${A.esc(datos)}</p>
+        ${r ? `<div class="pg-obra-owner">${A.avatar(r, 'sm')}<span><b>${A.esc(r.nombre)}</b> · Responsable de obra</span></div>` : ''}
+      </div>`;
+    const crumb = document.querySelector('#topbar .crumbs .current');
+    if (crumb) crumb.textContent = o.nombre;
+    document.title = `${o.nombre} · Administración recoBA`;
+  }
+
+  /* ---------- Fases ---------- */
+  function renderFases() {
+    const idx = o.faseActual || 0;
+    const f = (o.fechasFases || [])[idx];
+    $('#pg-fase-sub').textContent = `Fase ${idx + 1} de ${D.fases.length} · ${D.fases[idx]}${f ? ' · ' + A.date(f, 'month') : ''}`;
+    let hito = null;
+    if (o.proximoHito) hito = { label: 'Próximo hito', value: `${o.proximoHito.texto} · ${A.date(o.proximoHito.fecha, 'month')}` };
+    else if (o.oportunidad && o.estado === 'En estudio') hito = { label: 'Cierre de la captación', value: `${A.date(o.oportunidad.cierre)} · ${diasTexto(o.oportunidad.cierre)}` };
+    $('#pg-hito').innerHTML = hito ? `<div class="pg-obra-hito-label">${A.esc(hito.label)}</div><div class="pg-obra-hito-value">${A.esc(hito.value)}</div>` : '';
+    $('#pg-phases').innerHTML = A.phases(o);
+  }
+
+  /* ---------- Métricas según el estado ---------- */
+  function stat(c) {
+    const tag = c.href ? 'a' : 'div';
+    const attrs = c.href ? ` href="${A.esc(c.href)}"${c.tab ? ` data-pg-tab="${A.esc(c.tab)}"` : ''}` : '';
+    return `<${tag} class="stat-card${c.href ? ' pg-obra-stat-link' : ''}"${attrs}>
+      <div class="stat-label"><span>${A.esc(c.label)}</span>${A.icon(c.icon)}</div>
+      <div class="stat-value${c.accent ? ' accent' : ''}">${A.esc(c.value)}</div>
+      ${c.bar || ''}${c.sub ? `<div class="stat-sub">${A.esc(c.sub)}</div>` : ''}</${tag}>`;
+  }
+
+  function oportunidadHTML() {
+    const op = o.oportunidad;
+    if (!op) return `<div class="alert alert-ink pg-obra-opp">${A.icon('info')}<div><div class="alert-title">Sin oportunidad abierta</div><div class="alert-text">Esta obra no tiene una captación de inversión en curso.</div></div></div>`;
+    const comps = D.compromisos.filter((c) => c.obra === o.id);
+    const pc = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
+    const kv = (label, value, sub) => `<div><div class="pg-obra-kv-label">${A.esc(label)}</div><div class="pg-obra-kv-value">${A.esc(value)}</div>${sub ? `<div class="hint">${A.esc(sub)}</div>` : ''}</div>`;
+    const lista = comps.length
+      ? `<div class="list">${comps.map((c) => {
+          const p = A.persona(c.inversor);
+          return `<div class="list-item">${A.avatar(p)}<div class="list-main"><div class="list-title">${A.esc(p ? p.nombre : c.inversor)}</div><div class="list-meta">${A.esc(A.date(c.fecha))}</div></div>
+            <div class="text-right"><div class="strong tnum">${A.money(c.monto)}</div><div class="mt-4">${A.chip(c.estado, c.estado === 'Confirmado' ? 'chip-sage' : 'chip-gold')}</div></div></div>`;
+        }).join('')}</div>`
+      : `<div class="empty">${A.icon('users')}<div class="strong">Sin compromisos detallados</div><div class="hint mt-4">Registre cada compromiso desde Inversores para verlo aquí.</div></div>`;
+    return `<div class="grid-main-side pg-obra-opp">
+      <section class="card">
+        <div class="card-head"><div><h3>Oportunidad de inversión</h3><p class="card-sub">Abierta a inversores hasta el ${A.esc(A.date(op.cierre))}</p></div>${A.chip(op.estado, op.estado === 'Abierta' ? 'chip-sage' : 'chip-ink')}</div>
+        <div class="card-body">
+          <div class="pg-obra-opp-big"><div><span class="numeral">${A.money(op.comprometido)}</span> <span class="soft">comprometidos de ${A.money(op.objetivo)}</span></div><span class="strong tnum">${A.pct(pc)}</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${Math.min(100, pc)}%"></div></div>
+          <div class="pg-obra-opp-grid">
+            ${kv('Objetivo', A.money(op.objetivo))}
+            ${kv('Ticket mínimo', A.money(op.ticketMinimo))}
+            ${kv('Cierre', A.date(op.cierre), diasTexto(op.cierre))}
+            ${kv('Compra prevista', A.money(op.compraPrevista))}
+          </div>
+          <p class="pg-obra-opp-note">Quedan ${A.money(Math.max(0, op.objetivo - op.comprometido))} por captar · TIR base estimada ${A.esc(op.tirBase)}</p>
+        </div>
+      </section>
+      <section class="card">
+        <div class="card-head"><div><h3>Compromisos</h3><p class="card-sub">${comps.length ? `${plural(comps.length, 'inversor', 'inversores')} · ${A.money(sum(comps, (c) => c.monto))}` : 'Sin detalle cargado'}</p></div></div>
+        <div class="card-body">${lista}</div>
+        <div class="card-foot"><span class="hint">Se gestionan desde Inversores</span><a class="btn btn-text btn-sm" href="inversores.html">Ver inversores${A.icon('arrow-right')}</a></div>
+      </section>
+    </div>`;
+  }
+
+  function renderMetricas() {
+    const el = $('#pg-metrics');
+    const g = grupo();
+    if (g === 'estudio') { el.innerHTML = oportunidadHTML(); return; }
+    const ps = parts();
+    const capital = sum(ps, (p) => p.monto);
+    const invCard = { label: 'Inversores', icon: 'users', value: A.group(ps.length), sub: ps.length ? `${A.money(capital)} de capital` : 'Sin participaciones', href: '#inversores', tab: 'inversores' };
+    if (g === 'renta') {
+      const dist = D.distribuciones.filter((d) => d.obra === o.id);
+      const pagadas = dist.filter((d) => d.estado === 'Pagada' && d.total);
+      const prox = dist.find((d) => d.estado === 'Programada');
+      const occ = o.ocupacionTrimestre;
+      el.innerHTML = `<div class="stats-grid pg-obra-stats">${[
+        { label: 'Ocupación del trimestre', icon: 'calendar', value: occ != null ? A.pct(occ) : '—', sub: occ != null ? 'Renta temporal' : 'Sin datos todavía', bar: occ != null ? `<div class="progress-track"><div class="progress-fill sage" style="width:${Math.min(100, occ)}%"></div></div>` : '' },
+        { label: 'Tarifa media por noche', icon: 'wallet', value: o.tarifaMediaNoche != null ? A.money(o.tarifaMediaNoche) : '—', sub: o.tarifaMediaNoche != null ? 'Media del trimestre' : 'Sin datos todavía' },
+        { label: 'Distribuciones pagadas', icon: 'percent', value: A.money(sum(pagadas, (d) => d.total)), accent: pagadas.length > 0, sub: `${plural(pagadas.length, 'pago', 'pagos')}${prox ? ` · próxima el ${A.date(prox.fecha)}` : ''}`, href: 'inversores.html' },
+        invCard
+      ].map(stat).join('')}</div>`;
+      return;
+    }
+    const docs = A.documentos(o.id);
+    const docsInv = docs.filter((d) => d.visibilidad !== 'equipo').length;
+    const cams = A.camaras(o.id);
+    const camsInv = cams.filter((c) => c.compartidaConInversores).length;
+    const av = Math.max(0, Math.min(100, o.avanceObra || 0));
+    const pres = o.presupuesto;
+    const ej = o.ejecutado || 0;
+    el.innerHTML = `<div class="stats-grid pg-obra-stats pg-obra-cols-5">${[
+      { label: 'Avance de obra', icon: 'trend', value: A.pct(av), sub: o.finObraEstimado ? `Fin estimado ${A.date(o.finObraEstimado)}` : 'Según el diario de obra', bar: `<div class="progress-track"><div class="progress-fill${av >= 100 ? ' sage' : ''}" style="width:${av}%"></div></div>`, href: '#diario', tab: 'diario' },
+      { label: 'Presupuesto ejecutado', icon: 'receipt', value: pres ? A.pct((ej / pres) * 100, 1) : '—', accent: !!pres, sub: pres ? `${A.money(ej)} de ${A.money(pres)}` : 'Sin presupuesto cargado', bar: pres ? A.bar(ej, pres) : '', href: '#presupuesto', tab: 'presupuesto' },
+      invCard,
+      { label: 'Documentos', icon: 'file', value: A.group(docs.length), sub: docs.length ? `${docsInv} ${docsInv === 1 ? 'visible' : 'visibles'} para inversores` : 'Sin documentos', href: '#documentos', tab: 'documentos' },
+      { label: 'Cámaras', icon: 'camera', value: A.group(cams.length), sub: cams.length ? `${camsInv} ${camsInv === 1 ? 'compartida' : 'compartidas'} con inversores` : 'Sin señales conectadas', href: 'camaras.html' }
+    ].map(stat).join('')}</div>`;
+  }
+
+  /* ---------- Diario de obra ---------- */
+  function mediaHTML(media) {
+    if (!media || !media.length) return '';
+    return `<div class="pg-obra-media">${media.map((m) => {
+      const bg = m.url ? ` style="background-image:url('${A.esc(m.url)}')"` : '';
+      if (esVideo(m)) {
+        return `<div class="thumb ${A.esc(m.ph || 'ph-4')} pg-obra-shot pg-obra-video"${bg}><div class="pg-obra-play">${A.icon('play')}</div><span class="pg-obra-shot-label">${A.esc(m.etiqueta)}${m.duracion ? ' · ' + A.esc(m.duracion) : ''}</span></div>`;
+      }
+      return `<div class="thumb ${A.esc(m.ph || 'ph-1')} pg-obra-shot"${bg}>${m.url ? '' : A.icon('image')}<span class="pg-obra-shot-label">${A.esc(m.etiqueta)}</span></div>`;
+    }).join('')}</div>`;
+  }
+  function adjuntos(media) {
+    const v = (media || []).filter(esVideo).length;
+    const f = (media || []).length - v;
+    return [f ? plural(f, 'foto', 'fotos') : '', v ? plural(v, 'vídeo', 'vídeos') : ''].filter(Boolean).join(' y ');
+  }
+
+  function borradoresHTML(list) {
+    if (!list.length) return '';
+    return `<div class="pg-obra-drafts"><p class="pg-obra-sub">${A.icon('clock')}Pendiente de revisión</p>${list.map((av) => {
+      const p = A.persona(av.autor);
+      const propio = av.autor === D.usuario.id;
+      const meta = `${propio ? 'Borrador guardado' : 'Enviado a revisión'} ${A.ago(enviado(av))}${av.media && av.media.length ? ' · ' + adjuntos(av.media) : ''}`;
+      return `<article class="pg-obra-draft" id="pg-av-${A.esc(av.id)}">
+        <div class="pg-obra-draft-head"><div class="pg-obra-author">${A.avatar(p, 'sm')}<span><b>${A.esc(p ? p.nombre : '')}</b><small>${A.esc(meta)}</small></span></div>${A.chip('Borrador', 'chip-gold')}</div>
+        <h4 class="pg-obra-av-title">${A.esc(av.titulo)}</h4>
+        <p class="pg-obra-av-text">${A.esc(av.texto)}</p>
+        ${mediaHTML(av.media)}
+        <div class="pg-obra-draft-actions">
+          <button type="button" class="btn btn-copper" data-pg-revisar="${A.esc(av.id)}">${A.icon('check')}Revisar y publicar</button>
+          ${propio ? '' : `<button type="button" class="btn btn-ghost" data-pg-cambios="${A.esc(av.id)}">${A.icon('edit')}Pedir cambios</button>`}
+        </div>
+      </article>`;
+    }).join('')}</div>`;
+  }
+
+  function timelineHTML(list, n) {
+    return `<p class="pg-obra-sub">${A.icon('check')}Publicados</p>
+      <div class="timeline pg-obra-timeline">${list.map((av) => {
+        const p = A.persona(av.autor);
+        return `<article class="tl-item" id="pg-av-${A.esc(av.id)}">
+          <div class="tl-date">${A.esc(A.date(av.fecha, 'long'))}</div>
+          <h4 class="pg-obra-av-title">${A.esc(av.titulo)}</h4>
+          <p class="pg-obra-av-text">${A.esc(av.texto)}</p>
+          ${mediaHTML(av.media)}
+          <div class="pg-obra-tl-foot">
+            <span class="pg-obra-inline">${A.avatar(p, 'sm')}${A.esc(p ? p.nombre : '')}</span>
+            <span class="pg-obra-inline">${A.icon('eye')}${n ? `Visto por ${A.group(av.vistoPor || 0)} de ${plural(n, 'inversor', 'inversores')}` : 'Sin inversores todavía'}</span>
+          </div>
+        </article>`;
+      }).join('')}</div>`;
+  }
+
+  function asideHTML(pub, n) {
+    const videos = sum(pub, (a) => (a.media || []).filter(esVideo).length);
+    const fotos = sum(pub, (a) => (a.media || []).length) - videos;
+    const lectura = n && pub.length ? (sum(pub, (a) => a.vistoPor) / (pub.length * n)) * 100 : null;
+    const row = (k, v) => `<div class="pg-obra-aside-row"><span>${A.esc(k)}</span><b>${A.esc(v)}</b></div>`;
+    return `<aside class="pg-obra-aside">
+      <h4>Resumen del diario</h4>
+      ${row('Avances publicados', A.group(pub.length))}
+      ${row('Fotos y vídeos', `${plural(fotos, 'foto', 'fotos')} · ${plural(videos, 'vídeo', 'vídeos')}`)}
+      ${row('Última publicación', pub[0] ? A.ago(pub[0].fecha) : '—')}
+      ${row('Lectura de inversores', lectura != null ? A.pct(lectura) : '—')}
+      <p>Lo publicado aparece en el portal del inversor, en la pestaña Avances de la obra.</p>
+    </aside>`;
+  }
+
+  function renderDiario() {
+    const n = nInv();
+    const todos = A.avances(o.id).slice().sort((a, b) => b.fecha.localeCompare(a.fecha));
+    const drafts = todos.filter((a) => a.estado === 'borrador');
+    const pub = todos.filter((a) => a.estado === 'publicado');
+    const el = $('#pg-diario');
+    if (!todos.length) {
+      el.innerHTML = emptyHTML('image', 'Sin avances todavía', 'Los avances con fotos y vídeos se muestran aquí y en el portal del inversor, en orden cronológico.',
+        `<button type="button" class="btn btn-copper" data-pg-publicar>${A.icon('plus')}Publicar el primer avance</button>`);
+    } else {
+      const principal = borradoresHTML(drafts) + (pub.length ? timelineHTML(pub, n) : `<p class="muted">Todavía no hay avances publicados en esta obra.</p>`);
+      el.innerHTML = `<div class="pg-obra-diario${pub.length ? '' : ' pg-obra-solo'}"><div>${principal}</div>${pub.length ? asideHTML(pub, n) : ''}</div>`;
+    }
+    const c = $('#pg-n-diario');
+    c.textContent = pub.length;
+    c.hidden = !pub.length;
+  }
+
+  /* ---------- Presupuesto ---------- */
+  function renderPresupuesto() {
+    const el = $('#pg-presupuesto');
+    const filas = A.partidasPlanas(o.id);
+    if (!filas.length) {
+      el.innerHTML = emptyHTML('receipt', 'Sin presupuesto cargado', 'Cree el presupuesto por partidas o impórtelo desde Excel para seguir el gasto de esta obra.',
+        `<a class="btn btn-copper" href="gastos.html?obra=${encodeURIComponent(o.id)}">${A.icon('plus')}Crear presupuesto</a>`);
+      return;
+    }
+    const madres = filas.filter((f) => f.nivel === 0);
+    const pres = sum(madres, (f) => f.presupuesto);
+    const ej = sum(madres, (f) => f.ejecutado);
+    const kv = (label, value, cls) => `<div><div class="pg-obra-kv-label">${A.esc(label)}</div><div class="pg-obra-kv-value${cls ? ' ' + cls : ''}">${A.esc(value)}</div></div>`;
+    const fila = (f) => {
+      const pc = f.presupuesto ? (f.ejecutado / f.presupuesto) * 100 : 0;
+      const nombre = f.nivel ? A.esc(f.nombre) : `<span class="cell-title">${A.esc(f.nombre)}</span>${f.detalle ? `<div class="cell-meta">${A.esc(f.detalle)}</div>` : ''}`;
+      return `<tr${f.nivel ? ' class="sub"' : ''}>
+        <td>${nombre}</td>
+        <td class="num tnum">${A.money(f.presupuesto)}</td>
+        <td class="num tnum${f.ejecutado > f.presupuesto ? ' pg-obra-over' : ''}">${A.money(f.ejecutado)}</td>
+        <td><div class="pg-obra-barcell">${A.bar(f.ejecutado, f.presupuesto)}<span class="tnum">${fmtPct(pc)}</span></div></td>
+      </tr>`;
+    };
+    el.innerHTML = `
+      <div class="pg-obra-sum">
+        ${kv('Presupuesto total', A.money(pres))}
+        ${kv('Ejecutado', `${A.money(ej)} · ${fmtPct(pres ? (ej / pres) * 100 : 0)}`)}
+        ${kv('Disponible', A.money(pres - ej), pres - ej < 0 ? 'pg-obra-over' : '')}
+      </div>
+      <div class="pg-obra-box table-wrap"><table class="table">
+        <thead><tr><th>Partida</th><th class="num">Presupuesto</th><th class="num">Ejecutado</th><th class="pg-obra-c-bar">Avance</th></tr></thead>
+        <tbody>
+          ${filas.map(fila).join('')}
+          <tr class="total"><td>Total</td><td class="num tnum">${A.money(pres)}</td><td class="num tnum">${A.money(ej)}</td>
+            <td><div class="pg-obra-barcell">${A.bar(ej, pres)}<span class="tnum">${fmtPct(pres ? (ej / pres) * 100 : 0)}</span></div></td></tr>
+        </tbody>
+      </table></div>
+      <div class="pg-obra-tabfoot">
+        <p class="hint">Los gastos se registran con su comprobante en Presupuesto y gastos; aquí se ve el acumulado por partida.</p>
+        <a class="btn btn-ghost" href="gastos.html?obra=${encodeURIComponent(o.id)}">${A.icon('receipt')}Ver gastos</a>
+      </div>`;
+  }
+
+  /* ---------- Documentos ---------- */
+  function renderDocumentos() {
+    const docs = A.documentos(o.id).slice().sort((a, b) => b.fecha.localeCompare(a.fecha));
+    const c = $('#pg-n-docs');
+    c.textContent = docs.length;
+    c.hidden = !docs.length;
+    const el = $('#pg-documentos');
+    if (!docs.length) {
+      el.innerHTML = emptyHTML('file', 'Sin documentos', 'Los contratos, escrituras, seguros y rendiciones de esta obra se guardan aquí.',
+        `<a class="btn btn-copper" href="documentos.html?obra=${encodeURIComponent(o.id)}">${A.icon('upload')}Subir documento</a>`);
+      return;
+    }
+    const icono = (t) => (t === 'Carpeta' ? 'folder' : t === 'XLSX' ? 'table' : 'file');
+    const visChip = (v) => (v === 'equipo' ? A.chip('Solo equipo', 'chip-ink') : v === 'seleccionados' ? A.chip('Seleccionados', 'chip-gold') : A.chip('Inversores', 'chip-sage'));
+    el.innerHTML = `<div class="list pg-obra-docs">${docs.map((d) => `
+        <div class="list-item">
+          <span class="list-icon">${A.icon(icono(d.tipo))}</span>
+          <div class="list-main">
+            <div class="list-title">${A.esc(d.nombre)}</div>
+            <div class="list-meta">${A.esc(d.categoria)} · ${A.esc(d.estado)} · ${A.esc(A.date(d.fecha))}${d.vence ? ` · vence el ${A.esc(A.date(d.vence))}` : ''}</div>
+          </div>
+          <div class="pg-obra-doc-side">
+            ${visChip(d.visibilidad)}
+            <button type="button" class="btn btn-ghost btn-sm" data-toast="Descarga de demostración" data-toast-icon="download">${A.icon('download')}Descargar</button>
+          </div>
+        </div>`).join('')}</div>
+      <div class="pg-obra-tabfoot">
+        <p class="hint">Los inversores solo ven en su portal los documentos marcados para ellos.</p>
+        <a class="btn btn-ghost" href="documentos.html?obra=${encodeURIComponent(o.id)}">${A.icon('file')}Gestionar documentos</a>
+      </div>`;
+  }
+
+  /* ---------- Inversores ---------- */
+  function cobradoEnObra(inversorId) {
+    const p = parts().find((x) => x.inversor === inversorId);
+    if (!p) return 0;
+    return D.distribuciones
+      .filter((d) => d.obra === o.id && d.estado === 'Pagada' && d.total)
+      .reduce((s, d) => s + Math.round((d.total * p.pct) / 100), 0);
+  }
+
+  function renderInversores() {
+    const ps = parts().slice().sort((a, b) => b.monto - a.monto);
+    const c = $('#pg-n-inv');
+    c.textContent = ps.length;
+    c.hidden = !ps.length;
+    const el = $('#pg-inversores');
+    if (!ps.length) {
+      el.innerHTML = emptyHTML('users', 'Sin inversores en esta obra', 'Cuando se registre una participación, aparece aquí con su capital y lo que ha cobrado.',
+        `<a class="btn btn-copper" href="inversores.html">${A.icon('plus')}Invitar inversor</a>`);
+      return;
+    }
+    const capital = sum(ps, (p) => p.monto);
+    const cobrado = sum(ps, (p) => cobradoEnObra(p.inversor));
+    const kv = (label, value) => `<div><div class="pg-obra-kv-label">${A.esc(label)}</div><div class="pg-obra-kv-value">${A.esc(value)}</div></div>`;
+    el.innerHTML = `
+      <div class="pg-obra-sum">
+        ${kv('Capital de la obra', A.money(capital))}
+        ${kv('Inversores', A.group(ps.length))}
+        ${kv('Cobrado por los inversores', A.money(cobrado))}
+      </div>
+      <div class="pg-obra-box table-wrap"><table class="table">
+        <thead><tr><th>Inversor</th><th class="num">Capital</th><th class="num">Participación</th><th class="num">Cobrado</th><th class="num">Desde</th></tr></thead>
+        <tbody>${ps.map((p) => {
+          const per = A.persona(p.inversor);
+          return `<tr>
+            <td><div class="pg-obra-person">${A.avatar(per, 'sm')}<div><div class="cell-title">${A.esc(per ? per.nombre : p.inversor)}</div><div class="cell-meta">${A.esc(per ? per.email : '')}</div></div></div></td>
+            <td class="num tnum">${A.money(p.monto)}</td>
+            <td class="num tnum">${A.pct(p.pct, 1)}</td>
+            <td class="num tnum">${A.money(cobradoEnObra(p.inversor))}</td>
+            <td class="num">${A.esc(A.date(p.fecha))}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+      <div class="pg-obra-tabfoot">
+        <p class="hint">Cada inversor ve en su portal solo su participación y lo que ha cobrado.</p>
+        <a class="btn btn-ghost" href="inversores.html">${A.icon('users')}Gestionar inversores</a>
+      </div>`;
+  }
+
+  /* ---------- Datos de la obra ---------- */
+  function renderDatos() {
+    const equipoObra = D.equipo.filter((p) => p.perfil === 'obra');
+    const v = (x) => A.esc(x == null ? '' : x);
+    $('#pg-datos').innerHTML = `
+      <form class="pg-obra-datos" id="pg-form-datos" data-demo="Datos de la obra guardados" data-reset="false" autocomplete="off">
+        <div class="form-grid">
+          <label class="field span-2"><span class="label">Nombre</span><input class="input" name="nombre" value="${v(o.nombre)}"></label>
+          <label class="field"><span class="label">Barrio</span><input class="input" name="barrio" value="${v(o.barrio)}"></label>
+          <label class="field"><span class="label">Ciudad</span><input class="input" name="ciudad" value="${v(o.ciudad)}"></label>
+          <label class="field"><span class="label">Superficie (m²)</span><input class="input" name="m2" inputmode="numeric" value="${v(o.m2)}"></label>
+          <label class="field"><span class="label">Ambientes</span><input class="input" name="ambientes" inputmode="numeric" value="${v(o.ambientes)}"></label>
+          <label class="field"><span class="label">Piso</span><input class="input" name="piso" value="${v(o.piso)}" placeholder="Sin dato"></label>
+          <label class="field"><span class="label">Responsable de obra</span><select class="select" name="responsable">
+            <option value="">Sin asignar</option>
+            ${equipoObra.map((p) => `<option value="${A.esc(p.id)}"${o.responsable === p.id ? ' selected' : ''}>${A.esc(p.nombre)}</option>`).join('')}
+          </select></label>
+          <label class="field"><span class="label">Inicio de obra</span><input class="input" name="inicio" value="${v(o.inicioObra ? A.date(o.inicioObra) : '')}" placeholder="dd/mm/aaaa"></label>
+          <label class="field"><span class="label">Fin estimado</span><input class="input" name="fin" value="${v(o.finObraEstimado ? A.date(o.finObraEstimado) : '')}" placeholder="dd/mm/aaaa"></label>
+        </div>
+        <div class="pg-obra-datos-foot">
+          <p class="hint">La ficha y la portada se ven en el portal del inversor.</p>
+          <div class="row">
+            <button type="button" class="btn btn-ghost" data-toast="Obra archivada (demostración)" data-toast-icon="folder">${A.icon('folder')}Archivar obra</button>
+            <button type="submit" class="btn btn-copper">${A.icon('check')}Guardar cambios</button>
+          </div>
+        </div>
+      </form>`;
+    $('#pg-form-datos').addEventListener('submit', () => {
+      const f = $('#pg-form-datos');
+      o.nombre = f.nombre.value.trim() || o.nombre;
+      o.barrio = f.barrio.value.trim();
+      o.ciudad = f.ciudad.value.trim();
+      o.m2 = Number(f.m2.value) || o.m2;
+      o.ambientes = Number(f.ambientes.value) || o.ambientes;
+      o.piso = f.piso.value.trim() || null;
+      o.responsable = f.responsable.value || null;
+      renderHero();
+    });
+  }
+
+  /* ---------- Modal: publicar avance ---------- */
+  const formPub = $('#pg-form-publicar');
+  let revisando = null;
+  let adjuntosNuevos = [];
+
+  function pintarAdjuntos() {
+    $('#pg-pub-files').innerHTML = adjuntosNuevos.map((m) =>
+      `<div class="file-row">${A.icon(esVideo(m) ? 'video' : 'image')}<span>${A.esc(m.etiqueta)}${m.duracion ? ' · ' + A.esc(m.duracion) : ''}</span></div>`).join('');
+  }
+
+  function abrirPublicar(av) {
+    const n = nInv();
+    revisando = av || null;
+    formPub.reset();
+    adjuntosNuevos = av ? (av.media || []).slice() : [];
+    pintarAdjuntos();
+    $('#pg-pub-titulo').textContent = av ? 'Revisar y publicar' : 'Publicar avance';
+    $('#pg-pub-desc').textContent = av
+      ? `Enviado por ${nombreDe(av.autor)} ${A.ago(enviado(av))}. Al publicar se ve en el portal del inversor.`
+      : 'Se publica en el diario de la obra y en el portal del inversor.';
+    formPub.titulo.value = av ? av.titulo : '';
+    formPub.texto.value = av ? av.texto : '';
+    formPub.fecha.value = A.date(av ? av.fecha : HOY);
+    $('#pg-pub-avisar-label').textContent = n ? `Avisar a ${plural(n, 'inversor', 'inversores')} de la obra` : 'Sin inversores a los que avisar';
+    $('#pg-pub-avisar-hint').textContent = n ? 'Reciben un correo con el enlace al avance.' : 'Cuando la obra tenga participaciones, se podrá avisar desde aquí.';
+    $('#pg-pub-avisar').checked = n > 0;
+    $('#pg-pub-avisar').disabled = !n;
+    $('#pg-pub-avisar-row').classList.toggle('is-off', !n);
+    A.openModal('modal-publicar');
+  }
+
+  $('#pg-pub-drop').addEventListener('dropzone:files', (e) => {
+    e.detail.names.forEach((nombre) => {
+      adjuntosNuevos.push({
+        tipo: /\.(mp4|mov|webm|avi)$/i.test(nombre) ? 'video' : 'foto',
+        etiqueta: nombre.replace(/\.[^.]+$/, ''),
+        ph: 'ph-' + (1 + (adjuntosNuevos.length % 5))
+      });
+    });
+    pintarAdjuntos();
+  });
+
+  function guardarAvance(publicar) {
+    const titulo = formPub.titulo.value.trim();
+    const texto = formPub.texto.value.trim();
+    if (!titulo || !texto) { A.toast('Falta el título o el texto del avance', 'alert'); return null; }
+    const fecha = parseFecha(formPub.fecha.value) || HOY;
+    const avisar = publicar && $('#pg-pub-avisar').checked && nInv() > 0;
+    let av = revisando;
+    if (av) {
+      av.titulo = titulo; av.texto = texto; av.fecha = fecha;
+      av.media = adjuntosNuevos.slice();
+      av.estado = publicar ? 'publicado' : 'borrador';
+      if (publicar) { av.publicadoPor = D.usuario.id; av.vistoPor = 0; }
+    } else {
+      av = {
+        id: 'av-' + Date.now(), obra: o.id, fecha, titulo, texto,
+        estado: publicar ? 'publicado' : 'borrador',
+        autor: D.usuario.id, vistoPor: 0, media: adjuntosNuevos.slice()
+      };
+      if (publicar) av.publicadoPor = D.usuario.id;
+      D.avances.unshift(av);
+    }
+    revisando = null;
+    adjuntosNuevos = [];
+    renderDiario();
+    renderMetricas();
+    A.hydrate($('#content'));
+    A.activateTab($('#pg-tabs'), 'diario');
+    const nodo = document.getElementById('pg-av-' + av.id);
+    if (nodo) {
+      nodo.classList.add('pg-obra-flash');
+      nodo.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+    return { av, avisar };
+  }
+
+  formPub.addEventListener('submit', (e) => {
+    const r = guardarAvance(true);
+    if (!r) { e.preventDefault(); e.stopPropagation(); return; }
+    formPub.dataset.demo = r.avisar
+      ? `Avance publicado y ${plural(nInv(), 'inversor avisado', 'inversores avisados')}`
+      : 'Avance publicado';
+  });
+
+  $('#pg-pub-borrador').addEventListener('click', () => {
+    if (!guardarAvance(false)) return;
+    A.closeModal('modal-publicar');
+    A.toast('Borrador guardado');
+  });
+
+  /* ---------- Modal: actualizar fase ---------- */
+  const formFase = $('#pg-form-fase');
+
+  function abrirFase() {
+    const n = nInv();
+    const actual = o.faseActual || 0;
+    const fechaActual = (o.fechasFases || [])[actual];
+    $('#pg-fase-desc').textContent = `Ahora: ${D.fases[actual]}${fechaActual ? ' · ' + A.date(fechaActual, 'month') : ''}`;
+    const siguiente = Math.min(actual + 1, D.fases.length - 1);
+    $('#pg-fase-sel').innerHTML = D.fases.map((f, i) => `<option value="${i}"${i === siguiente ? ' selected' : ''}>${A.esc(f)}</option>`).join('');
+    const anio = Number(HOY.slice(0, 4));
+    const mesHoy = Number(HOY.slice(5, 7)) - 1;
+    const meses = [];
+    for (let i = -6; i <= 6; i++) {
+      const d = new Date(anio, mesHoy + i, 1);
+      meses.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
+    }
+    $('#pg-fase-mes').innerHTML = meses.map((m) => `<option value="${m}"${m === HOY.slice(0, 7) ? ' selected' : ''}>${A.esc(A.date(m, 'month'))}</option>`).join('');
+    $('#pg-fase-avisar-hint').textContent = n ? `Se avisa a ${plural(n, 'inversor', 'inversores')} de la obra.` : 'Esta obra todavía no tiene inversores.';
+    $('#pg-fase-avisar').checked = n > 0;
+    $('#pg-fase-avisar').disabled = !n;
+    $('#pg-fase-avisar-row').classList.toggle('is-off', !n);
+    A.openModal('modal-fase');
+  }
+
+  formFase.addEventListener('submit', () => {
+    const idx = Number($('#pg-fase-sel').value);
+    const mes = $('#pg-fase-mes').value;
+    const fechas = (o.fechasFases || []).slice();
+    for (let i = 0; i < idx; i++) if (!fechas[i]) fechas[i] = mes;
+    fechas[idx] = mes;
+    o.fechasFases = fechas;
+    o.faseActual = idx;
+    o.estado = D.fases[idx];
+    renderHero();
+    renderFases();
+    renderMetricas();
+    A.hydrate($('#content'));
+    formFase.dataset.demo = `Fase actualizada a ${D.fases[idx]}`;
+  });
+
+  /* ---------- Eventos y arranque ---------- */
+  document.addEventListener('click', (e) => {
+    const pub = e.target.closest('[data-pg-publicar]');
+    if (pub) { e.preventDefault(); abrirPublicar(null); return; }
+    const rev = e.target.closest('[data-pg-revisar]');
+    if (rev) { abrirPublicar(D.avances.find((a) => a.id === rev.dataset.pgRevisar)); return; }
+    const cambios = e.target.closest('[data-pg-cambios]');
+    if (cambios) {
+      const av = D.avances.find((a) => a.id === cambios.dataset.pgCambios);
+      A.toast(`Se pidieron cambios a ${nombreDe(av ? av.autor : '')}`, 'edit');
+      return;
+    }
+    const tabLink = e.target.closest('[data-pg-tab]');
+    if (tabLink) {
+      e.preventDefault();
+      A.activateTab($('#pg-tabs'), tabLink.dataset.pgTab);
+      $('#pg-tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+  $('#pg-btn-fase').addEventListener('click', abrirFase);
+
+  renderHero();
+  renderFases();
+  renderMetricas();
+  renderDiario();
+  renderPresupuesto();
+  renderDocumentos();
+  renderInversores();
+  renderDatos();
+  A.hydrate($('#content'));
+  if (window.location.hash === '#publicar') abrirPublicar(null);
+})();
+</script>
+</body>
+</html>

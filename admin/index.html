@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Resumen · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ============ Resumen · estilos propios (prefijo .pg-resumen-) ============ */
+  .pg-resumen-head .page-actions { flex-shrink: 0; }
+  .pg-resumen-cuerpo { margin-top: 24px; }
+  .stack.pg-resumen-col { gap: 28px; min-width: 0; }
+  .stack.pg-resumen-side { gap: 20px; min-width: 0; }
+  .card-body.pg-resumen-lista { padding-top: 4px; padding-bottom: 6px; }
+  .pg-resumen-bloque-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .pg-resumen-bloque-head h2 { font-size: 17px; }
+  .pg-resumen-bloque-head .btn-text { margin-right: -6px; }
+
+  /* Requiere atención */
+  .list-item.pg-resumen-alerta { gap: 14px; padding: 14px 0; overflow: hidden; }
+  .pg-resumen-alerta .list-title { line-height: 1.35; }
+  .pg-resumen-alerta-texto { margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
+  .pg-resumen-alerta-acciones { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .btn.pg-resumen-hecho { background: transparent; color: var(--ink-mute); padding-left: 9px; padding-right: 9px; }
+  .btn.pg-resumen-hecho:hover { background: var(--sand); color: var(--ink); }
+  .btn.pg-resumen-hecho:disabled { opacity: 1; cursor: default; }
+  .list-item.pg-resumen-saliendo { opacity: 0; padding-top: 0; padding-bottom: 0; border-bottom-color: transparent; transition: height .28s ease, padding .28s ease, opacity .16s ease, border-color .28s ease; }
+  .pg-resumen-vacio { padding: 28px 12px 24px; }
+  .pg-resumen-vacio .ico { color: var(--sage); }
+  .pg-resumen-vacio .strong { color: var(--ink); }
+  .pg-resumen-vacio p + p { margin-top: 2px; font-size: 13px; }
+  .pg-resumen-avisos-vacio { padding: 8px 10px 12px; font-size: 12.5px; color: var(--ink-mute); }
+
+  /* Obras */
+  .pg-resumen-obras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .card.pg-resumen-obra { display: flex; flex-direction: column; overflow: hidden; transition: border-color .18s ease, box-shadow .18s ease; }
+  .card.pg-resumen-obra:hover { border-color: var(--line-strong); box-shadow: 0 10px 26px rgba(28,35,49,.08); }
+  .card.pg-resumen-obra:focus-visible { border-radius: var(--radius); }
+  .thumb.pg-resumen-foto { aspect-ratio: auto; height: 120px; border-radius: 0; padding: 10px 12px; }
+  .pg-resumen-foto span { font-size: 11.5px; padding: 4px 10px; }
+  .pg-resumen-foto-aviso { position: absolute; top: 10px; right: 10px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; background: rgba(255,253,249,.94); color: var(--ink); font-size: 11px; font-weight: 600; font-style: normal; line-height: 1.45; }
+  .pg-resumen-foto-aviso::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .pg-resumen-obra-cuerpo { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 14px; }
+  .pg-resumen-obra-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .pg-resumen-obra-titulo { min-width: 0; }
+  .pg-resumen-obra-titulo h3 { font-size: 18px; line-height: 1.2; }
+  .pg-resumen-obra-titulo p { margin-top: 2px; font-size: 13px; color: var(--ink-mute); }
+  .pg-resumen-fila { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; margin-bottom: 7px; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-resumen-fila b { color: var(--ink); font-weight: 600; }
+  .progress-fill.pg-resumen-fill-oro { background: linear-gradient(90deg, #ddc596, var(--gold)); }
+  .pg-resumen-datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
+  .pg-resumen-dato-label { font-size: 11.5px; font-weight: 600; color: var(--ink-mute); }
+  .pg-resumen-dato-valor { margin-top: 1px; font-family: var(--serif); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-resumen-dato-valor small { margin-left: 4px; font-family: var(--sans); font-size: 11.5px; font-weight: 500; color: var(--ink-mute); }
+  .pg-resumen-obra-pie { margin-top: auto; display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .pg-resumen-pie-icono { width: 30px; height: 30px; flex-shrink: 0; display: grid; place-items: center; border-radius: 8px; background: var(--sand); color: var(--copper-dark); }
+  .pg-resumen-pie-icono .ico { width: 15px; height: 15px; }
+  .pg-resumen-pie-main { flex: 1; min-width: 0; }
+  .pg-resumen-pie-fila { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 10px; font-size: 11.5px; font-weight: 600; color: var(--ink-mute); }
+  .pg-resumen-pie-fecha { color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pg-resumen-pie-valor { margin-top: 1px; font-size: 13px; font-weight: 600; color: var(--ink); }
+  .pg-resumen-obra-pie > .pg-resumen-flecha { width: 16px; height: 16px; color: var(--ink-mute); transition: transform .18s ease, color .18s ease; }
+  .pg-resumen-obra:hover .pg-resumen-flecha { color: var(--copper); transform: translateX(2px); }
+  .pg-resumen-quedan-aviso { color: var(--copper-dark); }
+
+  /* Próximos vencimientos */
+  .list-item.pg-resumen-venc-item { gap: 12px; }
+  .pg-resumen-venc-item .list-title { text-wrap: pretty; }
+  .pg-resumen-venc-item:hover .list-title { color: var(--copper-dark); }
+  .pg-resumen-dia { width: 42px; height: 44px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; background: var(--sand); color: var(--ink); line-height: 1; }
+  .pg-resumen-dia b { font-family: var(--serif); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-resumen-dia small { margin-top: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-resumen-aviso .pg-resumen-dia { background: rgba(196,106,74,.11); color: var(--copper-dark); }
+  .pg-resumen-aviso .pg-resumen-dia small { color: var(--copper-dark); }
+  .pg-resumen-quedan { font-size: 12px; font-weight: 600; color: var(--ink-mute); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pg-resumen-aviso .pg-resumen-quedan { color: var(--copper-dark); }
+
+  /* Actividad reciente */
+  .list-item.pg-resumen-act { align-items: flex-start; gap: 11px; padding: 11px 0; }
+  .pg-resumen-act .avatar { margin-top: 1px; }
+  .pg-resumen-act-texto { font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
+  .pg-resumen-act-texto .strong { color: var(--ink); }
+  .pg-resumen-act-meta { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+  .pg-resumen-act-meta .ico { width: 13px; height: 13px; }
+
+  /* Adaptación */
+  @media (max-width: 1180px) and (min-width: 861px) {
+    .stack.pg-resumen-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  }
+  @media (max-width: 1000px) and (min-width: 861px) {
+    .page-head.pg-resumen-head { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 860px) {
+    .stats-grid.pg-resumen-stats { gap: 8px; }
+    .pg-resumen-stats .stat-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label valor" "sub valor"; align-items: center; column-gap: 14px; padding: 13px 16px; }
+    .pg-resumen-stats .stat-label { grid-area: label; margin-bottom: 0; }
+    .pg-resumen-stats .stat-label .ico { display: none; }
+    .pg-resumen-stats .stat-value { grid-area: valor; font-size: 23px; text-align: right; }
+    .pg-resumen-stats .stat-sub { grid-area: sub; margin-top: 1px; }
+  }
+  @media (max-width: 760px) {
+    .list-item.pg-resumen-alerta { flex-wrap: wrap; row-gap: 10px; }
+    .pg-resumen-alerta .list-main { flex: 1 1 calc(100% - 48px); }
+    .pg-resumen-alerta-acciones { width: 100%; padding-left: 48px; flex-wrap: wrap; row-gap: 6px; }
+  }
+  @media (max-width: 700px) {
+    .pg-resumen-obras { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .pg-resumen-alerta-acciones { padding-left: 0; }
+  }
+</style>
+</head>
+<body data-page="resumen">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head pg-resumen-head">
+        <div>
+          <p class="eyebrow" id="pg-resumen-fecha">Resumen</p>
+          <h1 id="pg-resumen-saludo">Buenos días</h1>
+          <p class="page-sub">Estado de las obras, el dinero y los inversores de un vistazo.</p>
+        </div>
+        <div class="page-actions">
+          <a class="btn btn-ghost" href="inversores.html"><span data-icon="mail"></span>Invitar inversor</a>
+          <a class="btn btn-ink" href="gastos.html?obra=ayacucho"><span data-icon="receipt"></span>Registrar gasto</a>
+        </div>
+      </div>
+
+      <div class="stats-grid pg-resumen-stats" id="pg-resumen-stats"></div>
+
+      <div class="grid-main-side pg-resumen-cuerpo">
+        <div class="stack pg-resumen-col">
+          <section class="card" aria-labelledby="pg-resumen-atencion-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-resumen-atencion-titulo" tabindex="-1">Requiere atención</h2>
+                <p class="card-sub">Avisos de obras, gastos e inversores</p>
+              </div>
+              <span id="pg-resumen-atencion-estado"></span>
+            </div>
+            <div class="card-body pg-resumen-lista" id="pg-resumen-atencion"></div>
+          </section>
+
+          <section aria-labelledby="pg-resumen-obras-titulo">
+            <div class="pg-resumen-bloque-head">
+              <h2 id="pg-resumen-obras-titulo">Obras</h2>
+              <a class="btn btn-text btn-sm" href="obras.html">Ver todas<span data-icon="arrow-right"></span></a>
+            </div>
+            <div class="pg-resumen-obras" id="pg-resumen-obras"></div>
+          </section>
+        </div>
+
+        <div class="stack pg-resumen-side">
+          <section class="card" aria-labelledby="pg-resumen-venc-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-resumen-venc-titulo">Próximos vencimientos</h2>
+                <p class="card-sub">Documentos, distribuciones y cierres</p>
+              </div>
+            </div>
+            <div class="card-body pg-resumen-lista" id="pg-resumen-venc"></div>
+          </section>
+
+          <section class="card" aria-labelledby="pg-resumen-act-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-resumen-act-titulo">Actividad reciente</h2>
+                <p class="card-sub">Equipo e inversores</p>
+              </div>
+            </div>
+            <div class="card-body pg-resumen-lista" id="pg-resumen-actividad"></div>
+          </section>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+  (function () {
+    'use strict';
+    const A = window.Admin;
+    if (!A) return;
+    const D = A.data;
+    const HOY = D.instalacion.hoy;
+    const [HOY_Y, HOY_M, HOY_D] = HOY.split('-').map(Number);
+    const DIAS_AVISO = 60;
+    const $ = (id) => document.getElementById(id);
+    const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+    const sinMovimiento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Encabezado ---------- */
+    const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    const diaSemana = DIAS_SEMANA[new Date(HOY_Y, HOY_M - 1, HOY_D).getDay()];
+    $('pg-resumen-fecha').textContent = `${diaSemana.charAt(0).toUpperCase()}${diaSemana.slice(1)}, ${A.date(HOY, 'long')}`;
+    $('pg-resumen-saludo').textContent = `Buenos días, ${D.usuario.nombre.split(' ')[0]}`;
+
+    /* ---------- Métricas ---------- */
+    function statCard(s) {
+      return `<div class="stat-card">
+        <div class="stat-label"><span>${A.esc(s.label)}</span>${A.icon(s.icono)}</div>
+        <div class="stat-value${s.accent ? ' accent' : ''}">${A.esc(s.valor)}</div>
+        <div class="stat-sub${s.tono ? ' ' + s.tono : ''}">${A.esc(s.sub)}</div>
+      </div>`;
+    }
+
+    function renderStats() {
+      const enCurso = D.obras.filter((o) => o.estado === 'En obra' || o.estado === 'En renta').length;
+      const enEstudio = D.obras.filter((o) => o.estado === 'En estudio').length;
+
+      const capital = D.participaciones.reduce((s, p) => s + p.monto, 0);
+      const nInversores = new Set(D.participaciones.map((p) => p.inversor)).size;
+      const nObras = new Set(D.participaciones.map((p) => p.obra)).size;
+
+      // Mes anterior a la fecha de referencia
+      const mesRef = new Date(HOY_Y, HOY_M - 2, 1);
+      const mesIso = `${mesRef.getFullYear()}-${String(mesRef.getMonth() + 1).padStart(2, '0')}`;
+      const mesNombre = A.date(`${mesIso}-01`, 'long').split(' de ')[1];
+      const gastosMes = D.gastos.filter((g) => g.fecha.slice(0, 7) === mesIso);
+      const sinComprobante = gastosMes.filter((g) => !g.comprobante).length;
+      let gastoSub = 'Sin gastos registrados';
+      let gastoTono = '';
+      if (gastosMes.length) {
+        const base = plural(gastosMes.length, 'gasto', 'gastos');
+        if (sinComprobante) {
+          gastoSub = `${base} · ${A.group(sinComprobante)} sin comprobante`;
+          gastoTono = 'warn';
+        } else {
+          gastoSub = `${base}, ${gastosMes.length === 1 ? 'con' : 'todos con'} comprobante`;
+          gastoTono = 'ok';
+        }
+      }
+
+      const tareas = D.alertas.length;
+      const porObra = {};
+      D.alertas.forEach((a) => { if (a.obra) porObra[a.obra] = (porObra[a.obra] || 0) + 1; });
+      const masCarga = Object.keys(porObra).sort((a, b) => porObra[b] - porObra[a])[0];
+      const tareasSub = !tareas ? 'Todo al día' : masCarga ? `${A.group(porObra[masCarga])} en ${A.obra(masCarga).nombre}` : 'Sin obra asociada';
+
+      $('pg-resumen-stats').innerHTML = [
+        { label: 'Obras en curso', icono: 'building', valor: A.group(enCurso),
+          sub: enEstudio === 0 ? 'Ninguna en estudio' : enEstudio === 1 ? 'Otra más en estudio' : `Otras ${A.group(enEstudio)} en estudio` },
+        { label: 'Capital de inversores', icono: 'wallet', valor: A.money(capital), accent: true,
+          sub: `${plural(nInversores, 'inversor', 'inversores')} en ${plural(nObras, 'obra', 'obras')}` },
+        { label: `Gasto registrado en ${mesNombre}`, icono: 'receipt', valor: A.money(gastosMes.reduce((s, g) => s + g.importe, 0)),
+          sub: gastoSub, tono: gastoTono },
+        { label: 'Tareas pendientes', icono: 'bell', valor: A.group(tareas), sub: tareasSub, tono: tareas ? '' : 'ok' }
+      ].map(statCard).join('');
+    }
+
+    /* ---------- Requiere atención ---------- */
+    const TONOS = { gold: 'tone-gold', copper: 'tone-copper', sage: 'tone-sage', ink: 'tone-ink' };
+
+    function renderAtencion() {
+      const n = D.alertas.length;
+      $('pg-resumen-atencion-estado').innerHTML = n ? A.chip(plural(n, 'pendiente', 'pendientes'), 'chip-copper') : A.chip('Al día', 'chip-sage');
+      const box = $('pg-resumen-atencion');
+      if (!n) {
+        box.innerHTML = `<div class="empty pg-resumen-vacio">${A.icon('check')}<p class="strong">Todo al día</p><p>No quedan tareas pendientes.</p></div>`;
+        return;
+      }
+      box.innerHTML = `<div class="list">${D.alertas.map((a) => `
+        <div class="list-item pg-resumen-alerta">
+          <span class="list-icon ${TONOS[a.tono] || 'tone-ink'}">${A.icon(a.icono)}</span>
+          <div class="list-main">
+            <p class="list-title">${A.esc(a.titulo)}</p>
+            <p class="pg-resumen-alerta-texto">${A.esc(a.texto)}</p>
+          </div>
+          <div class="pg-resumen-alerta-acciones">
+            ${a.accion ? `<a class="btn btn-ghost btn-sm" href="${A.esc(a.accion.href)}">${A.esc(a.accion.label)}</a>` : ''}
+            <button class="btn btn-sm pg-resumen-hecho" type="button" data-hecho="${A.esc(a.id)}" aria-label="Marcar como hecho: ${A.esc(a.titulo)}">${A.icon('check')}Marcar como hecho</button>
+          </div>
+        </div>`).join('')}</div>`;
+    }
+
+    // Mantiene coherente el menú de avisos de la barra superior (el shell lo pinta una sola vez al cargar).
+    function sincronizarAvisos(alerta) {
+      const dd = document.getElementById('bell-dd');
+      if (!dd) return;
+      dd.querySelectorAll('.top-dd-item').forEach((item) => {
+        const b = item.querySelector('b');
+        if (b && b.textContent === alerta.titulo) item.remove();
+      });
+      const quedan = dd.querySelectorAll('.top-dd-item').length;
+      const cuenta = dd.querySelector('.top-dd-head span:last-child');
+      if (cuenta) cuenta.textContent = A.group(quedan);
+      const punto = document.querySelector('#bell-btn .dot');
+      if (punto) punto.hidden = quedan === 0;
+      if (!quedan && !dd.querySelector('.pg-resumen-avisos-vacio')) {
+        dd.insertAdjacentHTML('beforeend', '<p class="pg-resumen-avisos-vacio">No hay avisos pendientes.</p>');
+      }
+    }
+
+    $('pg-resumen-atencion').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-hecho]');
+      if (!btn || btn.disabled) return;
+      const alerta = D.alertas.find((a) => a.id === btn.dataset.hecho);
+      if (!alerta) return;
+      const fila = btn.closest('.pg-resumen-alerta');
+      const teniaFoco = fila.contains(document.activeElement);
+      btn.disabled = true;
+      let cerrada = false;
+      const cerrar = () => {
+        if (cerrada) return;
+        cerrada = true;
+        const i = D.alertas.indexOf(alerta);
+        if (i > -1) D.alertas.splice(i, 1);
+        D.actividad.unshift({ fecha: HOY, quien: D.usuario.id, icono: 'check', texto: `marcó como hecha la tarea «${alerta.titulo}»` });
+        renderAtencion();
+        renderStats();
+        renderActividad();
+        sincronizarAvisos(alerta);
+        if (teniaFoco) $('pg-resumen-atencion-titulo').focus({ preventScroll: true });
+        A.toast(`Tarea «${alerta.titulo}» marcada como hecha`, 'check');
+      };
+      if (sinMovimiento) { cerrar(); return; }
+      fila.style.height = `${fila.offsetHeight}px`;
+      void fila.offsetHeight;
+      fila.classList.add('pg-resumen-saliendo');
+      fila.style.height = '0px';
+      fila.addEventListener('transitionend', (ev) => { if (ev.propertyName === 'height') cerrar(); });
+      setTimeout(cerrar, 450);
+    });
+
+    /* ---------- Obras ---------- */
+    function progreso(valor, clase) {
+      const w = Math.max(0, Math.min(100, Math.round(valor)));
+      return `<div class="progress-track"><div class="progress-fill${clase ? ' ' + clase : ''}" style="width:${w}%"></div></div>`;
+    }
+    function metrica(label, valorHtml, barraHtml) {
+      return `<div><div class="pg-resumen-fila"><span>${A.esc(label)}</span><span class="tnum">${valorHtml}</span></div>${barraHtml}</div>`;
+    }
+    function datos(pares) {
+      return `<div class="pg-resumen-datos">${pares.map(([label, valor, sufijo]) => `<div><div class="pg-resumen-dato-label">${A.esc(label)}</div><div class="pg-resumen-dato-valor">${A.esc(valor)}${sufijo ? `<small>${A.esc(sufijo)}</small>` : ''}</div></div>`).join('')}</div>`;
+    }
+    function textoQuedan(dias) {
+      if (dias < 0) return 'Vencido';
+      if (dias === 0) return 'Hoy';
+      if (dias === 1) return 'Mañana';
+      return `${A.group(dias)} días`;
+    }
+    function pie(label, fecha, valorHtml) {
+      return `<div class="pg-resumen-obra-pie">
+        <span class="pg-resumen-pie-icono">${A.icon('calendar')}</span>
+        <div class="pg-resumen-pie-main">
+          <div class="pg-resumen-pie-fila"><span>${A.esc(label)}</span><span class="pg-resumen-pie-fecha">${A.esc(fecha)}</span></div>
+          <div class="pg-resumen-pie-valor">${valorHtml}</div>
+        </div>
+        ${A.icon('arrow-right', 'pg-resumen-flecha')}
+      </div>`;
+    }
+    const pieHito = (o) => (o.proximoHito ? pie('Próximo hito', A.date(o.proximoHito.fecha, 'month'), A.esc(o.proximoHito.texto)) : '');
+
+    function tarjetaObra(o) {
+      let metricas = '';
+      let pieHtml = '';
+      if (o.estado === 'En obra') {
+        metricas = metrica('Avance de obra', `<b>${A.pct(o.avanceObra)}</b>`, progreso(o.avanceObra))
+          + metrica('Ejecutado', `<b>${A.money(o.ejecutado)}</b> de ${A.money(o.presupuesto)}`, A.bar(o.ejecutado, o.presupuesto));
+        pieHtml = pieHito(o);
+      } else if (o.estado === 'En renta') {
+        const distribuido = D.distribuciones
+          .filter((d) => d.obra === o.id && d.estado === 'Pagada' && d.total && Number(d.fecha.slice(0, 4)) === HOY_Y)
+          .reduce((s, d) => s + d.total, 0);
+        metricas = metrica('Ocupación del trimestre', `<b>${A.pct(o.ocupacionTrimestre)}</b>`, progreso(o.ocupacionTrimestre, 'sage'))
+          + datos([['Tarifa media', A.money(o.tarifaMediaNoche), 'por noche'], [`Distribuido en ${HOY_Y}`, A.money(distribuido)]]);
+        pieHtml = pieHito(o);
+      } else if (o.oportunidad) {
+        const op = o.oportunidad;
+        const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
+        const dias = A.daysUntil(op.cierre);
+        const quedan = dias > 1 ? `Quedan ${textoQuedan(dias)}` : dias < 0 ? 'Plazo vencido' : `Cierra ${textoQuedan(dias).toLowerCase()}`;
+        metricas = metrica('Objetivo cubierto', `<b>${A.pct(cubierto)}</b> de ${A.money(op.objetivo)}`, progreso(cubierto, 'pg-resumen-fill-oro'))
+          + datos([['Comprometido', A.money(op.comprometido)], ['Pendiente de cubrir', A.money(Math.max(0, op.objetivo - op.comprometido))]]);
+        pieHtml = pie('Cierre estimado', A.date(op.cierre), `<span class="${dias < DIAS_AVISO ? 'pg-resumen-quedan-aviso' : ''}">${A.esc(quedan)}</span>`);
+      }
+      const borradores = D.avances.filter((a) => a.obra === o.id && a.estado === 'borrador').length;
+      const ficha = [
+        o.m2 ? `${A.group(o.m2)} m²` : '',
+        o.ambientes ? plural(o.ambientes, 'ambiente', 'ambientes') : '',
+        o.piso ? `${o.piso} piso` : ''
+      ].filter(Boolean).join(' · ');
+      return `<a class="card pg-resumen-obra" href="obra.html?id=${encodeURIComponent(o.id)}">
+        <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-resumen-foto">
+          ${borradores ? `<em class="pg-resumen-foto-aviso">${A.esc(plural(borradores, 'avance por publicar', 'avances por publicar'))}</em>` : ''}
+          ${ficha ? `<span>${A.esc(ficha)}</span>` : ''}
+        </div>
+        <div class="pg-resumen-obra-cuerpo">
+          <div class="pg-resumen-obra-top">
+            <div class="pg-resumen-obra-titulo"><h3>${A.esc(o.nombre)}</h3><p>${A.esc(o.barrio)}</p></div>
+            ${A.estadoChip(o.estado)}
+          </div>
+          ${metricas}
+          ${pieHtml}
+        </div>
+      </a>`;
+    }
+
+    /* ---------- Próximos vencimientos ---------- */
+    function renderVencimientos() {
+      const items = [];
+      D.documentos.filter((d) => d.vence).forEach((d) => {
+        const o = A.obra(d.obra);
+        items.push({ fecha: d.vence, titulo: d.nombre, meta: [o && o.nombre], href: `documentos.html?obra=${encodeURIComponent(d.obra)}` });
+      });
+      D.distribuciones.filter((d) => d.estado === 'Programada').forEach((d) => {
+        const o = A.obra(d.obra);
+        items.push({ fecha: d.fecha, titulo: `Distribución ${d.periodo}`, meta: [o && o.nombre, d.estado], href: 'inversores.html#distribuciones' });
+      });
+      D.obras.filter((o) => o.oportunidad && o.oportunidad.cierre).forEach((o) => {
+        const op = o.oportunidad;
+        const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
+        items.push({ fecha: op.cierre, titulo: 'Cierre de la oportunidad', meta: [o.nombre, `${A.pct(cubierto)} cubierto`], href: `obra.html?id=${encodeURIComponent(o.id)}` });
+      });
+      const proximos = items
+        .filter((v) => A.daysUntil(v.fecha) >= 0)
+        .sort((a, b) => A.daysUntil(a.fecha) - A.daysUntil(b.fecha));
+
+      const box = $('pg-resumen-venc');
+      if (!proximos.length) {
+        box.innerHTML = `<div class="empty">${A.icon('calendar')}Sin vencimientos próximos.</div>`;
+        return;
+      }
+      box.innerHTML = `<div class="list">${proximos.map((v) => {
+        const dias = A.daysUntil(v.fecha);
+        const [dia, mes] = A.date(v.fecha, 'medium').split(' ');
+        return `<a class="list-item pg-resumen-venc-item${dias < DIAS_AVISO ? ' pg-resumen-aviso' : ''}" href="${A.esc(v.href)}">
+          <span class="pg-resumen-dia" title="${A.esc(A.date(v.fecha, 'long'))}"><b>${A.esc(dia)}</b><small>${A.esc(mes)}</small></span>
+          <div class="list-main">
+            <div class="list-title">${A.esc(v.titulo)}</div>
+            <div class="list-meta">${A.esc(v.meta.filter(Boolean).join(' · '))}</div>
+          </div>
+          <span class="pg-resumen-quedan">${A.esc(textoQuedan(dias))}</span>
+        </a>`;
+      }).join('')}</div>`;
+    }
+
+    /* ---------- Actividad reciente ---------- */
+    function renderActividad() {
+      $('pg-resumen-actividad').innerHTML = `<div class="list">${D.actividad.slice(0, 8).map((a) => {
+        const p = A.persona(a.quien);
+        return `<div class="list-item pg-resumen-act">
+          ${A.avatar(p, 'sm')}
+          <div class="list-main">
+            <p class="pg-resumen-act-texto">${p ? `<span class="strong">${A.esc(p.nombre)}</span> ` : ''}${A.esc(a.texto)}</p>
+            <p class="list-meta pg-resumen-act-meta">${A.icon(a.icono)}<span>${A.esc(A.ago(a.fecha))}</span></p>
+          </div>
+        </div>`;
+      }).join('')}</div>`;
+    }
+
+    renderStats();
+    renderAtencion();
+    $('pg-resumen-obras').innerHTML = D.obras.map(tarjetaObra).join('');
+    renderVencimientos();
+    renderActividad();
+  })();
+</script>
+</body>
+</html>

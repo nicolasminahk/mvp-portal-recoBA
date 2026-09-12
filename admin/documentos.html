@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Contratos y documentos · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ---------- Contratos y documentos (prefijo .pg-doc-) ---------- */
+  /* Oculto para la vista pero legible por lectores de pantalla. Sin position:absolute:
+     dentro de la tabla con desplazamiento propio escaparía del recorte y ensancharía la página. */
+  .pg-doc-sr { display: inline-block; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; vertical-align: top; }
+
+  /* Métricas compactas en móvil */
+  @media (max-width: 860px) {
+    .stats-grid.pg-doc-stats { gap: 8px; }
+    .pg-doc-stats .stat-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label valor" "sub valor"; align-items: center; column-gap: 14px; padding: 13px 16px; }
+    .pg-doc-stats .stat-label { grid-area: label; margin-bottom: 0; }
+    .pg-doc-stats .stat-value { grid-area: valor; font-size: 23px; text-align: right; }
+    .pg-doc-stats .stat-sub { grid-area: sub; margin-top: 1px; }
+  }
+
+  /* Dos columnas: categorías + contenido */
+  .pg-doc-cols { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 20px; align-items: start; margin-top: 24px; }
+  .pg-doc-side { position: sticky; top: 78px; }
+  .card-head.pg-doc-cats-head { padding: 14px 16px; }
+  .card-head.pg-doc-cats-head h2 { font-size: 15px; }
+  .pg-doc-cats { display: flex; flex-direction: column; padding: 8px; }
+  .pg-doc-cat { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; text-align: left; background: none; border: 1px solid transparent; padding: 8px 10px; border-radius: 9px; font-size: 13px; font-weight: 500; color: var(--ink-soft); line-height: 1.35; }
+  .pg-doc-cat:hover:not(:disabled) { background: var(--sand); color: var(--ink); }
+  .pg-doc-cat.active { background: rgba(196,106,74,.1); color: var(--copper-dark); font-weight: 600; }
+  .pg-doc-cat:disabled { color: var(--ink-mute); opacity: .5; cursor: default; }
+  .pg-doc-cat-n { font-size: 11.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink-mute); flex-shrink: 0; }
+  .pg-doc-cat.active .pg-doc-cat-n { color: var(--copper-dark); }
+  .pg-doc-cat-sep { height: 1px; background: var(--line); margin: 6px 10px; }
+  .pg-doc-side-foot { padding: 11px 16px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-mute); }
+
+  /* Barra de filtros */
+  .pg-doc-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+  .select.pg-doc-select { width: auto; min-width: 176px; }
+  .pg-doc-search { margin-left: auto; display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line-strong); border-radius: 10px; padding: 7px 11px; width: 216px; color: var(--ink-mute); }
+  .pg-doc-search:focus-within { border-color: var(--copper); box-shadow: 0 0 0 3px rgba(196,106,74,.16); }
+  .pg-doc-search .ico { width: 16px; height: 16px; }
+  .pg-doc-search input { border: 0; outline: 0; background: transparent; flex: 1; min-width: 0; font-size: 13.5px; color: var(--ink); }
+
+  /* Tabla: anchos fijos para que nada quede cortado y la última columna siempre se vea */
+  .pg-doc-table { table-layout: fixed; min-width: 848px; }
+  .pg-doc-table th, .pg-doc-table td { padding-left: 10px; padding-right: 10px; }
+  .pg-doc-table th:first-child, .pg-doc-table td:first-child { padding-left: 16px; }
+  .pg-doc-table th:last-child, .pg-doc-table td:last-child { padding-right: 14px; }
+  .pg-doc-table .chip { font-size: 10px; letter-spacing: .04em; padding: 4px 9px; }
+  .pg-doc-name { display: flex; align-items: center; gap: 9px; min-width: 0; }
+  .pg-doc-name .list-icon { width: 28px; height: 28px; border-radius: 8px; }
+  .pg-doc-name .list-icon .ico { width: 15px; height: 15px; }
+  .pg-doc-name-main { min-width: 0; }
+  .pg-doc-cat-cell { font-size: 13px; color: var(--ink-soft); }
+  .chip.pg-doc-vis { padding-left: 8px; }
+  .pg-doc-vis .ico { width: 13px; height: 13px; stroke-width: 2; }
+  .pg-doc-venc-fecha { font-variant-numeric: tabular-nums; }
+  .pg-doc-soon { color: var(--copper-dark); font-weight: 600; }
+  .pg-doc-acts { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+  .icon-btn.pg-doc-ib { width: 30px; height: 30px; border-radius: 8px; }
+  .pg-doc-ib .ico { width: 15px; height: 15px; }
+  .pg-doc-foot { font-size: 12.5px; color: var(--ink-mute); }
+  @keyframes pg-doc-flash { from { background-color: rgba(196,106,74,.16); } to { background-color: transparent; } }
+  .pg-doc-new > td { animation: pg-doc-flash 2.6s ease-out; }
+
+  /* Próximos vencimientos */
+  .card-body.pg-doc-lista { padding-top: 4px; padding-bottom: 6px; }
+  .list-item.pg-doc-venc-item { gap: 12px; }
+  .pg-doc-dia { width: 42px; height: 44px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; background: var(--sand); color: var(--ink); line-height: 1; }
+  .pg-doc-dia b { font-family: var(--serif); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-doc-dia small { margin-top: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-doc-venc-item.is-soon .pg-doc-dia { background: rgba(196,106,74,.11); color: var(--copper-dark); }
+  .pg-doc-venc-item.is-soon .pg-doc-dia small { color: var(--copper-dark); }
+  .pg-doc-venc-acts { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .pg-doc-quedan { font-size: 12px; font-weight: 600; color: var(--ink-mute); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pg-doc-venc-item.is-soon .pg-doc-quedan { color: var(--copper-dark); }
+  .pg-doc-nota { align-items: center; }
+
+  /* Modales */
+  .option-cards.pg-doc-opts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pg-doc-people { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .pg-doc-person { display: flex; align-items: center; gap: 9px; font-size: 13px; cursor: pointer; min-width: 0; }
+  .pg-doc-person input { accent-color: var(--copper); width: 15px; height: 15px; flex-shrink: 0; }
+  .pg-doc-person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pg-doc-quien { display: flex; align-items: flex-start; gap: 10px; padding: 11px 14px; border-radius: 12px; background: var(--paper); font-size: 13px; color: var(--ink-soft); line-height: 1.45; }
+  .pg-doc-quien .ico { width: 16px; height: 16px; color: var(--ink-mute); flex-shrink: 0; margin-top: 1px; }
+  .pg-doc-quien b { color: var(--ink); font-weight: 600; }
+  .pg-doc-notify { display: flex; align-items: center; justify-content: space-between; gap: 8px 16px; flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; background: var(--paper); }
+  .pg-doc-notify .hint { flex: 1; min-width: 200px; text-align: right; }
+  .pg-doc-target { display: flex; align-items: center; gap: 11px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .pg-doc-target .list-icon { width: 32px; height: 32px; border-radius: 9px; }
+  .pg-doc-target .list-icon .ico { width: 16px; height: 16px; }
+
+  /* Adaptación */
+  @media (max-width: 1400px) {
+    .pg-doc-cols { grid-template-columns: minmax(0, 1fr); }
+    .pg-doc-side { position: static; }
+    .pg-doc-cats { flex-direction: row; flex-wrap: wrap; gap: 6px; padding: 12px 16px; }
+    .pg-doc-cat { width: auto; border-color: var(--line); border-radius: 999px; padding: 6px 12px; }
+    .pg-doc-cat.active { border-color: rgba(196,106,74,.34); }
+    .pg-doc-cat-sep { display: none; }
+  }
+  @media (max-width: 860px) {
+    .pg-doc-search { margin-left: 0; width: 100%; }
+    .select.pg-doc-select { width: 100%; }
+    .pg-doc-toolbar .segmented { width: 100%; }
+    .pg-doc-toolbar .segmented button { flex: 1; }
+    .pg-doc-nota { flex-wrap: wrap; }
+    .option-cards.pg-doc-opts { grid-template-columns: 1fr; }
+    .pg-doc-people { grid-template-columns: 1fr; }
+    .pg-doc-notify .hint { text-align: left; }
+  }
+  @media (max-width: 560px) {
+    .list-item.pg-doc-venc-item { flex-wrap: wrap; row-gap: 10px; }
+    .pg-doc-venc-item .list-main { flex: 1 1 calc(100% - 54px); }
+    .pg-doc-venc-acts { width: 100%; padding-left: 54px; justify-content: space-between; }
+  }
+</style>
+</head>
+<body data-page="documentos">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head">
+        <div>
+          <p class="eyebrow" id="pg-doc-eyebrow">Gestión</p>
+          <h1>Contratos y documentos</h1>
+          <p class="page-sub">Todo lo firmado y lo pendiente de cada obra, y quién puede verlo.</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost" type="button" id="pg-doc-nueva-carpeta"><span data-icon="folder"></span>Nueva carpeta</button>
+          <button class="btn btn-copper" type="button" id="pg-doc-open-subir" data-open-modal="modal-subir"><span data-icon="upload"></span>Subir documento</button>
+        </div>
+      </div>
+
+      <div class="stats-grid pg-doc-stats" id="pg-doc-stats"></div>
+
+      <div class="pg-doc-cols">
+        <aside class="card pg-doc-side" aria-labelledby="pg-doc-cats-titulo">
+          <div class="card-head pg-doc-cats-head">
+            <h2 id="pg-doc-cats-titulo">Categorías</h2>
+          </div>
+          <div class="pg-doc-cats" id="pg-doc-cats"></div>
+          <div class="pg-doc-side-foot" id="pg-doc-peso"></div>
+        </aside>
+
+        <div class="stack" style="gap:20px">
+          <section class="card" aria-label="Documentos">
+            <div class="pg-doc-toolbar">
+              <label class="pg-doc-sr" for="pg-doc-obra">Obra</label>
+              <select class="select pg-doc-select" id="pg-doc-obra"></select>
+              <div class="segmented" data-segmented id="pg-doc-vis-filtro" aria-label="Filtrar por visibilidad">
+                <button type="button" class="active" data-value="todas" aria-pressed="true">Todas</button>
+                <button type="button" data-value="inversores" aria-pressed="false">Inversores</button>
+                <button type="button" data-value="equipo" aria-pressed="false">Solo equipo</button>
+              </div>
+              <label class="pg-doc-search">
+                <span data-icon="search"></span>
+                <input type="search" id="pg-doc-q" placeholder="Buscar documento" aria-label="Buscar documento">
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table class="table pg-doc-table">
+                <colgroup>
+                  <col>
+                  <col style="width:100px">
+                  <col style="width:136px">
+                  <col style="width:138px">
+                  <col style="width:92px">
+                  <col style="width:94px">
+                  <col style="width:128px">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>Documento</th>
+                    <th>Categoría</th>
+                    <th>Estado</th>
+                    <th>Visibilidad</th>
+                    <th>Fecha</th>
+                    <th>Vence</th>
+                    <th class="num"><span class="pg-doc-sr">Acciones</span></th>
+                  </tr>
+                </thead>
+                <tbody id="pg-doc-body"></tbody>
+              </table>
+            </div>
+            <div class="card-foot pg-doc-foot">
+              <span id="pg-doc-count"></span>
+              <button class="btn btn-text btn-sm" type="button" id="pg-doc-reset" hidden>Quitar filtros</button>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="pg-doc-venc-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-doc-venc-titulo">Próximos vencimientos</h2>
+                <p class="card-sub" id="pg-doc-venc-sub"></p>
+              </div>
+              <span id="pg-doc-venc-chip"></span>
+            </div>
+            <div class="card-body pg-doc-lista" id="pg-doc-venc"></div>
+          </section>
+
+          <div class="alert alert-ink pg-doc-nota">
+            <span data-icon="shield"></span>
+            <div>
+              <div class="alert-title">Qué ve el inversor</div>
+              <div class="alert-text">En su portal solo aparecen los documentos marcados para él. Cada descarga usa un enlace privado y temporal.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: subir documento -->
+<div class="modal-overlay" id="modal-subir" aria-hidden="true">
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="modal-subir-titulo">
+    <form data-demo="Documento subido" id="pg-doc-form-subir">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-subir-titulo">Subir documento</h3>
+          <p class="modal-desc">Queda guardado en la obra y solo lo ve quien usted indique.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="field span-2">
+            <div class="dropzone" data-accept=".pdf,.xlsx,.xls,.doc,.docx,.jpg,.png"><span data-icon="upload"></span><b>Arrastrar el archivo aquí</b> o hacer clic para seleccionarlo</div>
+            <div class="file-list" id="pg-doc-files"></div>
+          </div>
+          <label class="field span-2"><span class="label">Nombre</span><input class="input" name="nombre" required autocomplete="off" placeholder="Contrato de obra con la constructora"></label>
+          <label class="field"><span class="label">Obra</span><select class="select" name="obra" id="pg-doc-sub-obra"></select></label>
+          <label class="field"><span class="label">Categoría</span><select class="select" name="categoria" id="pg-doc-sub-cat"></select></label>
+          <label class="field"><span class="label">Estado</span><select class="select" name="estado" id="pg-doc-sub-estado"></select></label>
+          <label class="field"><span class="label">Vencimiento <span class="muted">(opcional)</span></span><input class="input" name="vence" inputmode="numeric" autocomplete="off" placeholder="dd/mm/aaaa" pattern="\d{1,2}/\d{1,2}/\d{4}" title="Fecha con formato dd/mm/aaaa"></label>
+          <div class="field span-2">
+            <span class="label">Quién puede verlo</span>
+            <div class="option-cards pg-doc-opts" id="pg-doc-sub-vis"></div>
+          </div>
+          <div class="field span-2" id="pg-doc-sub-people-box" hidden>
+            <span class="label">Inversores con acceso</span>
+            <div class="pg-doc-people" id="pg-doc-sub-people"></div>
+          </div>
+          <div class="span-2 pg-doc-quien" id="pg-doc-sub-quien"></div>
+          <div class="span-2 pg-doc-notify">
+            <label class="switch"><input type="checkbox" name="avisar" checked><span class="track"></span><span>Avisar a quien pueda verlo</span></label>
+            <span class="hint" id="pg-doc-sub-asunto"></span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="upload"></span>Subir documento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: cambiar visibilidad -->
+<div class="modal-overlay" id="modal-visibilidad" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-visibilidad-titulo">
+    <form data-demo="Visibilidad actualizada" data-reset="false" id="pg-doc-form-vis">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-visibilidad-titulo">Cambiar visibilidad</h3>
+          <p class="modal-desc">Decide quién ve este documento en el portal.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="pg-doc-target" id="pg-doc-vis-target"></div>
+        <div class="option-cards mt-16" id="pg-doc-vis-cards"></div>
+        <div class="field mt-16" id="pg-doc-vis-people-box" hidden>
+          <span class="label">Inversores con acceso</span>
+          <div class="pg-doc-people" id="pg-doc-vis-people"></div>
+        </div>
+        <div class="pg-doc-quien mt-16" id="pg-doc-vis-quien"></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+(function () {
+  'use strict';
+  const A = window.Admin;
+  if (!A) return;
+  const D = A.data;
+  const esc = A.esc;
+  const HOY = D.instalacion.hoy;
+  const AVISO = 90;
+  const $ = (id) => document.getElementById(id);
+
+  const TIPO = {
+    PDF: { icono: 'file', tono: 'tone-copper' },
+    XLSX: { icono: 'table', tono: 'tone-sage' },
+    Carpeta: { icono: 'folder', tono: 'tone-gold' }
+  };
+  const VIS = {
+    inversores: { icono: 'users', corto: 'Inversores', chip: 'chip-sage' },
+    equipo: { icono: 'lock', corto: 'Solo equipo', chip: 'chip-ink' },
+    seleccionados: { icono: 'user', corto: 'Seleccionados', chip: 'chip-gold' }
+  };
+  const ESTADO_TONO = {
+    Firmado: 'chip-sage', Registrada: 'chip-sage', Vigente: 'chip-sage', Aprobado: 'chip-sage',
+    Publicada: 'chip-sage', Publicado: 'chip-sage', 'Sin gravámenes': 'chip-sage',
+    'Pendiente de firma': 'chip-gold', 'En revisión': 'chip-gold', Vencido: 'chip-copper'
+  };
+  const ESTADOS = ['Firmado', 'Pendiente de firma', 'En revisión', 'Registrada', 'Vigente', 'Aprobado', 'Publicada'];
+
+  /* ---------- Utilidades ---------- */
+  const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+  const lista = (arr) => (arr.length <= 1 ? arr.join('') : `${arr.slice(0, -1).join(', ')} y ${arr[arr.length - 1]}`);
+  const limpio = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const tipoDe = (t) => TIPO[t] || TIPO.PDF;
+  const nombreObra = (id) => (A.obra(id) || {}).nombre || id;
+
+  function pesoMB(txt) {
+    const m = String(txt || '').match(/([\d.,]+)\s*(KB|MB|GB)/i);
+    if (!m) return 0;
+    const n = parseFloat(m[1].replace(/\./g, '').replace(',', '.'));
+    if (!Number.isFinite(n)) return 0;
+    const u = m[2].toUpperCase();
+    return u === 'KB' ? n / 1024 : u === 'GB' ? n * 1024 : n;
+  }
+  const pesoTexto = (mb) => (mb >= 1 ? `${A.group(mb, 1)} MB` : `${A.group(Math.max(1, Math.round(mb * 1024)))} KB`);
+  function parseFecha(v) {
+    const m = String(v || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (!m) return null;
+    const d = Number(m[1]); const mo = Number(m[2]); const y = Number(m[3]);
+    const dt = new Date(y, mo - 1, d);
+    if (dt.getFullYear() !== y || dt.getMonth() !== mo - 1 || dt.getDate() !== d) return null;
+    return `${y}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  }
+  function textoQuedan(dias) {
+    if (dias < 0) return 'Vencido';
+    if (dias === 0) return 'Vence hoy';
+    if (dias === 1) return 'Vence mañana';
+    return `En ${A.group(dias)} días`;
+  }
+  function inversoresDe(obraId) {
+    const ids = [];
+    A.participaciones({ obra: obraId }).forEach((p) => { if (!ids.includes(p.inversor)) ids.push(p.inversor); });
+    D.compromisos.filter((c) => c.obra === obraId).forEach((c) => { if (!ids.includes(c.inversor)) ids.push(c.inversor); });
+    return ids.map((id) => A.persona(id)).filter(Boolean);
+  }
+  function nombresCompartidos(d) {
+    return (d.compartidoCon || []).map((id) => (A.persona(id) || {}).nombre).filter(Boolean);
+  }
+  function asunto(avisoId, vars) {
+    const a = D.avisos.find((x) => x.id === avisoId);
+    return a ? a.asunto.replace(/\{(\w+)\}/g, (m, k) => (vars[k] !== undefined ? vars[k] : m)) : '';
+  }
+  function flash(sel) {
+    requestAnimationFrame(() => {
+      const n = document.querySelector(sel);
+      if (!n) return;
+      n.classList.remove('pg-doc-new');
+      void n.offsetWidth;
+      n.classList.add('pg-doc-new');
+      n.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      setTimeout(() => n.classList.remove('pg-doc-new'), 2800);
+    });
+  }
+
+  /* ---------- Estado de la pantalla ---------- */
+  const obraURL = A.obra(A.qs('obra')) ? A.qs('obra') : '';
+  const filtros = { obra: obraURL, vis: 'todas', cat: '', q: '' };
+
+  const enObra = () => D.documentos.filter((d) => !filtros.obra || d.obra === filtros.obra);
+  const pasaVis = (d) => filtros.vis === 'todas' || (filtros.vis === 'equipo' ? d.visibilidad === 'equipo' : d.visibilidad !== 'equipo');
+  function pasaQ(d) {
+    const q = limpio(filtros.q).trim();
+    if (!q) return true;
+    return limpio([d.nombre, d.categoria, d.estado, nombreObra(d.obra)].join(' ')).includes(q);
+  }
+  const sinCategoria = () => enObra().filter((d) => pasaVis(d) && pasaQ(d));
+  const visibles = () => sinCategoria().filter((d) => !filtros.cat || d.categoria === filtros.cat);
+  const porFecha = (a, b) => String(b.fecha).localeCompare(String(a.fecha));
+  const hayFiltros = () => !!(filtros.obra || filtros.cat || filtros.q.trim() || filtros.vis !== 'todas');
+
+  /* ---------- Métricas ---------- */
+  function renderStats() {
+    const docs = enObra();
+    const compartidos = docs.filter((d) => d.visibilidad !== 'equipo');
+    const seleccion = docs.filter((d) => d.visibilidad === 'seleccionados').length;
+    const equipo = docs.filter((d) => d.visibilidad === 'equipo').length;
+    const proximos = docs.filter((d) => d.vence && A.daysUntil(d.vence) >= 0 && A.daysUntil(d.vence) <= AVISO)
+      .sort((a, b) => a.vence.localeCompare(b.vence));
+    const cats = new Set(docs.map((d) => d.categoria)).size;
+    const peso = docs.reduce((s, d) => s + pesoMB(d.peso), 0);
+
+    const cards = [
+      { label: 'Documentos', icono: 'file', valor: A.group(docs.length),
+        sub: docs.length ? `${plural(cats, 'categoría', 'categorías')} · ${pesoTexto(peso)}` : 'Sin documentos en esta obra' },
+      { label: 'Compartidos con inversores', icono: 'users', valor: A.group(compartidos.length), accent: true,
+        sub: seleccion ? `${A.group(seleccion)} solo para personas concretas` : 'Visibles en el portal del inversor' },
+      { label: 'Vencen en 90 días', icono: 'clock', valor: A.group(proximos.length),
+        sub: proximos.length ? `El más próximo, el ${A.date(proximos[0].vence)}` : 'Nada por renovar',
+        tono: proximos.length ? 'warn' : 'ok' },
+      { label: 'Solo equipo', icono: 'lock', valor: A.group(equipo), sub: 'No aparecen en el portal' }
+    ];
+    $('pg-doc-stats').innerHTML = cards.map((s) => `<div class="stat-card">
+      <div class="stat-label"><span>${esc(s.label)}</span>${A.icon(s.icono)}</div>
+      <div class="stat-value${s.accent ? ' accent' : ''}">${esc(s.valor)}</div>
+      <div class="stat-sub${s.tono ? ' ' + s.tono : ''}">${esc(s.sub)}</div>
+    </div>`).join('');
+  }
+
+  /* ---------- Categorías ---------- */
+  function renderCategorias() {
+    const pool = sinCategoria();
+    const cuenta = (c) => pool.filter((d) => d.categoria === c).length;
+    const fila = (valor, nombre, n, activa) => `<button class="pg-doc-cat${activa ? ' active' : ''}" type="button" data-cat="${esc(valor)}"${!n && !activa ? ' disabled' : ''} aria-pressed="${activa}">
+      <span>${esc(nombre)}</span><span class="pg-doc-cat-n">${A.group(n)}</span></button>`;
+    $('pg-doc-cats').innerHTML = fila('', 'Todas', pool.length, !filtros.cat)
+      + '<div class="pg-doc-cat-sep"></div>'
+      + D.categoriasDocumento.map((c) => fila(c, c, cuenta(c), filtros.cat === c)).join('');
+    const peso = enObra().reduce((s, d) => s + pesoMB(d.peso), 0);
+    $('pg-doc-peso').textContent = peso ? `Espacio usado: ${pesoTexto(peso)}` : 'Sin archivos guardados';
+  }
+
+  /* ---------- Tabla ---------- */
+  function chipVisibilidad(d) {
+    const v = VIS[d.visibilidad] || VIS.equipo;
+    return `<span class="chip ${v.chip} no-dot pg-doc-vis">${A.icon(v.icono)}${esc(v.corto)}</span>`;
+  }
+  function celdaVencimiento(d) {
+    if (!d.vence) return '<span class="muted">—</span>';
+    const dias = A.daysUntil(d.vence);
+    const soon = dias <= AVISO;
+    return `<div class="pg-doc-venc-fecha${soon ? ' pg-doc-soon' : ''}">${esc(A.date(d.vence))}</div>
+      <div class="cell-meta${soon ? ' pg-doc-soon' : ''}">${esc(textoQuedan(dias))}</div>`;
+  }
+  function renderTabla() {
+    const filas = visibles().slice().sort(porFecha);
+    const body = $('pg-doc-body');
+    if (!filas.length) {
+      body.innerHTML = `<tr><td colspan="7"><div class="empty">${A.icon('folder')}No hay documentos con estos filtros.</div></td></tr>`;
+    } else {
+      body.innerHTML = filas.map((d) => {
+        const t = tipoDe(d.tipo);
+        const meta = [nombreObra(d.obra), d.peso].filter(Boolean).join(' · ');
+        const sel = d.visibilidad === 'seleccionados' ? nombresCompartidos(d) : [];
+        return `<tr data-doc="${esc(d.id)}">
+          <td>
+            <div class="pg-doc-name">
+              <span class="list-icon ${t.tono}" title="${esc(d.tipo)}">${A.icon(t.icono)}</span>
+              <div class="pg-doc-name-main">
+                <div class="cell-title">${esc(d.nombre)}</div>
+                <div class="cell-meta">${esc(meta)}</div>
+              </div>
+            </div>
+          </td>
+          <td class="pg-doc-cat-cell">${esc(d.categoria)}</td>
+          <td>${A.chip(d.estado, ESTADO_TONO[d.estado] || 'chip-ink')}</td>
+          <td>${chipVisibilidad(d)}${sel.length ? `<div class="cell-meta">${esc(lista(sel))}</div>` : ''}</td>
+          <td class="tnum">${esc(A.date(d.fecha))}</td>
+          <td class="pg-doc-venc">${celdaVencimiento(d)}</td>
+          <td class="num"><div class="pg-doc-acts">
+            <button class="btn btn-text btn-sm" type="button" data-pg-bajar="${esc(d.id)}">Descargar</button>
+            <button class="icon-btn pg-doc-ib" type="button" data-pg-vis="${esc(d.id)}" title="Cambiar visibilidad" aria-label="Cambiar la visibilidad de ${esc(d.nombre)}">${A.icon('eye')}</button>
+          </div></td>
+        </tr>`;
+      }).join('');
+    }
+    const total = enObra().length;
+    $('pg-doc-count').textContent = filas.length === total
+      ? `${plural(total, 'documento', 'documentos')}${filtros.obra ? ' en ' + nombreObra(filtros.obra) : ''}`
+      : `${A.group(filas.length)} de ${plural(total, 'documento', 'documentos')}`;
+    $('pg-doc-reset').hidden = !hayFiltros();
+  }
+
+  /* ---------- Próximos vencimientos ---------- */
+  function renderVencimientos() {
+    const items = enObra().filter((d) => d.vence).sort((a, b) => a.vence.localeCompare(b.vence));
+    $('pg-doc-venc-sub').textContent = filtros.obra ? `De ${nombreObra(filtros.obra)}` : 'De todas las obras';
+    $('pg-doc-venc-chip').innerHTML = items.length
+      ? A.chip(plural(items.filter((d) => A.daysUntil(d.vence) <= AVISO).length, 'por renovar', 'por renovar'), 'chip-copper')
+      : A.chip('Al día', 'chip-sage');
+    const box = $('pg-doc-venc');
+    if (!items.length) {
+      box.innerHTML = `<div class="empty">${A.icon('calendar')}Ningún documento con fecha de vencimiento.</div>`;
+      return;
+    }
+    box.innerHTML = `<div class="list">${items.map((d) => {
+      const dias = A.daysUntil(d.vence);
+      const partes = A.date(d.vence, 'medium').split(' ');
+      return `<div class="list-item pg-doc-venc-item${dias <= AVISO ? ' is-soon' : ''}">
+        <span class="pg-doc-dia" title="${esc(A.date(d.vence, 'long'))}"><b>${esc(partes[0])}</b><small>${esc(partes[1])}</small></span>
+        <div class="list-main">
+          <div class="list-title">${esc(d.nombre)}</div>
+          <div class="list-meta">${esc(nombreObra(d.obra))} · ${esc(d.categoria)}</div>
+        </div>
+        <div class="pg-doc-venc-acts">
+          <span class="pg-doc-quedan">${esc(textoQuedan(dias))}</span>
+          <button class="btn btn-ghost btn-sm" type="button" data-pg-renovar="${esc(d.id)}">${A.icon('refresh')}Renovar</button>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  function renderAll() {
+    renderStats();
+    renderCategorias();
+    renderTabla();
+    renderVencimientos();
+  }
+
+  /* ---------- Filtros ---------- */
+  const selObra = $('pg-doc-obra');
+  selObra.innerHTML = '<option value="">Todas las obras</option>'
+    + D.obras.map((o) => `<option value="${esc(o.id)}">${esc(o.nombre)}</option>`).join('');
+  selObra.value = filtros.obra;
+  $('pg-doc-eyebrow').textContent = filtros.obra ? `Gestión · ${nombreObra(filtros.obra)}` : 'Gestión';
+
+  selObra.addEventListener('change', () => {
+    filtros.obra = selObra.value;
+    $('pg-doc-eyebrow').textContent = filtros.obra ? `Gestión · ${nombreObra(filtros.obra)}` : 'Gestión';
+    if (filtros.cat && !sinCategoria().some((d) => d.categoria === filtros.cat)) filtros.cat = '';
+    renderAll();
+  });
+  $('pg-doc-vis-filtro').addEventListener('segmented:change', (e) => {
+    filtros.vis = e.detail;
+    if (filtros.cat && !sinCategoria().some((d) => d.categoria === filtros.cat)) filtros.cat = '';
+    renderAll();
+  });
+  $('pg-doc-q').addEventListener('input', (e) => {
+    filtros.q = e.target.value;
+    if (filtros.cat && !sinCategoria().some((d) => d.categoria === filtros.cat)) filtros.cat = '';
+    renderCategorias();
+    renderTabla();
+  });
+  $('pg-doc-cats').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cat]');
+    if (!b || b.disabled) return;
+    filtros.cat = b.dataset.cat;
+    renderCategorias();
+    renderTabla();
+  });
+  function setSegmento(valor) {
+    filtros.vis = valor;
+    $('pg-doc-vis-filtro').querySelectorAll('button').forEach((b) => {
+      const on = b.dataset.value === valor;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+  $('pg-doc-reset').addEventListener('click', () => {
+    filtros.obra = '';
+    filtros.cat = '';
+    filtros.q = '';
+    selObra.value = '';
+    $('pg-doc-q').value = '';
+    $('pg-doc-eyebrow').textContent = 'Gestión';
+    setSegmento('todas');
+    renderAll();
+  });
+
+  $('pg-doc-nueva-carpeta').addEventListener('click', () => {
+    A.toast(filtros.obra ? `Carpeta creada en ${nombreObra(filtros.obra)}` : 'Carpeta creada', 'folder');
+  });
+
+  /* ---------- Acciones de fila ---------- */
+  document.addEventListener('click', (e) => {
+    const bajar = e.target.closest('[data-pg-bajar]');
+    if (bajar) {
+      const d = D.documentos.find((x) => x.id === bajar.dataset.pgBajar);
+      if (d) A.toast(`Enlace privado generado para «${d.nombre}»`, 'download');
+      return;
+    }
+    const renovar = e.target.closest('[data-pg-renovar]');
+    if (renovar) {
+      const d = D.documentos.find((x) => x.id === renovar.dataset.pgRenovar);
+      if (d) A.toast(`Recordatorio de renovación creado para «${d.nombre}»`, 'clock');
+      return;
+    }
+    const cambiar = e.target.closest('[data-pg-vis]');
+    if (cambiar) {
+      docActual = D.documentos.find((x) => x.id === cambiar.dataset.pgVis) || null;
+      if (docActual) A.openModal('modal-visibilidad');
+    }
+  });
+
+  /* ---------- Piezas compartidas por los modales ---------- */
+  function tarjetasVisibilidad(name, valor) {
+    return D.visibilidades.map((v) => `<label class="option-card">
+      <input type="radio" name="${esc(name)}" value="${esc(v.id)}"${v.id === valor ? ' checked' : ''}>
+      <div><div class="option-title">${esc(v.nombre)}</div><div class="option-desc">${esc(v.descripcion)}</div></div>
+    </label>`).join('');
+  }
+  function personas(box, obraId, marcados) {
+    const gente = inversoresDe(obraId);
+    if (!gente.length) {
+      box.innerHTML = `<p class="hint">${esc(nombreObra(obraId))} todavía no tiene inversores. Elija otra opción de visibilidad.</p>`;
+      return;
+    }
+    box.innerHTML = gente.map((p) => `<label class="pg-doc-person">
+      <input type="checkbox" value="${esc(p.id)}"${marcados.includes(p.id) ? ' checked' : ''}>
+      ${A.avatar(p, 'sm')}<span>${esc(p.nombre)}</span>
+    </label>`).join('');
+  }
+  const marcados = (box) => Array.from(box.querySelectorAll('input:checked')).map((i) => i.value);
+
+  function resumenAcceso(vis, obraId, elegidos) {
+    const gente = inversoresDe(obraId);
+    if (vis === 'equipo') return '<b>Solo Administración y Obra.</b> No aparece en el portal del inversor.';
+    if (vis === 'seleccionados') {
+      if (!elegidos.length) return 'Elija al menos una persona o el documento no lo verá ningún inversor.';
+      return `Lo verán <b>${esc(lista(elegidos.map((id) => (A.persona(id) || {}).nombre || id)))}</b> en su portal.`;
+    }
+    if (!gente.length) return `<b>${esc(nombreObra(obraId))}</b> aún no tiene inversores: por ahora solo lo verá el equipo.`;
+    return `Lo verán <b>${esc(plural(gente.length, 'inversor', 'inversores'))}</b> de ${esc(nombreObra(obraId))} en su portal.`;
+  }
+
+  /* ---------- Modal: subir documento ---------- */
+  const fSub = $('pg-doc-form-subir');
+  const sv = fSub.elements;
+  const subPeopleBox = $('pg-doc-sub-people');
+  let subPeso = null;
+
+  sv.obra.innerHTML = D.obras.map((o) => `<option value="${esc(o.id)}">${esc(o.nombre)}</option>`).join('');
+  sv.categoria.innerHTML = D.categoriasDocumento.map((c) => `<option>${esc(c)}</option>`).join('');
+  sv.estado.innerHTML = ESTADOS.map((s) => `<option>${esc(s)}</option>`).join('');
+  $('pg-doc-sub-vis').innerHTML = tarjetasVisibilidad('visibilidad', 'inversores');
+
+  function syncSubir(recargarPersonas) {
+    const vis = sv.visibilidad.value;
+    const obraId = sv.obra.value;
+    const box = $('pg-doc-sub-people-box');
+    box.hidden = vis !== 'seleccionados';
+    if (vis === 'seleccionados' && recargarPersonas) personas(subPeopleBox, obraId, marcados(subPeopleBox));
+    const elegidos = vis === 'seleccionados' ? marcados(subPeopleBox) : [];
+    $('pg-doc-sub-quien').innerHTML = A.icon('info') + `<span>${resumenAcceso(vis, obraId, elegidos)}</span>`;
+    const nombre = sv.nombre.value.trim();
+    $('pg-doc-sub-asunto').innerHTML = !sv.avisar.checked
+      ? 'Sin aviso. Lo verán al entrar en su portal.'
+      : `Asunto: <b class="strong">${esc(asunto('n2', { documento: nombre || '…' }))}</b>`;
+  }
+
+  fSub.addEventListener('change', (e) => syncSubir(e.target === sv.obra || e.target.name === 'visibilidad'));
+  fSub.addEventListener('input', () => syncSubir(false));
+  subPeopleBox.addEventListener('change', () => syncSubir(false));
+
+  fSub.addEventListener('dropzone:files', (e) => {
+    const files = e.detail.files || [];
+    if (!files.length) return;
+    const f = files[0];
+    if (!sv.nombre.value.trim()) sv.nombre.value = f.name.replace(/\.[a-z0-9]+$/i, '');
+    const ext = (f.name.split('.').pop() || '').toLowerCase();
+    if (ext === 'xlsx' || ext === 'xls') sv.estado.value = 'Aprobado';
+    subPeso = files.reduce((s, x) => s + (x.size || 0), 0) / 1048576;
+    syncSubir(false);
+  });
+
+  $('modal-subir').addEventListener('modal:open', () => {
+    subPeso = null;
+    $('pg-doc-files').innerHTML = '';
+    sv.obra.value = filtros.obra || 'ayacucho';
+    sv.categoria.value = filtros.cat || D.categoriasDocumento[0];
+    sv.estado.value = ESTADOS[0];
+    sv.vence.value = '';
+    fSub.querySelectorAll('[name="visibilidad"]').forEach((r) => { r.checked = r.value === (filtros.vis === 'equipo' ? 'equipo' : 'inversores'); });
+    const aviso = D.avisos.find((a) => a.id === 'n2');
+    sv.avisar.checked = !aviso || aviso.activo;
+    personas(subPeopleBox, sv.obra.value, []);
+    syncSubir(false);
+  });
+
+  fSub.addEventListener('submit', (e) => {
+    const nombre = sv.nombre.value.trim();
+    if (!nombre) { e.preventDefault(); e.stopPropagation(); sv.nombre.value = ''; sv.nombre.reportValidity(); return; }
+    const vence = parseFecha(sv.vence.value);
+    if (sv.vence.value.trim() && !vence) { e.preventDefault(); e.stopPropagation(); sv.vence.reportValidity(); sv.vence.focus(); return; }
+    const vis = sv.visibilidad.value;
+    const elegidos = vis === 'seleccionados' ? marcados(subPeopleBox) : [];
+    const primerArchivo = $('pg-doc-files').querySelector('.file-row span');
+    const ext = primerArchivo ? (primerArchivo.textContent.split('.').pop() || '').toLowerCase() : '';
+    const tipo = ext === 'xlsx' || ext === 'xls' ? 'XLSX' : 'PDF';
+    const doc = {
+      id: `d-${Date.now().toString(36)}`,
+      obra: sv.obra.value,
+      nombre,
+      categoria: sv.categoria.value,
+      tipo,
+      estado: sv.estado.value,
+      fecha: HOY,
+      visibilidad: vis,
+      subidoPor: D.usuario.id,
+      peso: subPeso ? pesoTexto(subPeso) : null
+    };
+    if (vence) doc.vence = vence;
+    if (elegidos.length) doc.compartidoCon = elegidos;
+    D.documentos.unshift(doc);
+    D.actividad.unshift({ fecha: HOY, quien: D.usuario.id, icono: 'file', texto: `subió «${nombre}» a ${nombreObra(doc.obra)}` });
+
+    const gente = vis === 'equipo' ? 0 : vis === 'seleccionados' ? elegidos.length : inversoresDe(doc.obra).length;
+    fSub.dataset.demo = sv.avisar.checked && gente
+      ? `«${nombre}» subido · aviso a ${plural(gente, 'inversor', 'inversores')}`
+      : `«${nombre}» subido a ${nombreObra(doc.obra)}`;
+
+    // Deja el documento nuevo a la vista, sin cambiar de obra si se estaban viendo todas.
+    if (filtros.obra && filtros.obra !== doc.obra) {
+      filtros.obra = doc.obra;
+      selObra.value = doc.obra;
+      $('pg-doc-eyebrow').textContent = `Gestión · ${nombreObra(doc.obra)}`;
+    }
+    filtros.cat = '';
+    filtros.q = '';
+    $('pg-doc-q').value = '';
+    if (filtros.vis !== 'todas' && !pasaVis(doc)) setSegmento('todas');
+    renderAll();
+    flash(`tr[data-doc="${doc.id}"]`);
+  });
+
+  /* ---------- Modal: cambiar visibilidad ---------- */
+  let docActual = null;
+  const fVis = $('pg-doc-form-vis');
+  const visPeopleBox = $('pg-doc-vis-people');
+
+  function syncVis(recargarPersonas) {
+    if (!docActual) return;
+    const marcada = fVis.querySelector('[name="visibilidad"]:checked');
+    const vis = marcada ? marcada.value : docActual.visibilidad;
+    const box = $('pg-doc-vis-people-box');
+    box.hidden = vis !== 'seleccionados';
+    if (vis === 'seleccionados' && recargarPersonas) personas(visPeopleBox, docActual.obra, marcados(visPeopleBox));
+    const elegidos = vis === 'seleccionados' ? marcados(visPeopleBox) : [];
+    $('pg-doc-vis-quien').innerHTML = A.icon('info') + `<span>${resumenAcceso(vis, docActual.obra, elegidos)}</span>`;
+  }
+
+  fVis.addEventListener('change', (e) => syncVis(e.target.name === 'visibilidad'));
+
+  $('modal-visibilidad').addEventListener('modal:open', () => {
+    if (!docActual) return;
+    const t = tipoDe(docActual.tipo);
+    $('pg-doc-vis-target').innerHTML = `<span class="list-icon ${t.tono}">${A.icon(t.icono)}</span>
+      <div class="pg-doc-name-main">
+        <div class="cell-title">${esc(docActual.nombre)}</div>
+        <div class="cell-meta">${esc([nombreObra(docActual.obra), docActual.categoria].join(' · '))}</div>
+      </div>`;
+    $('pg-doc-vis-cards').innerHTML = tarjetasVisibilidad('visibilidad', docActual.visibilidad);
+    personas(visPeopleBox, docActual.obra, docActual.compartidoCon || []);
+    syncVis(false);
+  });
+
+  fVis.addEventListener('submit', () => {
+    if (!docActual) return;
+    const marcada = fVis.querySelector('[name="visibilidad"]:checked');
+    const vis = marcada ? marcada.value : docActual.visibilidad;
+    docActual.visibilidad = vis;
+    if (vis === 'seleccionados') docActual.compartidoCon = marcados(visPeopleBox);
+    else delete docActual.compartidoCon;
+    const v = VIS[vis] || VIS.equipo;
+    fVis.dataset.demo = `«${docActual.nombre}»: ${v.corto.toLowerCase()}`;
+    const id = docActual.id;
+    if (filtros.vis !== 'todas' && !pasaVis(docActual)) setSegmento('todas');
+    renderAll();
+    flash(`tr[data-doc="${id}"]`);
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

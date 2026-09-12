@@ -1,0 +1,680 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Carga desde el móvil · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ============ Carga desde el móvil · estilos propios (prefijo .pg-movil-) ============ */
+  .pg-movil-cols { display: grid; grid-template-columns: minmax(0, 1fr) 414px; gap: 28px; align-items: start; }
+  .page-head.pg-movil-encabezado .page-sub { max-width: 540px; }
+  .stack.pg-movil-info { gap: 20px; min-width: 0; }
+  .pg-movil-lado { position: sticky; top: 74px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .pg-movil-pie { font-size: 12.5px; color: var(--ink-mute); text-align: center; line-height: 1.5; max-width: 360px; }
+
+  /* ---------- Columna izquierda: pasos ---------- */
+  .pg-movil-pasos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  .pg-movil-paso { display: flex; gap: 13px; align-items: flex-start; }
+  .pg-movil-paso-ico { width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; flex-shrink: 0; }
+  .pg-movil-paso-ico .ico { width: 17px; height: 17px; }
+  .pg-movil-paso-num { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-movil-paso-titulo { font-size: 14px; font-weight: 600; margin-top: 1px; }
+  .pg-movil-paso-texto { font-size: 13px; line-height: 1.45; color: var(--ink-soft); margin-top: 2px; text-wrap: pretty; }
+
+  /* ---------- Columna izquierda: detalles ---------- */
+  .pg-movil-detalles { display: flex; flex-direction: column; gap: 10px; }
+  .pg-movil-detalle { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
+  .pg-movil-detalle .ico { width: 16px; height: 16px; color: var(--copper); flex-shrink: 0; margin-top: 2px; }
+
+  /* ---------- Columna izquierda: qué ve el perfil Obra ---------- */
+  .pg-movil-persona { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .pg-movil-ve { display: flex; flex-direction: column; gap: 10px; }
+  .pg-movil-ve-item { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; line-height: 1.45; text-wrap: pretty; }
+  .pg-movil-ve-ico { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; margin-top: 1px; }
+  .pg-movil-ve-ico .ico { width: 12px; height: 12px; stroke-width: 2.4; }
+  .pg-movil-si .pg-movil-ve-ico { background: rgba(95,113,97,.14); color: var(--sage); }
+  .pg-movil-no .pg-movil-ve-ico { background: rgba(28,35,49,.07); color: var(--ink-mute); }
+  .pg-movil-no { color: var(--ink-mute); }
+  .pg-movil-ve-pie { font-size: 12.5px; color: var(--ink-mute); }
+
+  /* ---------- Columna izquierda: pendiente de revisión ---------- */
+  .pg-movil-pend { display: flex; flex-direction: column; gap: 16px; }
+  .pg-movil-pend-item { display: flex; flex-direction: column; gap: 11px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .pg-movil-pend-item:last-child { padding-bottom: 0; border-bottom: 0; }
+  .pg-movil-pend-top { display: flex; gap: 11px; align-items: flex-start; }
+  .pg-movil-pend-main { flex: 1; min-width: 0; }
+  .pg-movil-pend-titulo { font-size: 14px; font-weight: 600; line-height: 1.35; text-wrap: pretty; }
+  .pg-movil-pend-meta { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .pg-movil-pend-texto { font-size: 13px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
+  .pg-movil-pend-fotos { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pg-movil-pend-fotos .thumb { width: 84px; aspect-ratio: 4 / 3; padding: 0; border-radius: 9px; background-size: cover; background-position: center; }
+  .pg-movil-pend-mas { width: 54px; display: grid; place-items: center; border: 1px dashed var(--line-strong); border-radius: 9px; font-size: 12px; font-weight: 600; color: var(--ink-mute); }
+  .pg-movil-pend-pie { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .pg-movil-pend-pie .btn-text { margin-left: -6px; }
+  .pg-movil-pend-aviso { font-size: 12px; color: var(--ink-mute); text-align: right; }
+  .pg-movil-pend-nueva { animation: pg-movil-entra .32s ease; }
+
+  /* ---------- Marco del teléfono ---------- */
+  .pg-movil-marco { position: relative; width: 414px; padding: 12px; border-radius: 46px; background: var(--ink); box-shadow: 0 16px 38px rgba(28,35,49,.18); }
+  .pg-movil-marco::before { content: ""; position: absolute; inset: 6px; border-radius: 40px; border: 1px solid rgba(244,238,228,.14); pointer-events: none; }
+
+  .pg-movil-pantalla { position: relative; width: 390px; height: 780px; border-radius: 34px; overflow: hidden; background: var(--cream); display: flex; flex-direction: column; }
+
+  .pg-movil-status { display: flex; align-items: center; justify-content: space-between; padding: 9px 22px 3px; background: var(--ink); color: var(--dark-soft); font-size: 11.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-movil-status-icos { display: inline-flex; align-items: center; gap: 7px; }
+  .pg-movil-status .ico { width: 13px; height: 13px; }
+  .pg-movil-bat { width: 20px; height: 10px; border: 1px solid currentColor; border-radius: 3px; position: relative; opacity: .9; }
+  .pg-movil-bat::before { content: ""; position: absolute; inset: 2px; right: 7px; background: currentColor; border-radius: 1px; }
+  .pg-movil-bat::after { content: ""; position: absolute; top: 3px; right: -3px; width: 2px; height: 4px; background: currentColor; border-radius: 0 2px 2px 0; }
+
+  .pg-movil-head { display: flex; align-items: center; gap: 9px; padding: 6px 16px 13px; background: var(--ink); color: var(--dark-text); }
+  .pg-movil-marca { font-size: 17px; }
+  .pg-movil-marca .ba { color: var(--copper-soft); }
+  .pg-movil-rol { font-size: 9.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dark-mute); border: 1px solid var(--dark-line); border-radius: 999px; padding: 2px 8px; }
+  .pg-movil-head-avatar { margin-left: auto; display: flex; }
+
+  /* ---------- Mini aplicación ---------- */
+  .pg-movil-barra { display: flex; flex-direction: column; gap: 11px; padding: 13px 14px 12px; background: var(--cream); border-bottom: 1px solid var(--line); }
+  .pg-movil-vista { position: relative; flex: 1; min-height: 0; display: flex; }
+  .pg-movil-body { flex: 1; min-width: 0; overflow-y: auto; padding: 14px 14px 0; display: flex; flex-direction: column; gap: 14px; scrollbar-width: none; }
+  .pg-movil-body::-webkit-scrollbar { display: none; }
+  .pg-movil-panel { display: flex; flex-direction: column; gap: 14px; flex: 1 0 auto; }
+  /* La acción principal queda siempre a la vista, como en una aplicación de móvil. */
+  .pg-movil-cta { position: sticky; bottom: 0; z-index: 1; margin: auto -14px 0; padding: 12px 14px 16px; background: var(--cream); display: flex; flex-direction: column; gap: 8px; }
+  .pg-movil-cta::before { content: ""; position: absolute; left: 0; right: 0; top: -20px; height: 20px; background: linear-gradient(to top, var(--cream), rgba(250,246,240,0)); pointer-events: none; }
+
+  .segmented.pg-movil-seg { display: flex; width: 100%; padding: 4px; }
+  .pg-movil-seg button { flex: 1; padding: 9px 10px; font-size: 13.5px; }
+  .btn.pg-movil-accion { width: 100%; padding: 14px 16px; font-size: 15px; border-radius: 12px; }
+  .pg-movil-accion .ico { width: 19px; height: 19px; }
+  .btn.pg-movil-enviar { width: 100%; padding: 15px 16px; font-size: 15px; border-radius: 12px; }
+  .pg-movil-enviar .ico { width: 18px; height: 18px; }
+
+  .pg-movil-bloque { display: flex; flex-direction: column; gap: 8px; }
+  .pg-movil-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .pg-movil-label { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  .pg-movil-contador { font-size: 11.5px; font-weight: 700; color: var(--copper-dark); background: rgba(196,106,74,.13); border-radius: 999px; padding: 1px 9px; font-variant-numeric: tabular-nums; }
+
+  .pg-movil-fotos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .thumb.pg-movil-foto { aspect-ratio: 4 / 3; border-radius: 10px; padding: 6px; background-size: cover; background-position: center; }
+  .pg-movil-foto span { font-size: 10.5px; padding: 2px 7px; }
+  .pg-movil-quitar { position: absolute; top: 5px; right: 5px; z-index: 2; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: rgba(28,35,49,.5); color: #fff; display: grid; place-items: center; }
+  .pg-movil-quitar:hover { background: rgba(28,35,49,.78); }
+  .pg-movil-quitar .ico { position: static; top: auto; right: auto; width: 12px; height: 12px; opacity: 1; stroke-width: 2.4; }
+  .pg-movil-fotos-vacio { grid-column: 1 / -1; border: 1.5px dashed var(--line-strong); border-radius: 10px; padding: 16px 12px; text-align: center; font-size: 12.5px; color: var(--ink-mute); background: rgba(244,238,228,.55); }
+  .dropzone.pg-movil-drop { padding: 11px; font-size: 13px; border-radius: 10px; }
+  .pg-movil-drop .ico { display: inline-block; width: 16px; height: 16px; margin: 0 7px 0 0; vertical-align: -3px; }
+
+  .textarea.pg-movil-texto { min-height: 84px; font-size: 14px; }
+  .pg-movil-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pg-movil-chip { border: 1px solid var(--line-strong); background: #fff; border-radius: 999px; padding: 8px 13px; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); transition: border-color .15s ease, background .15s ease, color .15s ease; }
+  .pg-movil-chip:hover { border-color: var(--copper-soft); color: var(--ink); }
+  .pg-movil-chip.is-on { background: rgba(196,106,74,.12); border-color: var(--copper-tint); color: var(--copper-dark); }
+  .pg-movil-aviso { font-size: 12.5px; color: var(--copper-dark); text-align: center; }
+  .pg-movil-nota { font-size: 12px; line-height: 1.45; color: var(--ink-mute); text-align: center; }
+
+  .pg-movil-comp-vacio { display: flex; align-items: center; gap: 10px; padding: 14px; border: 1.5px dashed var(--line-strong); border-radius: 12px; background: rgba(244,238,228,.55); font-size: 13px; color: var(--ink-mute); }
+  .pg-movil-comp-vacio .ico { width: 18px; height: 18px; color: var(--copper-soft); flex-shrink: 0; }
+  .pg-movil-comp-foto { display: flex; align-items: center; gap: 12px; }
+  .pg-movil-comp-foto .thumb { width: 92px; aspect-ratio: 3 / 4; flex-shrink: 0; border-radius: 10px; padding: 6px; background-size: cover; background-position: center; }
+  .pg-movil-comp-foto .thumb span { font-size: 10.5px; padding: 2px 7px; }
+  .pg-movil-comp-datos { min-width: 0; }
+  .pg-movil-comp-datos b { display: block; font-size: 13.5px; font-weight: 600; }
+  .pg-movil-comp-datos p { font-size: 12.5px; color: var(--ink-mute); margin-top: 2px; }
+  .pg-movil-comp-datos .btn-text { margin: 6px 0 0 -6px; }
+
+  /* ---------- Pantalla de éxito ---------- */
+  .pg-movil-exito { position: absolute; inset: 0; z-index: 3; background: var(--cream); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 30px 26px; text-align: center; }
+  .pg-movil-exito-ico { width: 66px; height: 66px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 8px; background: rgba(95,113,97,.14); color: var(--sage); }
+  .pg-movil-exito-ico .ico { width: 30px; height: 30px; stroke-width: 2.2; }
+  .pg-movil-exito h3 { font-size: 22px; }
+  .pg-movil-exito-texto { font-size: 14px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
+  .pg-movil-exito-meta { font-size: 12.5px; color: var(--ink-mute); margin-top: 2px; }
+  .pg-movil-exito .btn { margin-top: 20px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pg-movil-nueva { animation: pg-movil-entra .28s ease; }
+    .pg-movil-exito { animation: pg-movil-entra .22s ease; }
+  }
+  @keyframes pg-movil-entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Adaptación ---------- */
+  @media (max-width: 1240px) {
+    .pg-movil-cols { grid-template-columns: minmax(0, 1fr); }
+    .pg-movil-lado { position: static; }
+  }
+  @media (max-width: 860px) {
+    .pg-movil-lado { align-items: stretch; }
+    .pg-movil-pie { max-width: none; }
+    .pg-movil-marco { width: 100%; padding: 0; border-radius: 14px; background: transparent; box-shadow: none; }
+    .pg-movil-marco::before { display: none; }
+    .pg-movil-pantalla { width: 100%; height: auto; min-height: 540px; border-radius: 14px; border: 1px solid var(--line); }
+    .pg-movil-status { display: none; }
+    .pg-movil-head { padding-top: 13px; }
+    .pg-movil-barra { padding: 15px 16px 14px; }
+    .pg-movil-body { overflow: visible; padding: 16px 16px 20px; }
+    .pg-movil-cta { position: static; margin: 0; padding: 0; }
+    .pg-movil-cta::before { display: none; }
+  }
+</style>
+</head>
+<body data-page="movil">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head pg-movil-encabezado">
+        <div>
+          <p class="eyebrow">Equipo de obra</p>
+          <h1>Carga desde el móvil</h1>
+          <p class="page-sub">Pensada para el jefe de obra: se sacan las fotos, se escriben dos líneas y se envía. Administración revisa y publica.</p>
+        </div>
+        <div class="page-actions">
+          <a class="btn btn-ghost" href="obra.html?id=ayacucho#diario"><span data-icon="clock"></span>Ver avances pendientes</a>
+          <button class="btn btn-copper" type="button" id="pg-movil-copiar" data-toast="Enlace copiado" data-toast-icon="copy"><span data-icon="link"></span>Copiar enlace para el equipo</button>
+        </div>
+      </div>
+
+      <div class="pg-movil-cols">
+
+        <!-- ---------- Explicación ---------- -->
+        <div class="stack pg-movil-info">
+
+          <section class="card" aria-labelledby="pg-movil-pasos-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-movil-pasos-titulo">Tres pasos desde la obra</h2>
+                <p class="card-sub">Se tarda lo mismo que en mandar un mensaje</p>
+              </div>
+            </div>
+            <div class="card-body">
+              <ol class="pg-movil-pasos">
+                <li class="pg-movil-paso">
+                  <span class="pg-movil-paso-ico tone-copper"><span data-icon="camera"></span></span>
+                  <div>
+                    <p class="pg-movil-paso-num">Paso 1</p>
+                    <p class="pg-movil-paso-titulo">Sacar las fotos</p>
+                    <p class="pg-movil-paso-texto">Dos o tres del trabajo del día, con la cámara del móvil.</p>
+                  </div>
+                </li>
+                <li class="pg-movil-paso">
+                  <span class="pg-movil-paso-ico tone-gold"><span data-icon="edit"></span></span>
+                  <div>
+                    <p class="pg-movil-paso-num">Paso 2</p>
+                    <p class="pg-movil-paso-titulo">Escribir dos líneas</p>
+                    <p class="pg-movil-paso-texto">Las sugerencias completan la partida de la obra con un toque.</p>
+                  </div>
+                </li>
+                <li class="pg-movil-paso">
+                  <span class="pg-movil-paso-ico tone-sage"><span data-icon="send"></span></span>
+                  <div>
+                    <p class="pg-movil-paso-num">Paso 3</p>
+                    <p class="pg-movil-paso-titulo">Enviar a revisión</p>
+                    <p class="pg-movil-paso-texto">Administración recibe el aviso, revisa y publica para los inversores.</p>
+                  </div>
+                </li>
+              </ol>
+              <div class="divider"></div>
+              <div class="pg-movil-detalles">
+                <p class="pg-movil-detalle"><span data-icon="phone"></span><span>Funciona en el navegador del móvil. No hay que instalar nada.</span></p>
+                <p class="pg-movil-detalle"><span data-icon="refresh"></span><span>Si la señal de la obra es mala, el envío se reintenta hasta que entra.</span></p>
+                <p class="pg-movil-detalle"><span data-icon="image"></span><span>Las fotos se comprimen al subir: pesan poco y suben rápido.</span></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="pg-movil-ve-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-movil-ve-titulo">Qué ve el perfil Obra</h2>
+                <p class="card-sub">Solo lo que necesita para cargar su obra</p>
+              </div>
+              <span class="pg-movil-persona" id="pg-movil-persona"></span>
+            </div>
+            <div class="card-body">
+              <div class="pg-movil-ve" id="pg-movil-ve"></div>
+            </div>
+            <div class="card-foot">
+              <span class="pg-movil-ve-pie">El perfil se elige al invitar a cada persona.</span>
+              <a class="btn btn-text btn-sm" href="ajustes.html#usuarios">Perfiles y permisos<span data-icon="arrow-right"></span></a>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="pg-movil-pend-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-movil-pend-titulo">Pendiente de revisión</h2>
+                <p class="card-sub">Lo que envía el equipo de obra y aún no se publicó</p>
+              </div>
+              <span id="pg-movil-pend-n"></span>
+            </div>
+            <div class="card-body" id="pg-movil-pendientes"></div>
+          </section>
+
+        </div>
+
+        <!-- ---------- Teléfono ---------- -->
+        <div class="pg-movil-lado">
+          <div class="pg-movil-marco">
+            <div class="pg-movil-pantalla" id="pg-movil-pantalla">
+              <div class="pg-movil-status" aria-hidden="true">
+                <span>08:12</span>
+                <span class="pg-movil-status-icos"><span data-icon="signal"></span><span class="pg-movil-bat"></span></span>
+              </div>
+
+              <header class="pg-movil-head">
+                <span class="wordmark pg-movil-marca">reco<span class="ba">BA</span></span>
+                <span class="pg-movil-rol">Obra</span>
+                <span class="pg-movil-head-avatar" id="pg-movil-avatar"></span>
+              </header>
+
+              <div class="pg-movil-barra">
+                <label class="field">
+                  <span class="label">Obra</span>
+                  <select class="select" id="pg-movil-obra"></select>
+                </label>
+                <div class="segmented pg-movil-seg" id="pg-movil-seg" data-segmented role="group" aria-label="Qué se carga">
+                  <button type="button" class="active" aria-pressed="true" data-value="avance">Avance</button>
+                  <button type="button" aria-pressed="false" data-value="gasto">Gasto</button>
+                </div>
+              </div>
+
+              <div class="pg-movil-vista">
+                <div class="pg-movil-body" id="pg-movil-body">
+
+                  <!-- Avance -->
+                  <section class="pg-movil-panel" id="pg-movil-panel-avance" aria-label="Nuevo avance de obra">
+                    <button class="btn btn-ink pg-movil-accion" type="button" id="pg-movil-sacar"><span data-icon="camera"></span>Sacar foto</button>
+
+                    <div class="pg-movil-bloque">
+                      <div class="pg-movil-label-row">
+                        <span class="pg-movil-label">Fotos del día</span>
+                        <span class="pg-movil-contador" id="pg-movil-n-fotos">2</span>
+                      </div>
+                      <div class="pg-movil-fotos" id="pg-movil-fotos"></div>
+                      <div class="dropzone pg-movil-drop" id="pg-movil-drop" data-accept="image/*"><span data-icon="upload"></span><b>Subir desde la galería</b></div>
+                    </div>
+
+                    <label class="field">
+                      <span class="label">¿Qué se hizo hoy?</span>
+                      <textarea class="textarea pg-movil-texto" id="pg-movil-texto" rows="3" placeholder="Dos líneas alcanzan."></textarea>
+                    </label>
+
+                    <div class="pg-movil-bloque">
+                      <span class="pg-movil-label">Sugerencias</span>
+                      <div class="pg-movil-chips" id="pg-movil-chips"></div>
+                    </div>
+
+                    <div class="pg-movil-cta">
+                      <p class="pg-movil-aviso" id="pg-movil-aviso" hidden>Añada una foto o una nota antes de enviar.</p>
+                      <button class="btn btn-copper pg-movil-enviar" type="button" id="pg-movil-enviar"><span data-icon="send"></span>Enviar a revisión</button>
+                      <p class="pg-movil-nota">El avance no se publica solo: lo revisa Administración.</p>
+                    </div>
+                  </section>
+
+                  <!-- Gasto -->
+                  <section class="pg-movil-panel" id="pg-movil-panel-gasto" aria-label="Nuevo gasto de obra" hidden>
+                    <button class="btn btn-ink pg-movil-accion" type="button" id="pg-movil-sacar-comp"><span data-icon="camera"></span>Foto del comprobante</button>
+
+                    <div id="pg-movil-comprobante"></div>
+
+                    <label class="field">
+                      <span class="label">Importe</span>
+                      <span class="input-affix"><span>US$</span><input id="pg-movil-importe" inputmode="decimal" placeholder="550" aria-label="Importe en dólares"></span>
+                    </label>
+
+                    <label class="field">
+                      <span class="label">Partida</span>
+                      <select class="select" id="pg-movil-partida"></select>
+                    </label>
+
+                    <label class="field">
+                      <span class="label">Concepto</span>
+                      <input class="input" id="pg-movil-concepto" placeholder="Ej.: seña de la mesada">
+                    </label>
+
+                    <div class="pg-movil-cta">
+                      <button class="btn btn-copper pg-movil-enviar" type="button" id="pg-movil-registrar"><span data-icon="check"></span>Registrar gasto</button>
+                      <p class="pg-movil-nota">El gasto queda cargado en la obra con su comprobante.</p>
+                    </div>
+                  </section>
+
+                </div>
+
+                <div class="pg-movil-exito" id="pg-movil-exito" hidden>
+                  <span class="pg-movil-exito-ico"><span data-icon="check"></span></span>
+                  <h3 id="pg-movil-exito-titulo"></h3>
+                  <p class="pg-movil-exito-texto" id="pg-movil-exito-texto"></p>
+                  <p class="pg-movil-exito-meta" id="pg-movil-exito-meta"></p>
+                  <button class="btn btn-copper pg-movil-enviar" type="button" id="pg-movil-otro"><span data-icon="plus"></span>Cargar otro</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <p class="pg-movil-pie" id="pg-movil-pie"></p>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+(function () {
+  'use strict';
+  const A = window.Admin;
+  if (!A) return;
+  const D = A.data;
+  const $ = (id) => document.getElementById(id);
+  const HOY = D.instalacion.hoy;
+  const OBRA_ID = 'ayacucho';
+  const CARLOS = A.persona('u-carlos');
+  const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+
+  /* ---------- Cabecera del teléfono y enlace del equipo ---------- */
+  const ENLACE = `${D.instalacion.dominio}/m`;
+  $('pg-movil-avatar').innerHTML = A.avatar(CARLOS, 'sm');
+  $('pg-movil-persona').innerHTML = `${A.avatar(CARLOS, 'sm')}<span>${A.esc(CARLOS.nombre)}</span>`;
+  $('pg-movil-pie').innerHTML = `El equipo entra desde el navegador del móvil en <span class="mono">${A.esc(ENLACE)}</span>`;
+  $('pg-movil-copiar').addEventListener('click', () => {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(`https://${ENLACE}`).catch(() => {}); } catch (e) { /* sin portapapeles */ }
+  });
+
+  /* ---------- Qué ve el perfil Obra ---------- */
+  const obrasDeCarlos = (CARLOS.obras === 'todas' ? D.obras.map((o) => o.id) : CARLOS.obras || []).map(A.obra).filter(Boolean);
+  const nombresObras = obrasDeCarlos.map((o) => o.nombre).join(', ');
+  $('pg-movil-ve').innerHTML = [
+    { si: true, texto: `Sus obras asignadas: ${nombresObras || 'ninguna todavía'}` },
+    { si: true, texto: 'Avances y gastos que sube, con sus fotos y comprobantes' },
+    { si: false, texto: 'Inversores, participaciones y distribuciones' },
+    { si: false, texto: 'Capital invertido y rentabilidad de la obra' }
+  ].map((v) => `<div class="pg-movil-ve-item ${v.si ? 'pg-movil-si' : 'pg-movil-no'}">
+      <span class="pg-movil-ve-ico">${A.icon(v.si ? 'check' : 'x')}</span>
+      <span>${A.esc(v.texto)}</span>
+    </div>`).join('');
+
+  /* ---------- Pendiente de revisión ---------- */
+  let recienEnviado = null;
+
+  function renderPendientes() {
+    const pend = D.avances.filter((a) => a.estado === 'borrador');
+    $('pg-movil-pend-n').innerHTML = pend.length
+      ? A.chip(`${A.group(pend.length)} sin publicar`, 'chip-gold')
+      : A.chip('Al día', 'chip-sage');
+
+    const box = $('pg-movil-pendientes');
+    if (!pend.length) {
+      box.innerHTML = `<div class="empty">${A.icon('check')}No hay avances pendientes de revisión.</div>`;
+      return;
+    }
+    box.innerHTML = `<div class="pg-movil-pend">${pend.map((a) => {
+      const autor = A.persona(a.autor);
+      const o = A.obra(a.obra);
+      const fotos = (a.media || []).filter((m) => m.tipo === 'foto');
+      const visibles = fotos.slice(0, 4);
+      const resto = fotos.length - visibles.length;
+      const meta = [o && o.nombre, autor && autor.nombre, A.ago(a.fecha), plural(fotos.length, 'foto', 'fotos')].filter(Boolean).join(' · ');
+      return `<article class="pg-movil-pend-item${recienEnviado === a.id ? ' pg-movil-pend-nueva' : ''}">
+        <div class="pg-movil-pend-top">
+          ${A.avatar(autor, 'sm')}
+          <div class="pg-movil-pend-main">
+            <p class="pg-movil-pend-titulo">${A.esc(a.titulo)}</p>
+            <p class="pg-movil-pend-meta">${A.esc(meta)}</p>
+          </div>
+          ${A.chip('Borrador', 'chip-gold')}
+        </div>
+        ${a.texto ? `<p class="pg-movil-pend-texto">${A.esc(a.texto)}</p>` : '<p class="pg-movil-pend-texto muted">Enviado sin nota.</p>'}
+        ${visibles.length ? `<div class="pg-movil-pend-fotos">
+          ${visibles.map((m) => `<span class="thumb ${m.url ? '' : A.esc(m.ph || 'ph-1')}"${m.url ? ` style="background-image:url('${A.esc(m.url)}')"` : ''} aria-hidden="true"></span>`).join('')}
+          ${resto > 0 ? `<span class="pg-movil-pend-mas">+${A.group(resto)}</span>` : ''}
+        </div>` : ''}
+        <div class="pg-movil-pend-pie">
+          <a class="btn btn-text btn-sm" href="obra.html?id=${encodeURIComponent(a.obra)}#diario">Revisar y publicar${A.icon('arrow-right')}</a>
+          <span class="pg-movil-pend-aviso">Los inversores aún no lo ven</span>
+        </div>
+      </article>`;
+    }).join('')}</div>`;
+    recienEnviado = null;
+  }
+
+  // El shell pinta la barra lateral una sola vez: se mantiene su contador al día.
+  function sincronizarSidebar() {
+    const badge = document.querySelector('#sidebar .sb-count');
+    if (badge) badge.textContent = A.group(D.avances.filter((a) => a.estado === 'borrador').length);
+  }
+
+  /* ---------- Mini aplicación: datos de partida ---------- */
+  $('pg-movil-obra').innerHTML = obrasDeCarlos.map((o) => `<option value="${A.esc(o.id)}">${A.esc(o.nombre)}</option>`).join('');
+
+  $('pg-movil-partida').innerHTML = A.partidas(OBRA_ID).map((p) => (p.sub && p.sub.length
+    ? `<optgroup label="${A.esc(p.nombre)}">${p.sub.map((s) => `<option value="${A.esc(s.id)}">${A.esc(s.nombre)}</option>`).join('')}</optgroup>`
+    : `<option value="${A.esc(p.id)}">${A.esc(p.nombre)}</option>`)).join('');
+  $('pg-movil-partida').value = 'cocina';
+
+  const subpartidas = A.partidasPlanas(OBRA_ID).filter((p) => p.nivel === 1);
+  $('pg-movil-chips').innerHTML = subpartidas.map((s) => `<button class="pg-movil-chip" type="button" aria-pressed="false" data-sub="${A.esc(s.nombre)}">${A.esc(s.nombre)}</button>`).join('');
+
+  /* ---------- Flujo «Avance» ---------- */
+  const PH = ['ph-2', 'ph-5', 'ph-3', 'ph-1', 'ph-4'];
+  let seq = 0;
+  let envios = 0;
+  let fotos = [];
+  let ultima = null;
+
+  // Hora simulada de captura: la primera a las 08:34 y una cada 13 minutos.
+  function horaCaptura(n) {
+    const t = 514 + n * 13;
+    return `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`;
+  }
+  function nuevaFoto(url) {
+    const n = seq++;
+    return { id: `f${n}`, ph: PH[n % PH.length], etiqueta: horaCaptura(n), url: url || null };
+  }
+
+  function actualizarEnviar() {
+    const vacio = !fotos.length && !$('pg-movil-texto').value.trim();
+    $('pg-movil-enviar').disabled = vacio;
+    $('pg-movil-aviso').hidden = !vacio;
+  }
+
+  function renderFotos() {
+    $('pg-movil-n-fotos').textContent = A.group(fotos.length);
+    $('pg-movil-fotos').innerHTML = fotos.length
+      ? fotos.map((f) => `<div class="thumb ${f.url ? '' : A.esc(f.ph)} pg-movil-foto${ultima === f.id ? ' pg-movil-nueva' : ''}"${f.url ? ` style="background-image:url('${A.esc(f.url)}')"` : ''}>
+          <span>${A.esc(f.etiqueta)}</span>
+          <button class="pg-movil-quitar" type="button" data-quitar="${A.esc(f.id)}" aria-label="Quitar la foto de las ${A.esc(f.etiqueta)}">${A.icon('x')}</button>
+        </div>`).join('')
+      : '<p class="pg-movil-fotos-vacio">Sin fotos todavía. Toque «Sacar foto».</p>';
+    ultima = null;
+    actualizarEnviar();
+  }
+
+  $('pg-movil-sacar').addEventListener('click', () => {
+    const f = nuevaFoto();
+    fotos.push(f);
+    ultima = f.id;
+    renderFotos();
+  });
+
+  $('pg-movil-fotos').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-quitar]');
+    if (!b) return;
+    fotos = fotos.filter((f) => f.id !== b.dataset.quitar);
+    renderFotos();
+  });
+
+  $('pg-movil-drop').addEventListener('dropzone:files', (e) => {
+    const imagenes = (e.detail.files || []).filter((f) => /^image\//.test(f.type));
+    if (!imagenes.length) {
+      A.toast('Solo se pueden subir fotos', 'info');
+      return;
+    }
+    imagenes.forEach((f) => {
+      const nueva = nuevaFoto(URL.createObjectURL(f));
+      fotos.push(nueva);
+      ultima = nueva.id;
+    });
+    renderFotos();
+  });
+
+  $('pg-movil-texto').addEventListener('input', actualizarEnviar);
+
+  $('pg-movil-chips').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-sub]');
+    if (!b) return;
+    const ta = $('pg-movil-texto');
+    const prefijo = `${b.dataset.sub}: `;
+    if (!ta.value.includes(prefijo)) {
+      ta.value = ta.value.trim() ? `${ta.value.replace(/\s+$/, '')}\n${prefijo}` : prefijo;
+      b.classList.add('is-on');
+      b.setAttribute('aria-pressed', 'true');
+    }
+    ta.focus({ preventScroll: true });
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+    actualizarEnviar();
+  });
+
+  function tituloDe(texto) {
+    const linea = (texto.split('\n').find((l) => l.trim()) || '').trim().replace(/[:.,;\s]+$/, '');
+    if (!linea) return 'Avance de obra';
+    return linea.length > 60 ? `${linea.slice(0, 57)}…` : linea;
+  }
+
+  $('pg-movil-enviar').addEventListener('click', () => {
+    if ($('pg-movil-enviar').disabled) return;
+    const texto = $('pg-movil-texto').value.trim();
+    const obraId = $('pg-movil-obra').value || OBRA_ID;
+    const nombreObra = (A.obra(obraId) || {}).nombre || '';
+    envios += 1;
+    const id = `av-m${envios}`;
+    D.avances.unshift({
+      id, obra: obraId, fecha: HOY, titulo: tituloDe(texto), texto,
+      estado: 'borrador', autor: CARLOS.id, vistoPor: 0,
+      media: fotos.map((f) => ({ tipo: 'foto', etiqueta: f.etiqueta, ph: f.ph, url: f.url }))
+    });
+    recienEnviado = id;
+    renderPendientes();
+    sincronizarSidebar();
+    mostrarExito({
+      titulo: 'Enviado a revisión',
+      texto: 'Administración recibirá un aviso. Cuando lo publique, los inversores lo verán en su portal.',
+      meta: [nombreObra, plural(fotos.length, 'foto', 'fotos')].filter(Boolean).join(' · '),
+      volver: 'avance'
+    });
+    A.toast('Avance enviado a revisión', 'send');
+  });
+
+  function resetAvance() {
+    fotos = [];
+    $('pg-movil-texto').value = '';
+    $('pg-movil-chips').querySelectorAll('.pg-movil-chip').forEach((c) => {
+      c.classList.remove('is-on');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    renderFotos();
+  }
+
+  /* ---------- Flujo «Gasto» ---------- */
+  let comprobante = null;
+
+  function renderComprobante() {
+    $('pg-movil-comprobante').innerHTML = comprobante
+      ? `<div class="pg-movil-comp-foto">
+          <span class="thumb ${A.esc(comprobante.ph)}${comprobante.nuevo ? ' pg-movil-nueva' : ''}"><span>${A.esc(comprobante.etiqueta)}</span></span>
+          <div class="pg-movil-comp-datos">
+            <b>Comprobante adjunto</b>
+            <p>Foto tomada a las ${A.esc(comprobante.etiqueta)}</p>
+            <button class="btn btn-text btn-sm" type="button" id="pg-movil-quitar-comp">Quitar</button>
+          </div>
+        </div>`
+      : `<div class="pg-movil-comp-vacio">${A.icon('receipt')}<span>Sin comprobante todavía. Saque la foto de la factura o el recibo.</span></div>`;
+    comprobante && (comprobante.nuevo = false);
+    const quitar = $('pg-movil-quitar-comp');
+    if (quitar) quitar.addEventListener('click', () => { comprobante = null; renderComprobante(); });
+  }
+
+  $('pg-movil-sacar-comp').addEventListener('click', () => {
+    const n = seq++;
+    comprobante = { ph: PH[n % PH.length], etiqueta: horaCaptura(n), nuevo: true };
+    renderComprobante();
+  });
+
+  $('pg-movil-registrar').addEventListener('click', () => {
+    const importe = parseInt(String($('pg-movil-importe').value).replace(/[^\d]/g, ''), 10);
+    const partida = $('pg-movil-partida').value;
+    const concepto = $('pg-movil-concepto').value.trim();
+    const obraId = $('pg-movil-obra').value || OBRA_ID;
+    const nombreObra = (A.obra(obraId) || {}).nombre || '';
+    const meta = [
+      Number.isFinite(importe) && importe > 0 ? A.money(importe) : '',
+      partida ? A.partidaNombre(OBRA_ID, partida) : ''
+    ].filter(Boolean).join(' · ');
+    mostrarExito({
+      titulo: 'Gasto registrado',
+      texto: concepto
+        ? `«${concepto}» queda cargado en ${nombreObra}${comprobante ? ' con su comprobante.' : '. Falta adjuntar el comprobante.'}`
+        : `Queda cargado en ${nombreObra}${comprobante ? ' con su comprobante.' : '. Falta adjuntar el comprobante.'}`,
+      meta,
+      volver: 'gasto'
+    });
+    A.toast(`Gasto registrado en ${nombreObra}`, 'receipt');
+  });
+
+  function resetGasto() {
+    comprobante = null;
+    $('pg-movil-importe').value = '';
+    $('pg-movil-concepto').value = '';
+    $('pg-movil-partida').value = 'cocina';
+    renderComprobante();
+  }
+
+  /* ---------- Pantalla de éxito ---------- */
+  function mostrarExito(o) {
+    const caja = $('pg-movil-exito');
+    $('pg-movil-exito-titulo').textContent = o.titulo;
+    $('pg-movil-exito-texto').textContent = o.texto;
+    const meta = $('pg-movil-exito-meta');
+    meta.textContent = o.meta || '';
+    meta.hidden = !o.meta;
+    caja.dataset.volver = o.volver;
+    caja.hidden = false;
+    $('pg-movil-otro').focus({ preventScroll: true });
+  }
+
+  $('pg-movil-otro').addEventListener('click', () => {
+    const caja = $('pg-movil-exito');
+    if (caja.dataset.volver === 'gasto') resetGasto();
+    else resetAvance();
+    caja.hidden = true;
+    $('pg-movil-body').scrollTop = 0;
+  });
+
+  /* ---------- Selector segmentado ---------- */
+  $('pg-movil-seg').addEventListener('segmented:change', (e) => {
+    const v = e.detail;
+    $('pg-movil-panel-avance').hidden = v !== 'avance';
+    $('pg-movil-panel-gasto').hidden = v !== 'gasto';
+    $('pg-movil-exito').hidden = true;
+    $('pg-movil-body').scrollTop = 0;
+  });
+
+  /* ---------- Estado inicial ---------- */
+  fotos = [nuevaFoto(), nuevaFoto()];
+  renderFotos();
+  renderComprobante();
+  renderPendientes();
+})();
+</script>
+</body>
+</html>

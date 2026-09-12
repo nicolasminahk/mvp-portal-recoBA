@@ -1,0 +1,1161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ajustes · Administración recoBA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/admin.css">
+<style>
+  /* ---------- Ajustes · estructura ---------- */
+  .pg-ajustes > .tabs { margin-bottom: 22px; }
+  .pg-ajustes-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pg-ajustes-head-wrap { flex-wrap: wrap; }
+  .pg-ajustes-error { font-size: 12.5px; font-weight: 600; color: var(--copper-dark); }
+
+  /* ---------- Marca ---------- */
+  .pg-ajustes-brand {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: start;
+    --pg-brand: #C46A4A; --pg-brand-light: #D38F77; --pg-brand-soft: rgba(196,106,74,.14); --pg-brand-text: #C46A4A; --pg-on-brand: #FFFFFF;
+  }
+  .pg-ajustes-form { gap: 22px; }
+  .pg-ajustes-brand .wordmark .ba { color: var(--pg-brand-text); }
+  .pg-ajustes-logo { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; }
+  .pg-ajustes-logo-tile {
+    display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; min-height: 98px; padding: 12px;
+    border: 1px solid var(--line); border-radius: 12px; background: var(--cream); overflow: hidden; font-size: 22px;
+  }
+  .pg-ajustes-logo-tile .wordmark { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-ajustes-logo-tile img { max-width: 100%; max-height: 52px; object-fit: contain; }
+  .pg-ajustes-logo .dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 14px 16px; font-size: 13px; line-height: 1.45; }
+  .pg-ajustes-logo .dropzone .ico { width: 22px; height: 22px; margin-bottom: 4px; }
+  .pg-ajustes-logo-file { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-ajustes-logo-file .ico { width: 15px; height: 15px; color: var(--copper); }
+  .pg-ajustes-logo-file .btn { margin-left: auto; }
+  .pg-ajustes-color { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+  .pg-ajustes-picker { width: 46px; height: 40px; padding: 3px; flex-shrink: 0; border: 1px solid var(--line-strong); border-radius: 10px; background: #fff; cursor: pointer; }
+  .pg-ajustes-picker::-webkit-color-swatch-wrapper { padding: 0; }
+  .pg-ajustes-picker::-webkit-color-swatch { border: 0; border-radius: 7px; }
+  .pg-ajustes-picker::-moz-color-swatch { border: 0; border-radius: 7px; }
+  .pg-ajustes-hex { width: 128px; }
+  .pg-ajustes-hex input { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13.5px; letter-spacing: .04em; text-transform: uppercase; }
+  .pg-ajustes-hex.is-invalid { border-color: var(--copper-dark); box-shadow: 0 0 0 3px rgba(169,86,58,.16); }
+  .pg-ajustes-swatches { display: flex; align-items: center; gap: 8px; padding-left: 6px; }
+  .pg-ajustes-swatch { width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 2px solid var(--paper-card); box-shadow: 0 0 0 1px var(--line-strong); transition: box-shadow .15s ease; }
+  .pg-ajustes-swatch:hover { box-shadow: 0 0 0 1px var(--ink-mute); }
+  .pg-ajustes-swatch.is-active { box-shadow: 0 0 0 2px var(--ink); }
+  .pg-ajustes-domain { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pg-ajustes-domain .input-affix { flex: 1 1 220px; min-width: 0; }
+  .pg-ajustes-domain .input-affix .ico { width: 15px; height: 15px; }
+  .pg-ajustes-domain input { color: var(--ink-soft); cursor: default; }
+  .pg-ajustes-dirty { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; color: var(--gold-text); }
+  .pg-ajustes-dirty::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+  .pg-ajustes-foot-actions { display: flex; gap: 10px; margin-left: auto; }
+
+  /* Vista previa del portal */
+  .pg-ajustes-browser { border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; background: var(--cream); box-shadow: 0 12px 32px rgba(28,35,49,.08); }
+  .pg-ajustes-browser-bar { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--paper); border-bottom: 1px solid var(--line); }
+  .pg-ajustes-browser-dots { display: flex; gap: 5px; width: 44px; flex-shrink: 0; }
+  .pg-ajustes-browser-dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(28,35,49,.16); }
+  .pg-ajustes-browser-url {
+    flex: 0 1 260px; min-width: 0; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 4px 10px; border: 1px solid var(--line); border-radius: 7px; background: var(--paper-card); font-size: 11.5px; color: var(--ink-soft);
+  }
+  .pg-ajustes-browser-url .ico { width: 11px; height: 11px; }
+  .pg-ajustes-browser-spacer { width: 44px; flex-shrink: 0; }
+  .pg-ajustes-portal-head { display: flex; align-items: center; gap: 22px; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+  .pg-ajustes-portal-brand { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 19px; }
+  .pg-ajustes-portal-brand .wordmark { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-ajustes-portal-brand img { max-width: 130px; max-height: 26px; object-fit: contain; }
+  .pg-ajustes-mark {
+    width: 24px; height: 24px; flex-shrink: 0; display: grid; place-items: center; border-radius: 7px;
+    background: var(--pg-brand); color: var(--pg-on-brand); font-family: var(--serif); font-size: 13px; font-weight: 600;
+  }
+  .pg-ajustes-logo-tile .pg-ajustes-mark { width: 30px; height: 30px; font-size: 16px; border-radius: 8px; }
+  .pg-ajustes-portal-nav { display: flex; gap: 16px; font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+  .pg-ajustes-portal-nav span { padding: 4px 0; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .pg-ajustes-portal-nav .is-on { color: var(--ink); border-color: var(--pg-brand); }
+  .pg-ajustes-portal-avatar {
+    width: 28px; height: 28px; margin-left: auto; flex-shrink: 0; display: grid; place-items: center; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pg-brand), var(--pg-brand-light)); color: var(--pg-on-brand); font-family: var(--serif); font-size: 11px; font-weight: 600;
+  }
+  .pg-ajustes-portal-body { padding: 20px 18px 22px; }
+  .pg-ajustes-portal-hello { font-family: var(--serif); font-size: 23px; font-weight: 600; line-height: 1.15; letter-spacing: -.01em; }
+  .pg-ajustes-portal-sub { margin-top: 3px; font-size: 12px; color: var(--ink-soft); }
+  .pg-ajustes-portal-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+  .pg-ajustes-portal-box { padding: 11px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper-card); }
+  .pg-ajustes-portal-box small { display: block; font-size: 10.5px; font-weight: 600; color: var(--ink-mute); }
+  .pg-ajustes-portal-box b { display: block; margin-top: 2px; font-family: var(--serif); font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-ajustes-portal-box b.is-accent { color: var(--pg-brand-text); }
+  .pg-ajustes-portal-project { margin-top: 10px; }
+  .pg-ajustes-portal-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.5px; font-weight: 600; }
+  .pg-ajustes-portal-chip { padding: 3px 8px; border-radius: 999px; background: var(--pg-brand-soft); color: var(--pg-brand-text); font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .pg-ajustes-portal-progress { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 11.5px; color: var(--ink-soft); }
+  .pg-ajustes-portal-track { flex: 1; height: 6px; overflow: hidden; border-radius: 999px; background: var(--sand); }
+  .pg-ajustes-portal-fill { height: 100%; border-radius: 999px; background: var(--pg-brand); transition: background .2s ease; }
+  .pg-ajustes-portal-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
+  .pg-ajustes-portal-btn { display: inline-block; padding: 8px 14px; border-radius: 9px; background: var(--pg-brand); color: var(--pg-on-brand); font-size: 12.5px; font-weight: 600; transition: background .2s ease; }
+  .pg-ajustes-portal-link { font-size: 12.5px; font-weight: 700; color: var(--pg-brand-text); }
+
+  /* ---------- Usuarios y perfiles ---------- */
+  .pg-ajustes-team { min-width: 880px; }
+  .pg-ajustes-team th, .pg-ajustes-team td { padding-left: 10px; padding-right: 10px; }
+  .pg-ajustes-team th:first-child, .pg-ajustes-team td:first-child { padding-left: 22px; }
+  .pg-ajustes-team th:last-child, .pg-ajustes-team td:last-child { padding-right: 22px; text-align: right; white-space: nowrap; }
+  .pg-ajustes-team th:last-child { position: relative; }
+  .pg-ajustes-team .cell-meta { white-space: nowrap; }
+  .pg-ajustes-person { display: flex; align-items: center; gap: 12px; }
+  .pg-ajustes-role { width: auto; min-width: 140px; padding-top: 6px; padding-bottom: 6px; font-size: 13px; }
+  .pg-ajustes-role-fixed { display: inline-flex; align-items: center; gap: 6px; padding-left: 13px; font-size: 13px; white-space: nowrap; }
+  .pg-ajustes-role-fixed .ico { width: 13px; height: 13px; color: var(--ink-mute); }
+  .pg-ajustes-obras-btn { display: inline-flex; align-items: center; gap: 6px; margin-left: -8px; padding: 4px 8px; border: 0; border-radius: 7px; background: transparent; font-size: 13.5px; text-align: left; white-space: nowrap; }
+  .pg-ajustes-obras-btn .ico { width: 13px; height: 13px; color: var(--ink-mute); }
+  .pg-ajustes-obras-btn:hover { background: var(--sand); }
+  .pg-ajustes-obras-btn:hover .ico { color: var(--copper); }
+  .pg-ajustes-actions { display: inline-flex; justify-content: flex-end; gap: 6px; }
+  .pg-ajustes-flash td { animation: pg-ajustes-flash 1.8s ease; }
+  @keyframes pg-ajustes-flash { 0%, 35% { background: rgba(201,169,106,.22); } 100% { background: transparent; } }
+  .pg-ajustes-note { align-items: center; }
+  .pg-ajustes-note > div { flex: 1; min-width: 0; }
+  .pg-ajustes-profile { display: flex; flex-direction: column; gap: 12px; }
+  .pg-ajustes-profile-top { display: flex; align-items: center; gap: 12px; }
+  .pg-ajustes-profile h3 { font-size: 18px; }
+  .pg-ajustes-profile-desc { flex: 1; font-size: 13px; line-height: 1.55; color: var(--ink-soft); }
+  .pg-ajustes-profile-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft); }
+  .pg-ajustes-profile-foot a { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; color: var(--copper-dark); }
+  .pg-ajustes-profile-foot a:hover { color: var(--copper); }
+  .pg-ajustes-profile-foot .ico { width: 14px; height: 14px; }
+  .pg-ajustes-matrix { min-width: 700px; }
+  .pg-ajustes-matrix th:first-child, .pg-ajustes-matrix td:first-child { padding-left: 22px; }
+  .pg-ajustes-matrix th:not(:first-child), .pg-ajustes-matrix td:not(:first-child) { width: 19%; text-align: center; }
+  .pg-ajustes-matrix td { padding-top: 10px; padding-bottom: 10px; }
+  .pg-ajustes-matrix .chip, .pg-ajustes-legend .chip { padding: 3px 10px; font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+  .pg-ajustes-yes { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(95,113,97,.14); color: var(--sage); vertical-align: middle; }
+  .pg-ajustes-yes .ico { width: 14px; height: 14px; stroke-width: 2.4; }
+  .pg-ajustes-no { display: inline-block; width: 12px; height: 2px; border-radius: 2px; background: var(--line-strong); vertical-align: middle; }
+  .pg-ajustes-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 12px; color: var(--ink-mute); }
+  .pg-ajustes-legend > span { display: inline-flex; align-items: center; gap: 8px; }
+
+  /* ---------- Acceso ---------- */
+  .pg-ajustes-setting { display: flex; align-items: center; gap: 14px; width: 100%; padding: 15px 22px; border-bottom: 1px solid var(--line); }
+  .pg-ajustes-setting:last-child { border-bottom: 0; }
+  .pg-ajustes-setting .list-main { min-width: 0; }
+  .pg-ajustes-brandicon { width: 36px; height: 36px; flex-shrink: 0; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  .pg-ajustes-brandicon svg { width: 18px; height: 18px; }
+  .pg-ajustes-setting.is-disabled { cursor: not-allowed; }
+  .pg-ajustes-setting.is-disabled .pg-ajustes-brandicon svg { filter: grayscale(1); opacity: .55; }
+  .pg-ajustes-setting.is-disabled .list-title { color: var(--ink-soft); }
+  .pg-ajustes-setting input:disabled + .track { opacity: .5; }
+  .pg-ajustes-fixed { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: rgba(95,113,97,.12); color: var(--sage); font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+  .pg-ajustes-fixed .ico { width: 13px; height: 13px; }
+  .pg-ajustes-inline { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; font-size: 13.5px; font-weight: 600; }
+  .pg-ajustes-inline .select { width: auto; padding-top: 6px; padding-bottom: 6px; font-size: 13.5px; font-weight: 600; }
+  .pg-ajustes-when { font-size: 12px; color: var(--ink-mute); white-space: nowrap; }
+  .pg-ajustes-access-foot { justify-content: flex-start; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-ajustes-access-foot .ico { width: 15px; height: 15px; color: var(--gold-text); }
+
+  /* ---------- Avisos por email ---------- */
+  .pg-ajustes-sender { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); font-size: 12.5px; color: var(--ink-soft); white-space: nowrap; }
+  .pg-ajustes-sender .ico { width: 15px; height: 15px; color: var(--copper); }
+  .pg-ajustes-sender b { font-weight: 600; color: var(--ink); }
+  .pg-ajustes-aviso { display: grid; grid-template-columns: auto minmax(0, 260px) minmax(0, 1fr) auto; align-items: center; gap: 18px; padding: 14px 22px; border-bottom: 1px solid var(--line); }
+  .pg-ajustes-aviso:last-child { border-bottom: 0; }
+  .pg-ajustes-aviso .list-meta { display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+  .pg-ajustes-aviso .list-meta .ico { width: 13px; height: 13px; }
+  .pg-ajustes-aviso-main, .pg-ajustes-aviso-subject { transition: opacity .2s ease; }
+  .pg-ajustes-aviso.is-off .pg-ajustes-aviso-main, .pg-ajustes-aviso.is-off .pg-ajustes-aviso-subject { opacity: .5; }
+  .pg-ajustes-aviso-subject { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .pg-ajustes-aviso-subject > span { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
+  .pg-ajustes-aviso-subject .input { padding: 7px 11px; font-size: 13.5px; }
+
+  /* ---------- Instalación ---------- */
+  .pg-ajustes-owner { display: flex; align-items: center; gap: 14px; }
+  .pg-ajustes-owner .list-icon { width: 42px; height: 42px; border-radius: 12px; }
+  .pg-ajustes-owner .list-icon .ico { width: 20px; height: 20px; }
+  .pg-ajustes-owner h3 { font-size: 19px; }
+  .pg-ajustes-dl-row { display: flex; align-items: center; gap: 14px; padding: 12px 22px; border-bottom: 1px solid var(--line); }
+  .pg-ajustes-dl-row:last-child { border-bottom: 0; }
+  .pg-ajustes-dl-row .list-icon { width: 32px; height: 32px; border-radius: 9px; background: var(--paper); color: var(--ink-soft); }
+  .pg-ajustes-dl-row .list-icon .ico { width: 16px; height: 16px; }
+  .pg-ajustes-dl-text { flex: 1; min-width: 0; display: grid; grid-template-columns: 160px minmax(0, 1fr); align-items: center; gap: 2px 14px; }
+  .pg-ajustes-dl-label { font-size: 12.5px; font-weight: 600; color: var(--ink-mute); }
+  .pg-ajustes-dl-value { font-size: 13.5px; font-weight: 600; }
+  .pg-ajustes-kv { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13.5px; }
+  .pg-ajustes-kv:first-child { padding-top: 0; }
+  .pg-ajustes-kv span { color: var(--ink-soft); }
+  .pg-ajustes-kv b { font-weight: 600; text-align: right; }
+  .pg-ajustes-kv b.tnum { font-variant-numeric: tabular-nums; }
+  .pg-ajustes-hours { padding: 12px 0 14px; border-bottom: 1px solid var(--line); }
+  .pg-ajustes-hours-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 13.5px; }
+  .pg-ajustes-hours-top span { color: var(--ink-soft); }
+  .pg-ajustes-hours-top b { font-family: var(--serif); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pg-ajustes-hours-top small { font-family: var(--sans); font-size: 12.5px; font-weight: 500; color: var(--ink-mute); }
+  .pg-ajustes-switch-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 100%; }
+  .pg-ajustes-switch-row b { display: block; font-size: 13.5px; font-weight: 600; }
+  .pg-ajustes-switch-row small { display: block; margin-top: 2px; font-size: 12px; color: var(--ink-mute); }
+  .pg-ajustes-data-text { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .pg-ajustes-kv:last-child { padding-bottom: 0; border-bottom: 0; }
+  .pg-ajustes-portal-fill { display: block; }
+  .pg-ajustes-setting .list-title, .pg-ajustes-setting .list-meta { display: block; }
+
+  /* ---------- Casillas de obras (modales) ---------- */
+  .pg-ajustes-checks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .pg-ajustes-check { align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: #fff; transition: border-color .15s ease, background .15s ease; }
+  .pg-ajustes-check:hover { border-color: var(--copper-soft); }
+  .pg-ajustes-check:has(input:checked) { border-color: var(--copper); background: rgba(196,106,74,.05); }
+  .pg-ajustes-check input { margin-top: 2px; flex-shrink: 0; }
+  .pg-ajustes-check b { display: block; font-size: 13.5px; font-weight: 600; }
+  .pg-ajustes-check small { display: block; font-size: 12px; color: var(--ink-mute); }
+
+  /* ---------- Adaptación ---------- */
+  @media (max-width: 1180px) {
+    .pg-ajustes-brand { grid-template-columns: minmax(0, 1fr); }
+    .pg-ajustes-aviso { grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px 16px; }
+    .pg-ajustes-aviso > .btn { grid-column: 3; grid-row: 1; }
+    .pg-ajustes-aviso-subject { grid-column: 2 / -1; grid-row: 2; }
+  }
+  @media (max-width: 860px) {
+    .pg-ajustes-logo { grid-template-columns: 112px minmax(0, 1fr); }
+    .pg-ajustes-logo-tile { font-size: 18px; }
+    .pg-ajustes-portal-nav span + span { display: none; }
+    .pg-ajustes-portal-head { gap: 16px; padding: 12px 14px; }
+    .pg-ajustes-portal-body { padding: 18px 14px 20px; }
+    .pg-ajustes-setting { padding: 14px 18px; }
+    .pg-ajustes-aviso { grid-template-columns: auto minmax(0, 1fr); padding: 14px 18px; }
+    .pg-ajustes-aviso > .btn { grid-column: 1 / -1; grid-row: 3; justify-self: start; }
+    .pg-ajustes-aviso-subject { grid-column: 1 / -1; grid-row: 2; }
+    .pg-ajustes-dl-row { align-items: flex-start; padding: 12px 18px; }
+    .pg-ajustes-dl-text { grid-template-columns: minmax(0, 1fr); }
+    .pg-ajustes-dl-row > .chip { margin-top: 6px; }
+    .pg-ajustes-sender { white-space: normal; }
+  }
+</style>
+</head>
+<body data-page="ajustes">
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="main">
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="content">
+
+      <div class="page-head">
+        <div>
+          <p class="eyebrow">Configuración</p>
+          <h1>Ajustes</h1>
+          <p class="page-sub">Marca, personas con acceso, perfiles y datos de la instalación.</p>
+        </div>
+      </div>
+
+      <div class="pg-ajustes" id="pg-ajustes-tabs" data-tabs>
+        <div class="tabs" role="tablist" aria-label="Secciones de ajustes">
+          <button class="tab active" type="button" role="tab" data-tab="marca">Marca</button>
+          <button class="tab" type="button" role="tab" data-tab="usuarios">Usuarios y perfiles<span class="count" id="pg-ajustes-count-equipo">3</span></button>
+          <button class="tab" type="button" role="tab" data-tab="acceso">Acceso</button>
+          <button class="tab" type="button" role="tab" data-tab="avisos">Avisos por email</button>
+          <button class="tab" type="button" role="tab" data-tab="instalacion">Instalación</button>
+        </div>
+
+        <!-- ============ Marca ============ -->
+        <section data-panel="marca" aria-label="Marca">
+          <div class="pg-ajustes-brand" id="pg-ajustes-brand">
+            <form class="card" id="pg-ajustes-brand-form" data-demo="Cambios de marca guardados" data-reset="false" novalidate>
+              <div class="card-head">
+                <div>
+                  <h3>Marca del portal</h3>
+                  <div class="card-sub">Se aplica al portal del inversor y a los avisos por email.</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="stack pg-ajustes-form">
+                  <label class="field">
+                    <span class="label">Nombre visible</span>
+                    <input class="input" id="pg-ajustes-nombre" maxlength="40" autocomplete="off" spellcheck="false">
+                    <span class="hint">Aparece en el portal, en los avisos y en los documentos compartidos.</span>
+                  </label>
+
+                  <div class="field">
+                    <span class="label">Logotipo</span>
+                    <div class="pg-ajustes-logo">
+                      <div class="pg-ajustes-logo-tile" id="pg-ajustes-logo-tile" aria-label="Logotipo actual"></div>
+                      <div class="dropzone" id="pg-ajustes-logo-drop" data-accept="image/svg+xml,image/png,image/jpeg,image/webp" data-multiple="false" aria-label="Subir logotipo">
+                        <span data-icon="upload"></span><span><b>Subir logotipo</b><br>o arrastrarlo aquí</span>
+                      </div>
+                    </div>
+                    <div class="pg-ajustes-logo-file" id="pg-ajustes-logo-file" hidden>
+                      <span data-icon="image"></span><span id="pg-ajustes-logo-name"></span>
+                      <button class="btn btn-text btn-sm" type="button" id="pg-ajustes-logo-remove">Quitar</button>
+                    </div>
+                    <span class="hint">SVG o PNG con fondo transparente. Sin logotipo, se muestra el nombre.</span>
+                  </div>
+
+                  <div class="field">
+                    <span class="label" id="pg-ajustes-color-label">Color principal</span>
+                    <div class="pg-ajustes-color" role="group" aria-labelledby="pg-ajustes-color-label">
+                      <input class="pg-ajustes-picker" type="color" id="pg-ajustes-color" value="#c46a4a" aria-label="Elegir color principal">
+                      <span class="input-affix pg-ajustes-hex"><span>#</span><input id="pg-ajustes-hex" maxlength="7" autocomplete="off" spellcheck="false" aria-label="Código hexadecimal del color"></span>
+                      <div class="pg-ajustes-swatches" id="pg-ajustes-swatches"></div>
+                    </div>
+                    <span class="hint">Botones, enlaces y detalles del portal.</span>
+                  </div>
+
+                  <div class="field">
+                    <span class="label" id="pg-ajustes-domain-label">Dominio</span>
+                    <div class="pg-ajustes-domain">
+                      <span class="input-affix"><span><span data-icon="lock"></span></span><input id="pg-ajustes-domain" readonly aria-labelledby="pg-ajustes-domain-label"></span>
+                      <button class="btn btn-ghost" type="button" data-toast="Solicitud de cambio de dominio enviada" data-toast-icon="globe"><span data-icon="globe"></span>Cambiar dominio</button>
+                    </div>
+                    <span class="hint">Dirección del portal del inversor y del panel.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-foot">
+                <span class="pg-ajustes-dirty" id="pg-ajustes-brand-state" hidden>Cambios sin guardar</span>
+                <div class="pg-ajustes-foot-actions">
+                  <button class="btn btn-ghost" type="button" id="pg-ajustes-brand-reset">Descartar</button>
+                  <button class="btn btn-copper" type="submit"><span data-icon="check"></span>Guardar cambios</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>Vista previa</h3>
+                  <div class="card-sub">Así se verá el portal del inversor.</div>
+                </div>
+                <span class="chip chip-sage">En vivo</span>
+              </div>
+              <div class="card-body">
+                <div class="pg-ajustes-browser" aria-hidden="true">
+                  <div class="pg-ajustes-browser-bar">
+                    <span class="pg-ajustes-browser-dots"><i></i><i></i><i></i></span>
+                    <span class="pg-ajustes-browser-url"><span data-icon="lock"></span><span id="pg-ajustes-preview-url"></span></span>
+                    <span class="pg-ajustes-browser-spacer"></span>
+                  </div>
+                  <div class="pg-ajustes-portal-head">
+                    <span class="pg-ajustes-portal-brand" id="pg-ajustes-preview-brand"></span>
+                    <span class="pg-ajustes-portal-nav"><span class="is-on">Mis inversiones</span><span>Oportunidades</span></span>
+                    <span class="pg-ajustes-portal-avatar" id="pg-ajustes-preview-avatar"></span>
+                  </div>
+                  <div class="pg-ajustes-portal-body" id="pg-ajustes-preview-body"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Usuarios y perfiles ============ -->
+        <section data-panel="usuarios" aria-label="Usuarios y perfiles">
+          <div class="card">
+            <div class="card-head pg-ajustes-head-wrap">
+              <div>
+                <h3>Equipo</h3>
+                <div class="card-sub" id="pg-ajustes-team-sub"></div>
+              </div>
+              <button class="btn btn-copper" type="button" id="pg-ajustes-invitar" data-open-modal="pg-ajustes-modal-invitar"><span data-icon="plus"></span>Invitar persona del equipo</button>
+            </div>
+            <div class="table-wrap">
+              <table class="table pg-ajustes-team">
+                <thead>
+                  <tr>
+                    <th>Persona</th>
+                    <th>Perfil</th>
+                    <th>Obras</th>
+                    <th>Estado</th>
+                    <th>Último acceso</th>
+                    <th><span class="pg-ajustes-sr">Acciones</span></th>
+                  </tr>
+                </thead>
+                <tbody id="pg-ajustes-team-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="alert alert-ink pg-ajustes-note mt-16">
+            <span data-icon="users"></span>
+            <div>
+              <div class="alert-title">Los inversores se gestionan aparte</div>
+              <div class="alert-text">Se invitan desde Inversores y en el portal solo ven lo suyo.</div>
+            </div>
+            <a class="btn btn-ghost btn-sm" href="inversores.html">Ir a Inversores<span data-icon="arrow-right"></span></a>
+          </div>
+
+          <h2 class="section-title">Perfiles</h2>
+          <div class="grid-3" id="pg-ajustes-perfiles"></div>
+
+          <div class="card mt-16">
+            <div class="card-head">
+              <div>
+                <h3>Qué puede hacer cada perfil</h3>
+                <div class="card-sub">Los permisos van con el perfil: basta con elegirlo al invitar.</div>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="table pg-ajustes-matrix">
+                <thead><tr id="pg-ajustes-permisos-head"></tr></thead>
+                <tbody id="pg-ajustes-permisos"></tbody>
+              </table>
+            </div>
+            <div class="card-foot">
+              <div class="pg-ajustes-legend">
+                <span><span class="pg-ajustes-yes" aria-hidden="true"><span data-icon="check"></span></span>Incluido</span>
+                <span><span class="chip chip-outline no-dot">Límite</span>Incluido con límite</span>
+                <span><span class="pg-ajustes-no" aria-hidden="true"></span>No incluido</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Acceso ============ -->
+        <section data-panel="acceso" aria-label="Acceso">
+          <div class="grid-main-side">
+            <div class="stack">
+              <div class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>Formas de entrar</h3>
+                    <div class="card-sub">Para el panel y para el portal del inversor. Sin contraseñas que recordar.</div>
+                  </div>
+                </div>
+                <div>
+                  <label class="switch pg-ajustes-setting">
+                    <span class="pg-ajustes-brandicon">
+                      <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg>
+                    </span>
+                    <span class="list-main">
+                      <span class="list-title">Google</span>
+                      <span class="list-meta">Cuentas de Google y de Google Workspace.</span>
+                    </span>
+                    <input type="checkbox" data-metodo="Google" checked>
+                    <span class="track"></span>
+                  </label>
+                  <label class="switch pg-ajustes-setting">
+                    <span class="pg-ajustes-brandicon"><span data-icon="mail"></span></span>
+                    <span class="list-main">
+                      <span class="list-title">Enlace por correo</span>
+                      <span class="list-meta">Un enlace de un solo uso al email de la persona invitada.</span>
+                    </span>
+                    <input type="checkbox" data-metodo="Enlace por correo" checked>
+                    <span class="track"></span>
+                  </label>
+                  <label class="switch pg-ajustes-setting is-disabled" title="Se configura en la instalación">
+                    <span class="pg-ajustes-brandicon">
+                      <svg viewBox="0 0 23 23" aria-hidden="true"><path fill="#F35325" d="M1 1h10v10H1z"/><path fill="#81BC06" d="M12 1h10v10H12z"/><path fill="#05A6F0" d="M1 12h10v10H1z"/><path fill="#FFBA08" d="M12 12h10v10H12z"/></svg>
+                    </span>
+                    <span class="list-main">
+                      <span class="list-title">Microsoft</span>
+                      <span class="list-meta">Se configura en la instalación.</span>
+                    </span>
+                    <input type="checkbox" data-metodo="Microsoft" disabled>
+                    <span class="track"></span>
+                  </label>
+                  <div class="pg-ajustes-setting">
+                    <span class="list-icon tone-sage"><span data-icon="lock"></span></span>
+                    <div class="list-main">
+                      <div class="list-title">Solo pueden entrar personas invitadas</div>
+                      <div class="list-meta">Nadie puede registrarse por su cuenta.</div>
+                    </div>
+                    <span class="pg-ajustes-fixed"><span data-icon="lock"></span>Siempre activo</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="pg-ajustes-setting">
+                  <span class="list-icon tone-ink"><span data-icon="clock"></span></span>
+                  <div class="list-main">
+                    <label class="pg-ajustes-inline">Cerrar sesión tras
+                      <select class="select" id="pg-ajustes-sesion" aria-label="Días sin uso">
+                        <option value="7">7</option>
+                        <option value="15">15</option>
+                        <option value="30" selected>30</option>
+                        <option value="60">60</option>
+                        <option value="90">90</option>
+                      </select>
+                      días sin uso
+                    </label>
+                    <div class="list-meta mt-4">Protege las cuentas si alguien deja la sesión abierta en un equipo compartido.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head">
+                <div>
+                  <h3>Accesos recientes</h3>
+                  <div class="card-sub">Equipo e inversores</div>
+                </div>
+              </div>
+              <div class="card-body" style="padding-top:6px;padding-bottom:6px">
+                <div class="list" id="pg-ajustes-accesos"></div>
+              </div>
+              <div class="card-foot pg-ajustes-access-foot" id="pg-ajustes-accesos-foot"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Avisos por email ============ -->
+        <section data-panel="avisos" aria-label="Avisos por email">
+          <div class="card">
+            <div class="card-head pg-ajustes-head-wrap">
+              <div>
+                <h3>Avisos por email</h3>
+                <div class="card-sub">Se envían solos cuando ocurre algo en el panel, con la marca de la instalación.</div>
+              </div>
+              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Remitente <b>avisos@recoba.casa</b></span>
+            </div>
+            <div id="pg-ajustes-avisos"></div>
+            <div class="card-foot">
+              <span class="hint">Entre llaves, los datos que se completan en cada envío: {obra}, {persona}, {periodo}…</span>
+              <span class="cell-meta tnum" id="pg-ajustes-avisos-count"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Instalación ============ -->
+        <section data-panel="instalacion" aria-label="Instalación">
+          <div class="grid-main-side">
+            <div class="stack">
+              <div class="card">
+                <div class="card-head">
+                  <div class="pg-ajustes-owner">
+                    <span class="list-icon tone-sage"><span data-icon="key"></span></span>
+                    <div>
+                      <h3 id="pg-ajustes-owner-title"></h3>
+                      <div class="card-sub">Instalada en sus propias cuentas, con licencia de uso.</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="pg-ajustes-install"></div>
+              </div>
+              <div class="alert alert-sage">
+                <span data-icon="shield"></span>
+                <div>
+                  <div class="alert-title">Sus datos viven en sus cuentas</div>
+                  <div class="alert-text">Si deja el mantenimiento, la plataforma sigue siendo suya: la instalación, los datos y el dominio no cambian de manos.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="stack">
+              <div class="card">
+                <div class="card-head">
+                  <div>
+                    <h3>Mantenimiento</h3>
+                    <div class="card-sub">Soporte y mejoras a cargo de recoBA.</div>
+                  </div>
+                </div>
+                <div class="card-body" id="pg-ajustes-mant"></div>
+                <div class="card-foot">
+                  <button class="btn btn-ghost btn-block" type="button" data-toast="Solicitud de mejora enviada a recoBA" data-toast-icon="send"><span data-icon="edit"></span>Solicitar una mejora</button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <div><h3>Acceso de soporte de recoBA</h3></div>
+                </div>
+                <div class="card-body">
+                  <label class="switch pg-ajustes-switch-row">
+                    <span><b>Permitir acceso para mantenimiento</b><small>Puede revocarse en cualquier momento.</small></span>
+                    <input type="checkbox" id="pg-ajustes-support" checked>
+                    <span class="track"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <div><h3>Sus datos</h3></div>
+                </div>
+                <div class="card-body">
+                  <p class="pg-ajustes-data-text">Una copia completa de obras, gastos, contratos, inversores y archivos.</p>
+                  <button class="btn btn-ghost btn-block mt-12" type="button" data-toast="Se prepara un archivo con todos los datos de la instalación" data-toast-icon="download"><span data-icon="download"></span>Exportar todos los datos</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal: invitar persona del equipo -->
+<div class="modal-overlay" id="pg-ajustes-modal-invitar" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pg-ajustes-invitar-titulo">
+    <form id="pg-ajustes-form-invitar" data-demo="Invitación enviada">
+      <div class="modal-head">
+        <div>
+          <h3 id="pg-ajustes-invitar-titulo">Invitar persona del equipo</h3>
+          <p class="modal-desc">Le llegará un email con el acceso. No necesita contraseña.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label class="field"><span class="label">Nombre</span><input class="input" name="nombre" required maxlength="60" autocomplete="off" placeholder="Nombre y apellido"></label>
+          <label class="field"><span class="label">Email</span><input class="input" type="email" name="email" required maxlength="120" autocomplete="off" placeholder="nombre@empresa.es"></label>
+          <div class="field span-2">
+            <span class="label">Perfil</span>
+            <div class="option-cards" id="pg-ajustes-invitar-perfiles"></div>
+          </div>
+          <div class="field span-2" id="pg-ajustes-invitar-obras" hidden>
+            <span class="label">Obras que puede cargar</span>
+            <div class="pg-ajustes-checks" id="pg-ajustes-invitar-lista"></div>
+            <span class="hint">Solo verá y cargará datos de las obras marcadas.</span>
+            <span class="pg-ajustes-error" id="pg-ajustes-invitar-error" hidden>Marque al menos una obra.</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="send"></span>Enviar invitación</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: obras de una persona con perfil Obra -->
+<div class="modal-overlay" id="pg-ajustes-modal-obras" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pg-ajustes-obras-titulo">
+    <form id="pg-ajustes-form-obras" data-demo="Obras actualizadas" data-reset="false">
+      <div class="modal-head">
+        <div>
+          <h3 id="pg-ajustes-obras-titulo">Obras</h3>
+          <p class="modal-desc">Solo verá y cargará datos de las obras marcadas.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="pg-ajustes-checks" id="pg-ajustes-obras-lista"></div>
+        <p class="pg-ajustes-error mt-12" id="pg-ajustes-obras-error" hidden>Marque al menos una obra.</p>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/data.js"></script>
+<script src="assets/admin.js"></script>
+<script>
+  (function () {
+    'use strict';
+    const A = window.Admin;
+    const D = A.data;
+    const inst = D.instalacion;
+    const $ = (sel, root) => (root || document).querySelector(sel);
+    const $$ = (sel, root) => Array.from((root || document).querySelectorAll(sel));
+    const INK = '#1C2331';
+    const CREAM = '#FAF6F0';
+
+    /* ---------- Pestañas: la dirección recuerda la pestaña abierta ---------- */
+    const tabsBox = $('#pg-ajustes-tabs');
+    tabsBox.addEventListener('tabs:change', (e) => {
+      const hash = '#' + e.detail;
+      if (window.location.hash === hash || (!window.location.hash && e.detail === 'marca')) return;
+      try { history.replaceState(null, '', hash); } catch (err) { /* sin historial disponible */ }
+    });
+    window.addEventListener('hashchange', () => {
+      const name = window.location.hash.slice(1);
+      if (name && tabsBox.querySelector(`.tab[data-tab="${CSS.escape(name)}"]`)) A.activateTab(tabsBox, name);
+    });
+
+    /* ---------- Utilidades de color ---------- */
+    function normHex(value) {
+      let s = String(value || '').trim().replace(/^#/, '');
+      if (/^[0-9a-f]{3}$/i.test(s)) s = s.split('').map((c) => c + c).join('');
+      return /^[0-9a-f]{6}$/i.test(s) ? '#' + s.toUpperCase() : null;
+    }
+    const rgb = (hex) => { const n = parseInt(hex.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+    const toHex = (c) => '#' + c.map((x) => Math.round(x).toString(16).padStart(2, '0')).join('').toUpperCase();
+    const mix = (a, b, t) => { const x = rgb(a); const y = rgb(b); return toHex(x.map((v, i) => v + (y[i] - v) * t)); };
+    function lum(hex) {
+      const [r, g, b] = rgb(hex).map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+    const contrast = (a, b) => { const la = lum(a); const lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
+
+    /* ============================================================
+       Marca
+       ============================================================ */
+    const SWATCHES = [
+      { hex: '#C46A4A', nombre: 'Cobre' },
+      { hex: '#1C2331', nombre: 'Tinta' },
+      { hex: '#5F7161', nombre: 'Salvia' },
+      { hex: '#96793E', nombre: 'Oro viejo' },
+      { hex: '#3D5A73', nombre: 'Pizarra' }
+    ];
+    const brandBox = $('#pg-ajustes-brand');
+    const brandForm = $('#pg-ajustes-brand-form');
+    const elNombre = $('#pg-ajustes-nombre');
+    const elColor = $('#pg-ajustes-color');
+    const elHex = $('#pg-ajustes-hex');
+    const elHexWrap = elHex.closest('.input-affix');
+    let brand = { nombre: inst.marca, color: normHex(inst.colorPrincipal) || '#C46A4A', logo: null, logoNombre: '' };
+    let saved = Object.assign({}, brand);
+
+    $('#pg-ajustes-swatches').innerHTML = SWATCHES.map((s) =>
+      `<button class="pg-ajustes-swatch" type="button" data-color="${s.hex}" style="background:${s.hex}" title="${A.esc(s.nombre)}" aria-label="Color ${A.esc(s.nombre.toLowerCase())}"></button>`).join('');
+    $('#pg-ajustes-domain').value = inst.dominio;
+    $('#pg-ajustes-preview-url').textContent = inst.dominio;
+
+    /* «recoBA» → reco + BA con acento. Otros nombres: inicial en el color elegido + nombre. */
+    function wordmark(nombre) {
+      const name = String(nombre || '').trim() || saved.nombre;
+      const m = name.match(/^(.*[a-záéíóúüñ])([A-ZÁÉÍÓÚÜÑ]{2,})$/);
+      if (m) return `<span class="wordmark">${A.esc(m[1])}<span class="ba">${A.esc(m[2])}</span></span>`;
+      return `<span class="pg-ajustes-mark" aria-hidden="true">${A.esc(name.charAt(0).toUpperCase())}</span><span class="wordmark">${A.esc(name)}</span>`;
+    }
+
+    const martin = A.persona('i-martin');
+    const ayacucho = A.obra('ayacucho');
+    $('#pg-ajustes-preview-avatar').textContent = martin.iniciales;
+    $('#pg-ajustes-preview-body').innerHTML = `
+      <div class="pg-ajustes-portal-hello">Hola, ${A.esc(martin.nombre.split(' ')[0])}</div>
+      <div class="pg-ajustes-portal-sub">Estado de su cartera al ${A.date(inst.hoy)}</div>
+      <div class="pg-ajustes-portal-stats">
+        <div class="pg-ajustes-portal-box"><small>Capital invertido</small><b>${A.money(A.capitalDe(martin.id))}</b></div>
+        <div class="pg-ajustes-portal-box"><small>Distribuciones cobradas</small><b class="is-accent">${A.money(A.distribucionesDe(martin.id))}</b></div>
+      </div>
+      <div class="pg-ajustes-portal-box pg-ajustes-portal-project">
+        <div class="pg-ajustes-portal-top"><span>${A.esc(ayacucho.nombre)} · ${A.esc(ayacucho.barrio)}</span><span class="pg-ajustes-portal-chip">${A.esc(ayacucho.estado)}</span></div>
+        <div class="pg-ajustes-portal-progress"><span>Avance de obra</span><span class="pg-ajustes-portal-track"><span class="pg-ajustes-portal-fill" style="width:${ayacucho.avanceObra}%"></span></span><b class="tnum">${A.pct(ayacucho.avanceObra)}</b></div>
+        <div class="pg-ajustes-portal-actions"><span class="pg-ajustes-portal-btn">Ver avance de obra</span><span class="pg-ajustes-portal-link">Documentos</span></div>
+      </div>`;
+
+    function applyBrand() {
+      const c = brand.color;
+      const onBrand = contrast(c, '#FFFFFF') >= 3 ? '#FFFFFF' : INK;
+      let text = c;
+      for (let t = 0.15; contrast(text, CREAM) < 3.2 && t < 1; t += 0.15) text = mix(c, INK, t);
+      const [r, g, b] = rgb(c);
+      brandBox.style.setProperty('--pg-brand', c);
+      brandBox.style.setProperty('--pg-brand-light', mix(c, '#FFFFFF', 0.22));
+      brandBox.style.setProperty('--pg-brand-soft', `rgba(${r},${g},${b},.14)`);
+      brandBox.style.setProperty('--pg-brand-text', text);
+      brandBox.style.setProperty('--pg-on-brand', onBrand);
+
+      const logo = brand.logo
+        ? `<img src="${A.esc(brand.logo)}" alt="${A.esc(brand.nombre.trim() || saved.nombre)}">`
+        : wordmark(brand.nombre);
+      $('#pg-ajustes-preview-brand').innerHTML = logo;
+      $('#pg-ajustes-logo-tile').innerHTML = logo;
+      $('#pg-ajustes-logo-file').hidden = !brand.logo;
+      $('#pg-ajustes-logo-name').textContent = brand.logoNombre;
+      $$('.pg-ajustes-swatch').forEach((s) => {
+        const on = s.dataset.color === c;
+        s.classList.toggle('is-active', on);
+        s.setAttribute('aria-pressed', String(on));
+      });
+      const dirty = brand.nombre.trim() !== saved.nombre || c !== saved.color || brand.logo !== saved.logo;
+      $('#pg-ajustes-brand-state').hidden = !dirty;
+      $('#pg-ajustes-brand-reset').disabled = !dirty;
+    }
+
+    function setColor(value, from) {
+      const h = normHex(value);
+      if (!h) return;
+      brand.color = h;
+      if (from !== 'picker') elColor.value = h.toLowerCase();
+      if (from !== 'hex') { elHex.value = h.slice(1); elHexWrap.classList.remove('is-invalid'); }
+      applyBrand();
+    }
+    function fillBrandForm() {
+      elNombre.value = brand.nombre;
+      setColor(brand.color);
+    }
+
+    elNombre.addEventListener('input', () => { brand.nombre = elNombre.value; applyBrand(); });
+    elColor.addEventListener('input', () => setColor(elColor.value, 'picker'));
+    elHex.addEventListener('input', () => {
+      const v = elHex.value.trim().replace(/^#/, '');
+      elHexWrap.classList.toggle('is-invalid', /[^0-9a-f]/i.test(v) || v.length > 6);
+      if (/^[0-9a-f]{6}$/i.test(v)) setColor(v, 'hex');
+    });
+    elHex.addEventListener('change', () => {
+      const h = normHex(elHex.value);
+      if (h) setColor(h);
+      else { elHex.value = brand.color.slice(1); elHexWrap.classList.remove('is-invalid'); }
+    });
+    $('#pg-ajustes-swatches').addEventListener('click', (e) => {
+      const s = e.target.closest('[data-color]');
+      if (s) setColor(s.dataset.color);
+    });
+
+    $('#pg-ajustes-logo-drop').addEventListener('dropzone:files', (e) => {
+      const file = (e.detail.files || [])[0];
+      if (!file) return;
+      if (!/^image\//.test(file.type || '')) { A.toast('El logotipo tiene que ser una imagen SVG, PNG o JPG', 'alert'); return; }
+      brand.logo = URL.createObjectURL(file);
+      brand.logoNombre = file.name;
+      applyBrand();
+    });
+    $('#pg-ajustes-logo-remove').addEventListener('click', () => {
+      brand.logo = null;
+      brand.logoNombre = '';
+      applyBrand();
+    });
+
+    $('#pg-ajustes-brand-reset').addEventListener('click', () => {
+      brand = Object.assign({}, saved);
+      fillBrandForm();
+      A.toast('Cambios descartados', 'refresh');
+    });
+    brandForm.addEventListener('submit', () => {
+      brand.nombre = brand.nombre.trim() || saved.nombre;
+      elNombre.value = brand.nombre;
+      saved = Object.assign({}, brand);
+      inst.marca = brand.nombre;
+      inst.colorPrincipal = brand.color;
+      applyBrand();
+    });
+    fillBrandForm();
+
+    /* ============================================================
+       Usuarios y perfiles
+       ============================================================ */
+    const PERFILES_EQUIPO = ['admin', 'obra'];
+    const PERFIL_UI = {
+      admin: { icon: 'shield', tone: 'tone-copper', donde: 'Panel' },
+      obra: { icon: 'building', tone: 'tone-sage', donde: 'Panel y móvil' },
+      inversor: { icon: 'wallet', tone: 'tone-ink', donde: 'Portal' }
+    };
+    const ACCESO_CON = { Google: 'con Google', 'Enlace por correo': 'con enlace por correo', Microsoft: 'con Microsoft' };
+    const perfilNombre = (id) => (A.perfil(id) || {}).nombre || id;
+    const findPersona = (id) => D.equipo.find((p) => p.id === id);
+    const unir = (items) => (items.length > 1 ? `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}` : items[0] || '');
+    const plural = (n, uno, varios) => `${n} ${n === 1 ? uno : varios}`;
+
+    function obraChecks(seleccion) {
+      return D.obras.map((o) => `
+        <label class="check pg-ajustes-check">
+          <input type="checkbox" name="obras" value="${A.esc(o.id)}"${seleccion.includes(o.id) ? ' checked' : ''}>
+          <span><b>${A.esc(o.nombre)}</b><small>${A.esc(o.barrio)} · ${A.esc(o.estado)}</small></span>
+        </label>`).join('');
+    }
+
+    function obrasCell(p) {
+      if (p.perfil !== 'obra') return '<span class="soft">Todas</span>';
+      const nombres = (Array.isArray(p.obras) ? p.obras : []).map((id) => (A.obra(id) || {}).nombre).filter(Boolean);
+      const label = nombres.length ? A.esc(unir(nombres)) : '<span class="muted">Sin obras asignadas</span>';
+      return `<button class="pg-ajustes-obras-btn" type="button" data-edit-obras="${A.esc(p.id)}" title="Elegir obras">${label}${A.icon('edit')}</button>`;
+    }
+
+    function teamRow(p) {
+      const propia = p.id === D.usuario.id;
+      const perfil = propia
+        ? `<span class="pg-ajustes-role-fixed" title="Su propio perfil no se puede cambiar">${A.esc(perfilNombre(p.perfil))}${A.icon('lock')}</span>`
+        : `<select class="select pg-ajustes-role" data-role="${A.esc(p.id)}" aria-label="Perfil de ${A.esc(p.nombre)}">${PERFILES_EQUIPO.map((id) =>
+            `<option value="${id}"${p.perfil === id ? ' selected' : ''}>${A.esc(perfilNombre(id))}</option>`).join('')}</select>`;
+      const estado = p.estado === 'activo' ? A.chip('Activo', 'chip-sage') : A.chip('Pendiente', 'chip-gold');
+      const acceso = p.estado === 'activo'
+        ? `<div class="tnum">${A.esc(A.ago(p.ultimoAcceso))}</div><div class="cell-meta">${A.esc(ACCESO_CON[p.acceso] || '')}</div>`
+        : `<div class="soft">Sin acceso aún</div><div class="cell-meta tnum">Invitación del ${A.esc(A.date(p.invitado, 'day'))}</div>`;
+      const acciones = propia
+        ? '<span class="cell-meta">Su cuenta</span>'
+        : `<div class="pg-ajustes-actions">${p.estado === 'invitado' ? `<button class="btn btn-ghost btn-sm" type="button" data-resend="${A.esc(p.id)}">Reenviar invitación</button>` : ''}<button class="btn btn-danger btn-sm" type="button" data-remove="${A.esc(p.id)}">Quitar acceso</button></div>`;
+      return `<tr data-person="${A.esc(p.id)}">
+        <td><div class="pg-ajustes-person">${A.avatar(p)}<div><div class="cell-title">${A.esc(p.nombre)}</div><div class="cell-meta">${A.esc(p.email)}</div></div></div></td>
+        <td>${perfil}</td>
+        <td>${obrasCell(p)}</td>
+        <td>${estado}</td>
+        <td>${acceso}</td>
+        <td>${acciones}</td>
+      </tr>`;
+    }
+
+    function renderTeam(flashId) {
+      $('#pg-ajustes-team-body').innerHTML = D.equipo.map(teamRow).join('');
+      const pendientes = D.equipo.filter((p) => p.estado === 'invitado').length;
+      $('#pg-ajustes-count-equipo').textContent = D.equipo.length;
+      $('#pg-ajustes-team-sub').textContent = plural(D.equipo.length, 'persona en el equipo', 'personas en el equipo') +
+        (pendientes ? ` · ${plural(pendientes, 'invitación pendiente', 'invitaciones pendientes')}` : '');
+      if (flashId) {
+        const tr = $(`tr[data-person="${CSS.escape(flashId)}"]`);
+        if (tr) tr.classList.add('pg-ajustes-flash');
+      }
+      renderPerfiles();
+      renderAccesos();
+    }
+
+    function renderPerfiles() {
+      $('#pg-ajustes-perfiles').innerHTML = D.perfiles.map((pf) => {
+        const ui = PERFIL_UI[pf.id] || { icon: 'user', tone: 'tone-ink', donde: '' };
+        const n = pf.id === 'inversor' ? D.inversores.length : D.equipo.filter((p) => p.perfil === pf.id).length;
+        const quien = pf.id === 'inversor'
+          ? `<a href="inversores.html">${plural(n, 'inversor', 'inversores')}${A.icon('arrow-right')}</a>`
+          : `<span>${plural(n, 'persona', 'personas')}</span>`;
+        return `<div class="card card-pad pg-ajustes-profile">
+          <div class="pg-ajustes-profile-top"><span class="list-icon ${ui.tone}">${A.icon(ui.icon)}</span><h3>${A.esc(pf.nombre)}</h3></div>
+          <p class="pg-ajustes-profile-desc">${A.esc(pf.descripcion)}</p>
+          <div class="pg-ajustes-profile-foot">${quien}<span class="chip chip-outline no-dot">${A.esc(ui.donde)}</span></div>
+        </div>`;
+      }).join('');
+    }
+
+    const permisoCell = (v) => (v === true
+      ? `<span class="pg-ajustes-yes" role="img" aria-label="Sí">${A.icon('check')}</span>`
+      : v === false
+        ? '<span class="pg-ajustes-no" role="img" aria-label="No"></span>'
+        : `<span class="chip chip-outline no-dot">${A.esc(v)}</span>`);
+    $('#pg-ajustes-permisos-head').innerHTML = `<th>Acción</th>${D.perfiles.map((p) => `<th>${A.esc(p.nombre)}</th>`).join('')}`;
+    $('#pg-ajustes-permisos').innerHTML = D.permisos.map((r) =>
+      `<tr><td>${A.esc(r.accion)}</td>${D.perfiles.map((p) => `<td>${permisoCell(r[p.id])}</td>`).join('')}</tr>`).join('');
+
+    /* Obras de una persona con perfil Obra */
+    let obrasDe = null;
+    const formObras = $('#pg-ajustes-form-obras');
+    function openObras(id) {
+      const p = findPersona(id);
+      if (!p) return;
+      obrasDe = p.id;
+      $('#pg-ajustes-obras-titulo').textContent = `Obras de ${p.nombre}`;
+      $('#pg-ajustes-obras-lista').innerHTML = obraChecks(Array.isArray(p.obras) ? p.obras : []);
+      $('#pg-ajustes-obras-error').hidden = true;
+      A.openModal('pg-ajustes-modal-obras');
+    }
+    formObras.addEventListener('change', () => { $('#pg-ajustes-obras-error').hidden = true; });
+    formObras.addEventListener('submit', (e) => {
+      const ids = $$('input[name="obras"]:checked', formObras).map((i) => i.value);
+      const p = findPersona(obrasDe);
+      if (!ids.length || !p) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#pg-ajustes-obras-error').hidden = false;
+        return;
+      }
+      p.obras = ids;
+      formObras.dataset.demo = `Obras de ${p.nombre} actualizadas`;
+      renderTeam(p.id);
+    });
+
+    /* Tabla del equipo: perfil, reenviar, quitar y obras */
+    const teamBody = $('#pg-ajustes-team-body');
+    teamBody.addEventListener('change', (e) => {
+      const sel = e.target.closest('[data-role]');
+      const p = sel && findPersona(sel.dataset.role);
+      if (!p) return;
+      p.perfil = sel.value;
+      if (p.perfil === 'obra') {
+        p.obras = Array.isArray(p.obrasPrevias) ? p.obrasPrevias : [];
+      } else {
+        if (Array.isArray(p.obras)) p.obrasPrevias = p.obras;
+        p.obras = 'todas';
+      }
+      renderTeam(p.id);
+      A.toast(`${p.nombre} tiene ahora el perfil ${perfilNombre(p.perfil)}`, 'users');
+      if (p.perfil === 'obra' && !p.obras.length) openObras(p.id);
+    });
+    teamBody.addEventListener('click', (e) => {
+      const reenviar = e.target.closest('[data-resend]');
+      if (reenviar) {
+        const p = findPersona(reenviar.dataset.resend);
+        if (!p) return;
+        p.invitado = inst.hoy;
+        renderTeam();
+        A.toast(`Invitación reenviada a ${p.email}`, 'send');
+        return;
+      }
+      const quitar = e.target.closest('[data-remove]');
+      if (quitar) {
+        const i = D.equipo.findIndex((x) => x.id === quitar.dataset.remove);
+        if (i < 0) return;
+        const [p] = D.equipo.splice(i, 1);
+        renderTeam();
+        A.toast(`${p.nombre} ya no tiene acceso a la instalación`, 'lock');
+        return;
+      }
+      const editar = e.target.closest('[data-edit-obras]');
+      if (editar) openObras(editar.dataset.editObras);
+    });
+
+    /* Invitar persona del equipo */
+    const formInv = $('#pg-ajustes-form-invitar');
+    const invObras = $('#pg-ajustes-invitar-obras');
+    const invError = $('#pg-ajustes-invitar-error');
+    $('#pg-ajustes-invitar-perfiles').innerHTML = PERFILES_EQUIPO.map((id, i) => {
+      const pf = A.perfil(id);
+      return `<label class="option-card"><input type="radio" name="perfil" value="${id}"${i === 0 ? ' checked' : ''}><div><div class="option-title">${A.esc(pf.nombre)}</div><div class="option-desc">${A.esc(pf.descripcion)}</div></div></label>`;
+    }).join('');
+    $('#pg-ajustes-invitar-lista').innerHTML = obraChecks([]);
+
+    function syncInvite() {
+      const perfil = ($('input[name="perfil"]:checked', formInv) || {}).value;
+      invObras.hidden = perfil !== 'obra';
+      invError.hidden = true;
+    }
+    $('#pg-ajustes-modal-invitar').addEventListener('modal:open', syncInvite);
+    formInv.addEventListener('change', (e) => {
+      if (e.target.name === 'perfil') syncInvite();
+      if (e.target.name === 'obras') invError.hidden = true;
+    });
+    formInv.addEventListener('input', (e) => { if (e.target.name === 'email') e.target.setCustomValidity(''); });
+    formInv.addEventListener('reset', () => setTimeout(syncInvite, 0));
+    formInv.addEventListener('submit', (e) => {
+      const fd = new FormData(formInv);
+      const nombre = String(fd.get('nombre') || '').trim().replace(/\s+/g, ' ');
+      const email = String(fd.get('email') || '').trim().toLowerCase();
+      const perfil = String(fd.get('perfil') || 'admin');
+      const obras = fd.getAll('obras').map(String);
+      const cancelar = () => { e.preventDefault(); e.stopPropagation(); };
+      if (!nombre) { cancelar(); formInv.elements.nombre.focus(); return; }
+      if (D.equipo.concat(D.inversores).some((p) => p.email.toLowerCase() === email)) {
+        cancelar();
+        formInv.elements.email.setCustomValidity('Esta dirección ya tiene acceso a la instalación.');
+        formInv.elements.email.reportValidity();
+        return;
+      }
+      if (perfil === 'obra' && !obras.length) { cancelar(); invError.hidden = false; return; }
+      const nueva = {
+        id: 'u-' + Date.now().toString(36),
+        nombre,
+        iniciales: nombre.split(' ').slice(0, 2).map((w) => w.charAt(0).toUpperCase()).join(''),
+        email,
+        perfil,
+        obras: perfil === 'obra' ? obras : 'todas',
+        estado: 'invitado',
+        invitado: inst.hoy
+      };
+      D.equipo.push(nueva);
+      formInv.dataset.demo = `Invitación enviada a ${email}`;
+      renderTeam(nueva.id);
+    });
+
+    /* ============================================================
+       Acceso
+       ============================================================ */
+    function renderAccesos() {
+      const personas = D.equipo.concat(D.inversores);
+      const recientes = personas.filter((p) => p.ultimoAcceso).sort((a, b) => b.ultimoAcceso.localeCompare(a.ultimoAcceso));
+      $('#pg-ajustes-accesos').innerHTML = recientes.map((p) => {
+        const perfil = p.id.startsWith('i-') ? 'Inversor' : perfilNombre(p.perfil);
+        return `<div class="list-item">${A.avatar(p, 'sm')}<div class="list-main"><div class="list-title">${A.esc(p.nombre)}</div><div class="list-meta">${A.esc(perfil)} · ${A.esc(p.acceso)}</div></div><span class="pg-ajustes-when tnum">${A.esc(A.ago(p.ultimoAcceso))}</span></div>`;
+      }).join('') || '<div class="empty">Todavía no ha entrado nadie.</div>';
+      const pendientes = personas.filter((p) => p.estado === 'invitado').map((p) => p.nombre);
+      const foot = $('#pg-ajustes-accesos-foot');
+      foot.hidden = !pendientes.length;
+      foot.innerHTML = pendientes.length ? `${A.icon('mail')}<span>Sin aceptar la invitación: ${A.esc(unir(pendientes))}</span>` : '';
+    }
+
+    const metodos = $$('input[data-metodo]');
+    metodos.forEach((input) => input.addEventListener('change', () => {
+      if (!metodos.some((i) => i.checked && !i.disabled)) {
+        input.checked = true;
+        A.toast('Debe quedar al menos una forma de entrar activa', 'alert');
+        return;
+      }
+      inst.acceso = metodos.filter((i) => i.checked).map((i) => i.dataset.metodo);
+      A.toast(`Acceso ${ACCESO_CON[input.dataset.metodo]} ${input.checked ? 'activado' : 'desactivado'}`, input.checked ? 'check' : 'lock');
+      renderInstalacion();
+    }));
+    $('#pg-ajustes-sesion').addEventListener('change', (e) => {
+      A.toast(`Las sesiones se cerrarán tras ${e.target.value} días sin uso`, 'clock');
+    });
+
+    /* ============================================================
+       Avisos por email
+       ============================================================ */
+    const avisosBox = $('#pg-ajustes-avisos');
+    function contarAvisos() {
+      $('#pg-ajustes-avisos-count').textContent = `${D.avisos.filter((n) => n.activo).length} de ${D.avisos.length} activos`;
+    }
+    function renderAvisos() {
+      avisosBox.innerHTML = D.avisos.map((n) => `
+        <div class="pg-ajustes-aviso${n.activo ? '' : ' is-off'}" data-aviso="${A.esc(n.id)}">
+          <label class="switch"><input type="checkbox" data-aviso-on${n.activo ? ' checked' : ''} aria-label="Enviar el aviso «${A.esc(n.nombre)}»"><span class="track"></span></label>
+          <div class="pg-ajustes-aviso-main">
+            <div class="list-title">${A.esc(n.nombre)}</div>
+            <div class="list-meta">${A.icon('users')}<span>${A.esc(n.destinatarios)}</span></div>
+          </div>
+          <label class="pg-ajustes-aviso-subject"><span>Asunto</span><input class="input" data-aviso-subject value="${A.esc(n.asunto)}" maxlength="120" spellcheck="false"></label>
+          <button class="btn btn-ghost btn-sm" type="button" data-aviso-test>${A.icon('send')}Enviar prueba</button>
+        </div>`).join('');
+      contarAvisos();
+    }
+    const avisoDe = (el) => {
+      const row = el.closest('[data-aviso]');
+      return { row, n: row ? D.avisos.find((x) => x.id === row.dataset.aviso) : null };
+    };
+    avisosBox.addEventListener('change', (e) => {
+      const { row, n } = avisoDe(e.target);
+      if (!n) return;
+      if (e.target.matches('[data-aviso-on]')) {
+        n.activo = e.target.checked;
+        row.classList.toggle('is-off', !n.activo);
+        contarAvisos();
+        A.toast(`Aviso «${n.nombre}» ${n.activo ? 'activado' : 'desactivado'}`, n.activo ? 'bell' : 'minus');
+      } else if (e.target.matches('[data-aviso-subject]')) {
+        const v = e.target.value.trim();
+        if (!v) { e.target.value = n.asunto; A.toast('El asunto no puede quedar vacío', 'alert'); return; }
+        e.target.value = v;
+        if (v === n.asunto) return;
+        n.asunto = v;
+        A.toast(`Asunto de «${n.nombre}» actualizado`, 'edit');
+      }
+    });
+    avisosBox.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.target.matches('[data-aviso-subject]')) { e.preventDefault(); e.target.blur(); }
+    });
+    avisosBox.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-aviso-test]');
+      const { n } = btn ? avisoDe(btn) : {};
+      if (n) A.toast(`Prueba de «${n.nombre}» enviada a ${D.usuario.email}`, 'send');
+    });
+
+    /* ============================================================
+       Instalación
+       ============================================================ */
+    const ACCESO_TXT = { Google: 'Google', 'Enlace por correo': 'enlace por correo', Microsoft: 'Microsoft' };
+    const horas = (n) => A.group(n, Number.isInteger(n) ? 0 : 1);
+    function renderInstalacion() {
+      $('#pg-ajustes-owner-title').textContent = `Esta instalación es de ${inst.cliente}`;
+      const metodosTxt = unir(inst.acceso.map((m) => ACCESO_TXT[m] || m));
+      const filas = [
+        { icon: 'user', label: 'Propietario', value: inst.cliente },
+        { icon: 'key', label: 'Licencia', value: inst.licencia },
+        { icon: 'database', label: 'Datos y archivos', value: inst.datos, suya: true },
+        { icon: 'globe', label: 'Web', value: inst.web, suya: true },
+        { icon: 'link', label: 'Dominio', value: inst.dominio, suya: true },
+        { icon: 'refresh', label: 'Copias de seguridad', value: inst.copias },
+        { icon: 'lock', label: 'Acceso', value: `${metodosTxt.charAt(0).toUpperCase()}${metodosTxt.slice(1)} · solo personas invitadas` }
+      ];
+      $('#pg-ajustes-install').innerHTML = filas.map((f) => `
+        <div class="pg-ajustes-dl-row">
+          <span class="list-icon">${A.icon(f.icon)}</span>
+          <div class="pg-ajustes-dl-text"><span class="pg-ajustes-dl-label">${A.esc(f.label)}</span><span class="pg-ajustes-dl-value">${A.esc(f.value)}</span></div>
+          ${f.suya ? '<span class="chip chip-sage no-dot">En su cuenta</span>' : ''}
+        </div>`).join('');
+    }
+
+    const mant = inst.mantenimiento;
+    const usado = Math.min(100, Math.round((mant.horasUsadas / mant.horasMes) * 100));
+    $('#pg-ajustes-mant').innerHTML = `
+      <div class="pg-ajustes-kv"><span>Plan</span><b>${A.esc(mant.plan)}</b></div>
+      <div class="pg-ajustes-kv"><span>Horas incluidas</span><b class="tnum">${horas(mant.horasMes)} h al mes</b></div>
+      <div class="pg-ajustes-hours">
+        <div class="pg-ajustes-hours-top"><span>Horas usadas este mes</span><b>${horas(mant.horasUsadas)} <small>de ${horas(mant.horasMes)} h</small></b></div>
+        <div class="progress-track mt-8" role="progressbar" aria-label="Horas usadas este mes" aria-valuemin="0" aria-valuemax="${mant.horasMes}" aria-valuenow="${mant.horasUsadas}"><div class="progress-fill" style="width:${usado}%"></div></div>
+        <div class="cell-meta mt-8">Quedan ${horas(Math.max(0, mant.horasMes - mant.horasUsadas))} h · ${A.pct(usado)} usado</div>
+      </div>
+      <div class="pg-ajustes-kv"><span>Renovación</span><b>${A.date(mant.renovacion, 'long')}</b></div>`;
+
+    $('#pg-ajustes-support').addEventListener('change', (e) => {
+      A.toast(e.target.checked ? 'recoBA puede acceder para mantenimiento' : 'Acceso de soporte revocado', e.target.checked ? 'shield' : 'lock');
+    });
+
+    renderTeam();
+    renderAvisos();
+    renderInstalacion();
+  })();
+</script>
+</body>
+</html>
