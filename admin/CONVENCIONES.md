@@ -2,8 +2,8 @@
 
 Maqueta navegable (HTML estático, sin backend) del **panel de administración** de la
 plataforma de seguimiento de recoBA. Es la cara del equipo: aquí se cargan obras,
-avances con fotos, gastos, contratos, inversores y cámaras. Lo que se carga aquí es lo
-que ve el inversor en el portal (`../index.html`, la demo ya publicada en
+avances con fotos, documentos, cámara, personas y números de cada obra. Lo que se carga
+aquí es lo que ve el inversor en el portal (`../index.html`, la demo ya publicada en
 `gestion.recoba.casa`). Esta carpeta se publicará en `gestion.recoba.casa/admin/`.
 
 Se usa para vender el producto a promotoras, constructoras, inmobiliarias y fondos en
@@ -12,20 +12,23 @@ acciones claras.
 
 ## Archivos y dueños
 
-| Archivo | Qué es | Quién lo toca |
-|---|---|---|
-| `assets/admin.css` | Estilos compartidos | **Nadie** (solo el coordinador) |
-| `assets/admin.js` | Shell y utilidades (`window.Admin`) | **Nadie** (solo el coordinador) |
-| `assets/data.js` | Datos de demostración (`window.RECOBA_DATA`) | **Nadie** (solo el coordinador) |
-| `_plantilla.html` | Plantilla de página: copiarla como base | Nadie |
-| `index.html` | Resumen | Agente «resumen» |
-| `obras.html` + `obra.html` | Lista de obras y detalle de obra | Agente «obras» |
-| `gastos.html` | Presupuesto y gastos | Agente «gastos» |
-| `documentos.html` | Contratos y documentos | Agente «documentos» |
-| `inversores.html` | Inversores, participaciones y distribuciones | Agente «inversores» |
-| `camaras.html` | Visor de cámaras | Agente «cámaras» |
-| `ajustes.html` | Marca, usuarios y perfiles, acceso, avisos, instalación | Agente «ajustes» |
-| `movil.html` | Carga desde el móvil (perfil Obra) | Agente «móvil» |
+| Archivo | Qué es |
+|---|---|
+| `assets/admin.css` | Estilos compartidos |
+| `assets/admin.js` | Shell y utilidades (`window.Admin`) |
+| `assets/data.js` | Datos de demostración (`window.RECOBA_DATA`) |
+| `_plantilla.html` | Plantilla de página |
+| `index.html` | **Obras**: portada con la lista de obras y lo que espera respuesta |
+| `obra.html` | **La obra**: bandeja de correo y pestañas de avances, documentos, cámara, personas y números |
+| `ajustes.html` | Marca, equipo interno, acceso, avisos e instalación |
+| `movil.html` | Carga desde el móvil (perfil Obra) |
+
+**Concepto (12-sep-2026):** la unidad es la obra. Todo lo de una obra vive dentro
+de esa obra; no hay módulos globales de gastos, documentos, inversores ni cámaras.
+El panel no compite con el sistema de gestión del cliente: recoge lo que ya circula
+(cada obra tiene su dirección de correo, `obra.email`, y su bandeja en `D.bandeja`)
+y se lo muestra al inversor. Los números van en versión simple: partidas grandes,
+sin factura por factura.
 
 Cada agente escribe **solo su archivo**. Si necesita algo que no existe en los
 compartidos, lo resuelve dentro de su página y lo menciona en su informe final.
@@ -34,9 +37,8 @@ compartidos, lo resuelve dentro de su página y lo menciona en su informe final.
 
 Partir de `_plantilla.html`:
 
-- `<body data-page="…">` con uno de estos valores: `resumen`, `obras`, `obra`, `gastos`,
-  `documentos`, `inversores`, `camaras`, `movil` o `ajustes`. Marca la sección activa y
-  la ruta de la barra superior.
+- `<body data-page="…">` con uno de estos valores: `obras`, `obra`, `movil` o `ajustes`.
+  Marca la sección activa y la ruta de la barra superior.
 - Mantener `#sidebar`, `#topbar` y `main.content` (el shell los rellena solo).
 - Scripts al final del `<body>`, en este orden: `assets/data.js`, `assets/admin.js` y
   después el script de la página.
@@ -109,7 +111,9 @@ enormes ni efectos llamativos; la estética es la del portal: cálida, editorial
 
 Obras: `ayacucho` (Ayacucho 1400, **en obra**, la protagonista), `guemes` (Güemes 3800,
 en renta), `junin` y `aguirre` (en estudio, con oportunidad abierta a inversión).
-Hay además `partidas`, `gastos` (Ayacucho completo), `avances` (con un **borrador** de
+Cada obra tiene `email` (su dirección de correo) y entradas en `bandeja` (lo reenviado
+que espera revisión). Hay además `partidas`, `gastos` (Ayacucho completo, hoy solo se usa
+para totales: el panel base no lleva lista de gastos), `avances` (con un **borrador** de
 Carlos R. pendiente de publicar), `documentos`, `inversores`, `participaciones`,
 `compromisos`, `distribuciones`, `camaras`, `tiposSenal`, `capturas`,
 `responsabilidadCamaras`, `equipo`, `perfiles`, `permisos`, `alertas`, `actividad` y `avisos`.

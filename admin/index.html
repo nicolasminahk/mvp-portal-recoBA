@@ -4,468 +4,568 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Resumen · Administración recoBA</title>
+<title>Obras · Administración recoBA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="assets/admin.css">
 <style>
-  /* ============ Resumen · estilos propios (prefijo .pg-resumen-) ============ */
-  .pg-resumen-head .page-actions { flex-shrink: 0; }
-  .pg-resumen-cuerpo { margin-top: 24px; }
-  .stack.pg-resumen-col { gap: 28px; min-width: 0; }
-  .stack.pg-resumen-side { gap: 20px; min-width: 0; }
-  .card-body.pg-resumen-lista { padding-top: 4px; padding-bottom: 6px; }
-  .pg-resumen-bloque-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-  .pg-resumen-bloque-head h2 { font-size: 17px; }
-  .pg-resumen-bloque-head .btn-text { margin-right: -6px; }
+  /* ============ Obras · estilos propios (prefijo .pg-obras-) ============ */
 
-  /* Requiere atención */
-  .list-item.pg-resumen-alerta { gap: 14px; padding: 14px 0; overflow: hidden; }
-  .pg-resumen-alerta .list-title { line-height: 1.35; }
-  .pg-resumen-alerta-texto { margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
-  .pg-resumen-alerta-acciones { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-  .btn.pg-resumen-hecho { background: transparent; color: var(--ink-mute); padding-left: 9px; padding-right: 9px; }
-  .btn.pg-resumen-hecho:hover { background: var(--sand); color: var(--ink); }
-  .btn.pg-resumen-hecho:disabled { opacity: 1; cursor: default; }
-  .list-item.pg-resumen-saliendo { opacity: 0; padding-top: 0; padding-bottom: 0; border-bottom-color: transparent; transition: height .28s ease, padding .28s ease, opacity .16s ease, border-color .28s ease; }
-  .pg-resumen-vacio { padding: 28px 12px 24px; }
-  .pg-resumen-vacio .ico { color: var(--sage); }
-  .pg-resumen-vacio .strong { color: var(--ink); }
-  .pg-resumen-vacio p + p { margin-top: 2px; font-size: 13px; }
-  .pg-resumen-avisos-vacio { padding: 8px 10px 12px; font-size: 12.5px; color: var(--ink-mute); }
+  /* ---------- Métricas ---------- */
+  .stats-grid.pg-obras-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-  /* Obras */
-  .pg-resumen-obras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-  .card.pg-resumen-obra { display: flex; flex-direction: column; overflow: hidden; transition: border-color .18s ease, box-shadow .18s ease; }
-  .card.pg-resumen-obra:hover { border-color: var(--line-strong); box-shadow: 0 10px 26px rgba(28,35,49,.08); }
-  .card.pg-resumen-obra:focus-visible { border-radius: var(--radius); }
-  .thumb.pg-resumen-foto { aspect-ratio: auto; height: 120px; border-radius: 0; padding: 10px 12px; }
-  .pg-resumen-foto span { font-size: 11.5px; padding: 4px 10px; }
-  .pg-resumen-foto-aviso { position: absolute; top: 10px; right: 10px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: 999px; background: rgba(255,253,249,.94); color: var(--ink); font-size: 11px; font-weight: 600; font-style: normal; line-height: 1.45; }
-  .pg-resumen-foto-aviso::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
-  .pg-resumen-obra-cuerpo { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 16px 18px 14px; }
-  .pg-resumen-obra-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-  .pg-resumen-obra-titulo { min-width: 0; }
-  .pg-resumen-obra-titulo h3 { font-size: 18px; line-height: 1.2; }
-  .pg-resumen-obra-titulo p { margin-top: 2px; font-size: 13px; color: var(--ink-mute); }
-  .pg-resumen-fila { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 10px; margin-bottom: 7px; font-size: 12.5px; color: var(--ink-soft); }
-  .pg-resumen-fila b { color: var(--ink); font-weight: 600; }
-  .progress-fill.pg-resumen-fill-oro { background: linear-gradient(90deg, #ddc596, var(--gold)); }
-  .pg-resumen-datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: end; }
-  .pg-resumen-dato-label { font-size: 11.5px; font-weight: 600; color: var(--ink-mute); }
-  .pg-resumen-dato-valor { margin-top: 1px; font-family: var(--serif); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .pg-resumen-dato-valor small { margin-left: 4px; font-family: var(--sans); font-size: 11.5px; font-weight: 500; color: var(--ink-mute); }
-  .pg-resumen-obra-pie { margin-top: auto; display: flex; align-items: center; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
-  .pg-resumen-pie-icono { width: 30px; height: 30px; flex-shrink: 0; display: grid; place-items: center; border-radius: 8px; background: var(--sand); color: var(--copper-dark); }
-  .pg-resumen-pie-icono .ico { width: 15px; height: 15px; }
-  .pg-resumen-pie-main { flex: 1; min-width: 0; }
-  .pg-resumen-pie-fila { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 10px; font-size: 11.5px; font-weight: 600; color: var(--ink-mute); }
-  .pg-resumen-pie-fecha { color: var(--ink-soft); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .pg-resumen-pie-valor { margin-top: 1px; font-size: 13px; font-weight: 600; color: var(--ink); }
-  .pg-resumen-obra-pie > .pg-resumen-flecha { width: 16px; height: 16px; color: var(--ink-mute); transition: transform .18s ease, color .18s ease; }
-  .pg-resumen-obra:hover .pg-resumen-flecha { color: var(--copper); transform: translateX(2px); }
-  .pg-resumen-quedan-aviso { color: var(--copper-dark); }
+  /* ---------- Requiere atención ---------- */
+  .pg-obras-atencion { margin-top: 18px; }
+  .pg-obras-atencion .card-head { padding: 13px 18px; }
+  .pg-obras-atencion .card-head h2 { font-size: 16px; }
+  .pg-obras-avisos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px 6px; padding: 8px; }
+  .pg-obras-aviso { display: flex; align-items: center; gap: 11px; min-width: 0; padding: 8px 10px; border-radius: 10px; transition: background .15s ease; }
+  .pg-obras-aviso:hover { background: var(--sand); }
+  .pg-obras-aviso .list-icon { width: 30px; height: 30px; border-radius: 9px; }
+  .pg-obras-aviso .list-icon .ico { width: 15px; height: 15px; }
+  .pg-obras-aviso-main { display: block; flex: 1; min-width: 0; }
+  .pg-obras-aviso-t { display: block; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-obras-aviso:hover .pg-obras-aviso-t { color: var(--copper-dark); }
+  .pg-obras-aviso-m { display: block; margin-top: 1px; font-size: 12px; color: var(--ink-mute); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-obras-plazo { flex-shrink: 0; font-size: 11.5px; font-weight: 600; color: var(--ink-mute); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .pg-obras-urge { color: var(--copper-dark); }
+  .pg-obras-mas { padding: 2px 18px 12px; font-size: 12px; color: var(--ink-mute); }
+  .pg-obras-aldia { display: flex; align-items: center; gap: 12px; padding: 16px 18px; }
+  .pg-obras-aldia .list-icon { flex-shrink: 0; }
 
-  /* Próximos vencimientos */
-  .list-item.pg-resumen-venc-item { gap: 12px; }
-  .pg-resumen-venc-item .list-title { text-wrap: pretty; }
-  .pg-resumen-venc-item:hover .list-title { color: var(--copper-dark); }
-  .pg-resumen-dia { width: 42px; height: 44px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; background: var(--sand); color: var(--ink); line-height: 1; }
-  .pg-resumen-dia b { font-family: var(--serif); font-size: 17px; font-weight: 600; font-variant-numeric: tabular-nums; }
-  .pg-resumen-dia small { margin-top: 3px; font-size: 9.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute); }
-  .pg-resumen-aviso .pg-resumen-dia { background: rgba(196,106,74,.11); color: var(--copper-dark); }
-  .pg-resumen-aviso .pg-resumen-dia small { color: var(--copper-dark); }
-  .pg-resumen-quedan { font-size: 12px; font-weight: 600; color: var(--ink-mute); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .pg-resumen-aviso .pg-resumen-quedan { color: var(--copper-dark); }
+  /* ---------- Filtros ---------- */
+  .pg-obras-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 26px 0 14px; }
+  .pg-obras-seg-wrap { max-width: 100%; overflow-x: auto; }
+  .pg-obras-seg button { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+  .pg-obras-n { font-size: 11px; font-weight: 700; line-height: 17px; padding: 0 6px; border-radius: 999px; color: var(--ink-mute); background: rgba(28,35,49,.06); font-variant-numeric: tabular-nums; }
+  .pg-obras-seg button.active .pg-obras-n { color: var(--copper-dark); background: rgba(196,106,74,.13); }
+  .pg-obras-search { display: flex; align-items: center; gap: 8px; width: 290px; max-width: 100%; height: 36px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 10px; background: #fff; color: var(--ink-mute); transition: border-color .15s ease, box-shadow .15s ease; }
+  .pg-obras-search:focus-within { border-color: var(--copper); box-shadow: 0 0 0 3px rgba(196,106,74,.16); }
+  .pg-obras-search .ico { width: 16px; height: 16px; }
+  .pg-obras-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 13.5px; color: var(--ink); }
 
-  /* Actividad reciente */
-  .list-item.pg-resumen-act { align-items: flex-start; gap: 11px; padding: 11px 0; }
-  .pg-resumen-act .avatar { margin-top: 1px; }
-  .pg-resumen-act-texto { font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
-  .pg-resumen-act-texto .strong { color: var(--ink); }
-  .pg-resumen-act-meta { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
-  .pg-resumen-act-meta .ico { width: 13px; height: 13px; }
+  /* ---------- Tarjetas de obra ---------- */
+  .pg-obras-tarjetas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .card.pg-obras-tarjeta { display: flex; flex-direction: column; overflow: hidden; transition: border-color .18s ease, box-shadow .18s ease; }
+  .card.pg-obras-tarjeta:hover { border-color: var(--line-strong); box-shadow: 0 10px 26px rgba(28,35,49,.08); }
+  .thumb.pg-obras-foto { aspect-ratio: auto; height: 116px; border-radius: 0; padding: 10px 12px; background-size: cover; background-position: center; }
+  .pg-obras-foto span { font-size: 11.5px; padding: 4px 10px; }
+  .pg-obras-cuerpo { flex: 1; display: flex; flex-direction: column; gap: 13px; padding: 15px 18px 13px; }
+  .pg-obras-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .pg-obras-titulo { min-width: 0; }
+  .pg-obras-titulo h3 { font-size: 18px; line-height: 1.2; }
+  .pg-obras-titulo p { margin-top: 2px; font-size: 12.5px; color: var(--ink-mute); }
+  .pg-obras-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pg-obras-metricas { display: flex; flex-direction: column; gap: 11px; }
+  .pg-obras-fila { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1px 10px; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-obras-fila b { color: var(--ink); font-weight: 600; }
+  .pg-obras-fila + .progress-track, .pg-obras-fila + .mini-bar { margin-top: 6px; }
+  .pg-obras-metricas .mini-bar { height: 8px; min-width: 0; }
+  .pg-obras-subfila { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 1px 10px; margin-top: 5px; font-size: 11.5px; color: var(--ink-mute); font-variant-numeric: tabular-nums; }
+  .pg-obras-sin { font-size: 12.5px; }
+  .pg-obras-pie { margin-top: auto; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .pg-obras-personas { display: flex; align-items: center; gap: 9px; min-width: 0; font-size: 12.5px; color: var(--ink-soft); }
+  .pg-obras-avatares { display: flex; flex-shrink: 0; }
+  .pg-obras-avatares .avatar { border: 2px solid var(--paper-card); margin-right: -7px; }
+  .pg-obras-avatares .avatar:last-child { margin-right: 0; }
+  .pg-obras-avatares-mas { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--sand); color: var(--ink-soft); font-size: 10.5px; font-weight: 700; border: 2px solid var(--paper-card); }
+  .pg-obras-noavatar { width: 26px; height: 26px; border-radius: 50%; border: 1.5px dashed var(--line-strong); display: grid; place-items: center; color: var(--ink-mute); flex-shrink: 0; }
+  .pg-obras-noavatar .ico { width: 13px; height: 13px; }
+  .pg-obras-ultima { display: flex; align-items: center; gap: 6px; margin-left: auto; font-size: 12px; color: var(--ink-mute); white-space: nowrap; }
+  .pg-obras-ultima b { color: var(--ink-soft); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ico.pg-obras-flecha { width: 15px; height: 15px; color: var(--ink-mute); transition: transform .18s ease, color .18s ease; }
+  .pg-obras-tarjeta:hover .pg-obras-flecha { color: var(--copper); transform: translateX(2px); }
+  .pg-obras-recien { animation: pg-obras-flash 2.8s ease; }
+  @keyframes pg-obras-flash { 0%, 35% { border-color: var(--copper-tint); box-shadow: 0 0 0 3px rgba(196,106,74,.12); } 100% { border-color: var(--line); box-shadow: none; } }
+  .card.pg-obras-vacio { grid-column: 1 / -1; }
+  .pg-obras-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 12px; margin-top: 14px; font-size: 12.5px; color: var(--ink-mute); }
 
-  /* Adaptación */
-  @media (max-width: 1180px) and (min-width: 861px) {
-    .stack.pg-resumen-side { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  /* ---------- Modal ---------- */
+  .pg-obras-grid3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px 16px; }
+  .pg-obras-grid3.pg-obras-eq { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .pg-obras-files:empty { display: none; }
+
+  /* ---------- Adaptación ---------- */
+  @media (max-width: 960px) and (min-width: 861px) {
+    .pg-obras-avisos, .pg-obras-tarjetas { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 1000px) and (min-width: 861px) {
-    .page-head.pg-resumen-head { flex-direction: column; align-items: flex-start; }
+    .page-head.pg-obras-head { flex-direction: column; align-items: flex-start; }
   }
   @media (max-width: 860px) {
-    .stats-grid.pg-resumen-stats { gap: 8px; }
-    .pg-resumen-stats .stat-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label valor" "sub valor"; align-items: center; column-gap: 14px; padding: 13px 16px; }
-    .pg-resumen-stats .stat-label { grid-area: label; margin-bottom: 0; }
-    .pg-resumen-stats .stat-label .ico { display: none; }
-    .pg-resumen-stats .stat-value { grid-area: valor; font-size: 23px; text-align: right; }
-    .pg-resumen-stats .stat-sub { grid-area: sub; margin-top: 1px; }
+    .stats-grid.pg-obras-stats { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .pg-obras-stats .stat-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "label valor" "sub valor"; align-items: center; column-gap: 14px; padding: 13px 16px; }
+    .pg-obras-stats .stat-label { grid-area: label; margin-bottom: 0; }
+    .pg-obras-stats .stat-label .ico { display: none; }
+    .pg-obras-stats .stat-value { grid-area: valor; font-size: 23px; text-align: right; }
+    .pg-obras-stats .stat-sub { grid-area: sub; margin-top: 1px; }
+    .pg-obras-search { width: 100%; }
+    .pg-obras-seg-wrap { width: 100%; }
+    .pg-obras-seg { display: flex; width: 100%; }
+    .pg-obras-seg button { flex: 1; justify-content: center; padding: 6px 4px; }
+    .pg-obras-n { display: none; }
   }
-  @media (max-width: 760px) {
-    .list-item.pg-resumen-alerta { flex-wrap: wrap; row-gap: 10px; }
-    .pg-resumen-alerta .list-main { flex: 1 1 calc(100% - 48px); }
-    .pg-resumen-alerta-acciones { width: 100%; padding-left: 48px; flex-wrap: wrap; row-gap: 6px; }
-  }
-  @media (max-width: 700px) {
-    .pg-resumen-obras { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 480px) {
-    .pg-resumen-alerta-acciones { padding-left: 0; }
+  @media (max-width: 720px) {
+    .pg-obras-avisos, .pg-obras-tarjetas { grid-template-columns: minmax(0, 1fr); }
+    .pg-obras-grid3, .pg-obras-grid3.pg-obras-eq { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pg-obras-grid3 > :first-child { grid-column: 1 / -1; }
+    .pg-obras-ultima { margin-left: 0; }
   }
 </style>
 </head>
-<body data-page="resumen">
+<body data-page="obras">
 <div class="app">
   <aside class="sidebar" id="sidebar"></aside>
   <div class="main">
     <header class="topbar" id="topbar"></header>
     <main class="content" id="content">
 
-      <div class="page-head pg-resumen-head">
+      <div class="page-head pg-obras-head">
         <div>
-          <p class="eyebrow" id="pg-resumen-fecha">Resumen</p>
-          <h1 id="pg-resumen-saludo">Buenos días</h1>
-          <p class="page-sub">Estado de las obras, el dinero y los inversores de un vistazo.</p>
+          <p class="eyebrow">Gestión</p>
+          <h1>Obras</h1>
+          <p class="page-sub">Cada obra, con su seguimiento, sus documentos y sus inversores.</p>
         </div>
         <div class="page-actions">
-          <a class="btn btn-ghost" href="inversores.html"><span data-icon="mail"></span>Invitar inversor</a>
-          <a class="btn btn-ink" href="gastos.html?obra=ayacucho"><span data-icon="receipt"></span>Registrar gasto</a>
+          <button class="btn btn-copper" type="button" id="pg-obras-nueva" data-open-modal="modal-nueva-obra"><span data-icon="plus"></span>Nueva obra</button>
         </div>
       </div>
 
-      <div class="stats-grid pg-resumen-stats" id="pg-resumen-stats"></div>
+      <div class="stats-grid pg-obras-stats" id="pg-obras-stats"></div>
 
-      <div class="grid-main-side pg-resumen-cuerpo">
-        <div class="stack pg-resumen-col">
-          <section class="card" aria-labelledby="pg-resumen-atencion-titulo">
-            <div class="card-head">
-              <div>
-                <h2 id="pg-resumen-atencion-titulo" tabindex="-1">Requiere atención</h2>
-                <p class="card-sub">Avisos de obras, gastos e inversores</p>
-              </div>
-              <span id="pg-resumen-atencion-estado"></span>
-            </div>
-            <div class="card-body pg-resumen-lista" id="pg-resumen-atencion"></div>
-          </section>
-
-          <section aria-labelledby="pg-resumen-obras-titulo">
-            <div class="pg-resumen-bloque-head">
-              <h2 id="pg-resumen-obras-titulo">Obras</h2>
-              <a class="btn btn-text btn-sm" href="obras.html">Ver todas<span data-icon="arrow-right"></span></a>
-            </div>
-            <div class="pg-resumen-obras" id="pg-resumen-obras"></div>
-          </section>
+      <section class="card pg-obras-atencion" aria-labelledby="pg-obras-atencion-titulo">
+        <div class="card-head">
+          <div>
+            <h2 id="pg-obras-atencion-titulo">Requiere atención</h2>
+            <p class="card-sub">Lo que espera respuesta dentro de una obra</p>
+          </div>
+          <span id="pg-obras-atencion-chip"></span>
         </div>
+        <div id="pg-obras-atencion"></div>
+      </section>
 
-        <div class="stack pg-resumen-side">
-          <section class="card" aria-labelledby="pg-resumen-venc-titulo">
-            <div class="card-head">
-              <div>
-                <h2 id="pg-resumen-venc-titulo">Próximos vencimientos</h2>
-                <p class="card-sub">Documentos, distribuciones y cierres</p>
-              </div>
-            </div>
-            <div class="card-body pg-resumen-lista" id="pg-resumen-venc"></div>
-          </section>
-
-          <section class="card" aria-labelledby="pg-resumen-act-titulo">
-            <div class="card-head">
-              <div>
-                <h2 id="pg-resumen-act-titulo">Actividad reciente</h2>
-                <p class="card-sub">Equipo e inversores</p>
-              </div>
-            </div>
-            <div class="card-body pg-resumen-lista" id="pg-resumen-actividad"></div>
-          </section>
+      <div class="pg-obras-toolbar">
+        <div class="pg-obras-seg-wrap">
+          <div class="segmented pg-obras-seg" id="pg-obras-seg" data-segmented role="group" aria-label="Filtrar por estado">
+            <button type="button" class="active" aria-pressed="true" data-value="todas">Todas <span class="pg-obras-n" data-n="todas"></span></button>
+            <button type="button" aria-pressed="false" data-value="En obra">En obra <span class="pg-obras-n" data-n="En obra"></span></button>
+            <button type="button" aria-pressed="false" data-value="En renta">En renta <span class="pg-obras-n" data-n="En renta"></span></button>
+            <button type="button" aria-pressed="false" data-value="En estudio">En estudio <span class="pg-obras-n" data-n="En estudio"></span></button>
+          </div>
         </div>
+        <label class="pg-obras-search"><span data-icon="search"></span><input type="search" id="pg-obras-search" placeholder="Buscar por nombre o barrio" aria-label="Buscar obra por nombre o barrio" autocomplete="off"></label>
       </div>
+
+      <div class="pg-obras-tarjetas" id="pg-obras-lista"></div>
+      <p class="pg-obras-foot"><span id="pg-obras-total"></span><span id="pg-obras-fecha"></span></p>
 
     </main>
+  </div>
+</div>
+
+<!-- Modal: nueva obra -->
+<div class="modal-overlay" id="modal-nueva-obra" aria-hidden="true">
+  <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="modal-nueva-obra-titulo">
+    <form data-demo="Obra creada" id="pg-form-nueva" autocomplete="off">
+      <div class="modal-head">
+        <div>
+          <h3 id="modal-nueva-obra-titulo">Nueva obra</h3>
+          <p class="modal-desc">Dar de alta la obra para cargar avances, gastos, documentos e inversores.</p>
+        </div>
+        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-grid">
+          <label class="field"><span class="label">Nombre</span><input class="input" name="nombre" required placeholder="Ej.: Charcas 2900"></label>
+          <label class="field"><span class="label">Barrio o dirección</span><input class="input" name="barrio" placeholder="Ej.: Palermo"></label>
+          <div class="span-2 pg-obras-grid3">
+            <label class="field"><span class="label">Ciudad</span><input class="input" name="ciudad" value="Buenos Aires"></label>
+            <label class="field"><span class="label">m²</span><input class="input" name="m2" inputmode="numeric" placeholder="50"></label>
+            <label class="field"><span class="label">Ambientes</span>
+              <select class="select" name="ambientes"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select>
+            </label>
+          </div>
+          <div class="span-2 pg-obras-grid3 pg-obras-eq">
+            <label class="field"><span class="label">Fase inicial</span><select class="select" name="fase" id="pg-nueva-fase"></select></label>
+            <label class="field"><span class="label">Responsable de obra</span><select class="select" name="responsable" id="pg-nueva-resp"></select></label>
+            <label class="field"><span class="label">Presupuesto inicial</span><span class="input-affix"><span>US$</span><input name="presupuesto" inputmode="numeric" placeholder="120.000"></span></label>
+          </div>
+          <div class="field span-2">
+            <span class="label">Portada</span>
+            <div class="dropzone" id="pg-nueva-drop" data-accept="image/*" data-multiple="false"><span data-icon="image"></span><b>Arrastrar una foto aquí</b> o hacer clic para seleccionarla</div>
+            <div class="file-list pg-obras-files" id="pg-nueva-files"></div>
+            <span class="hint">Identifica la obra en esta lista y en el portal del inversor.</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Crear obra</button>
+      </div>
+    </form>
   </div>
 </div>
 
 <script src="assets/data.js"></script>
 <script src="assets/admin.js"></script>
 <script>
-  (function () {
-    'use strict';
-    const A = window.Admin;
-    if (!A) return;
-    const D = A.data;
-    const HOY = D.instalacion.hoy;
-    const [HOY_Y, HOY_M, HOY_D] = HOY.split('-').map(Number);
-    const DIAS_AVISO = 60;
-    const $ = (id) => document.getElementById(id);
-    const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
-    const sinMovimiento = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+(function () {
+  'use strict';
+  const A = window.Admin;
+  if (!A) return;
+  const D = A.data;
+  const $ = (s) => document.querySelector(s);
+  const norm = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const plural = (n, uno, varios) => `${A.group(n)} ${n === 1 ? uno : varios}`;
+  const sum = (arr, fn) => arr.reduce((s, x) => s + (fn(x) || 0), 0);
+  const masReciente = (arr) => arr.slice().sort((a, b) => (a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : 0))[0];
 
-    /* ---------- Encabezado ---------- */
-    const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-    const diaSemana = DIAS_SEMANA[new Date(HOY_Y, HOY_M - 1, HOY_D).getDay()];
-    $('pg-resumen-fecha').textContent = `${diaSemana.charAt(0).toUpperCase()}${diaSemana.slice(1)}, ${A.date(HOY, 'long')}`;
-    $('pg-resumen-saludo').textContent = `Buenos días, ${D.usuario.nombre.split(' ')[0]}`;
+  const DIAS_AVISO = 60;   // solo se avisa de lo que vence dentro de dos meses
+  const DIAS_URGE = 20;    // por debajo de esto, el plazo se marca en cobre
+  const MAX_AVISOS = 5;
 
-    /* ---------- Métricas ---------- */
-    function statCard(s) {
-      return `<div class="stat-card">
-        <div class="stat-label"><span>${A.esc(s.label)}</span>${A.icon(s.icono)}</div>
-        <div class="stat-value${s.accent ? ' accent' : ''}">${A.esc(s.valor)}</div>
-        <div class="stat-sub${s.tono ? ' ' + s.tono : ''}">${A.esc(s.sub)}</div>
-      </div>`;
-    }
+  let filtro = 'todas';
+  let busqueda = '';
+  let recienCreada = null;
+  let seq = 0;
+  let portadaPendiente = null;
+  const portadas = {};
 
-    function renderStats() {
-      const enCurso = D.obras.filter((o) => o.estado === 'En obra' || o.estado === 'En renta').length;
-      const enEstudio = D.obras.filter((o) => o.estado === 'En estudio').length;
+  const borradores = (id) => A.avances(id).filter((a) => a.estado === 'borrador');
+  const publicados = (id) => A.avances(id).filter((a) => a.estado === 'publicado');
+  const bandeja = (id) => (D.bandeja || []).filter((b) => b.obra === id && b.estado === 'pendiente');
+  const hrefObra = (o, hash) => (o.nueva ? '#' : `obra.html?id=${encodeURIComponent(o.id)}${hash || ''}`);
 
-      const capital = D.participaciones.reduce((s, p) => s + p.monto, 0);
-      const nInversores = new Set(D.participaciones.map((p) => p.inversor)).size;
-      const nObras = new Set(D.participaciones.map((p) => p.obra)).size;
+  function textoPlazo(dias) {
+    if (dias <= 0) return 'Hoy';
+    if (dias === 1) return 'Mañana';
+    return `${A.group(dias)} días`;
+  }
+  function textoCierre(dias) {
+    if (dias < 0) return 'Plazo vencido';
+    if (dias === 0) return 'Cierra hoy';
+    if (dias === 1) return 'Cierra mañana';
+    return `Cierra en ${A.group(dias)} días`;
+  }
 
-      // Mes anterior a la fecha de referencia
-      const mesRef = new Date(HOY_Y, HOY_M - 2, 1);
-      const mesIso = `${mesRef.getFullYear()}-${String(mesRef.getMonth() + 1).padStart(2, '0')}`;
-      const mesNombre = A.date(`${mesIso}-01`, 'long').split(' de ')[1];
-      const gastosMes = D.gastos.filter((g) => g.fecha.slice(0, 7) === mesIso);
-      const sinComprobante = gastosMes.filter((g) => !g.comprobante).length;
-      let gastoSub = 'Sin gastos registrados';
-      let gastoTono = '';
-      if (gastosMes.length) {
-        const base = plural(gastosMes.length, 'gasto', 'gastos');
-        if (sinComprobante) {
-          gastoSub = `${base} · ${A.group(sinComprobante)} sin comprobante`;
-          gastoTono = 'warn';
-        } else {
-          gastoSub = `${base}, ${gastosMes.length === 1 ? 'con' : 'todos con'} comprobante`;
-          gastoTono = 'ok';
-        }
+  /* ---------- Cabecera de métricas ---------- */
+  function renderStats() {
+    const enCurso = D.obras.filter((o) => o.estado === 'En obra' || o.estado === 'En renta').length;
+    const enEstudio = D.obras.filter((o) => o.estado === 'En estudio').length;
+
+    const parts = D.participaciones.filter((p) => A.obra(p.obra));
+    const nInversores = new Set(parts.map((p) => p.inversor)).size;
+    const nObrasConCapital = new Set(parts.map((p) => p.obra)).size;
+
+    const nBorradores = D.avances.filter((a) => a.estado === 'borrador' && A.obra(a.obra)).length;
+    const nBandeja = (D.bandeja || []).filter((b) => b.estado === 'pendiente' && A.obra(b.obra)).length;
+    const pendientes = nBorradores + nBandeja;
+    const detalle = [];
+    if (nBorradores) detalle.push(plural(nBorradores, 'avance por publicar', 'avances por publicar'));
+    if (nBandeja) detalle.push(plural(nBandeja, 'entrada sin revisar', 'entradas sin revisar'));
+
+    const cards = [
+      { label: 'Obras en curso', icono: 'building', valor: A.group(enCurso),
+        sub: enEstudio ? `${plural(enEstudio, 'obra', 'obras')} más en estudio` : 'Ninguna en estudio' },
+      { label: 'Capital de inversores', icono: 'wallet', valor: A.money(sum(parts, (p) => p.monto)), accent: true,
+        sub: `${plural(nInversores, 'inversor', 'inversores')} en ${plural(nObrasConCapital, 'obra', 'obras')}` },
+      { label: 'Pendientes de revisar', icono: 'bell', valor: A.group(pendientes), accent: pendientes > 0,
+        sub: detalle.length ? detalle.join(' · ') : 'Todo al día', tono: pendientes ? '' : 'ok' }
+    ];
+    $('#pg-obras-stats').innerHTML = cards.map((c) => `<div class="stat-card">
+      <div class="stat-label"><span>${A.esc(c.label)}</span>${A.icon(c.icono)}</div>
+      <div class="stat-value${c.accent ? ' accent' : ''}">${A.esc(c.valor)}</div>
+      <div class="stat-sub${c.tono ? ' ' + c.tono : ''}">${A.esc(c.sub)}</div>
+    </div>`).join('');
+  }
+
+  /* ---------- Requiere atención ---------- */
+  function avisos() {
+    const out = [];
+
+    D.obras.forEach((o) => {
+      const pend = borradores(o.id);
+      if (pend.length) {
+        const ult = masReciente(pend);
+        out.push({ orden: 0, fecha: ult.fecha, dias: 0, tono: 'tone-gold', icono: 'image', urge: true,
+          titulo: plural(pend.length, 'avance por publicar', 'avances por publicar'),
+          meta: `${o.nombre} · ${ult.titulo}`, plazo: A.ago(ult.fecha), href: hrefObra(o, '#diario') });
       }
-
-      const tareas = D.alertas.length;
-      const porObra = {};
-      D.alertas.forEach((a) => { if (a.obra) porObra[a.obra] = (porObra[a.obra] || 0) + 1; });
-      const masCarga = Object.keys(porObra).sort((a, b) => porObra[b] - porObra[a])[0];
-      const tareasSub = !tareas ? 'Todo al día' : masCarga ? `${A.group(porObra[masCarga])} en ${A.obra(masCarga).nombre}` : 'Sin obra asociada';
-
-      $('pg-resumen-stats').innerHTML = [
-        { label: 'Obras en curso', icono: 'building', valor: A.group(enCurso),
-          sub: enEstudio === 0 ? 'Ninguna en estudio' : enEstudio === 1 ? 'Otra más en estudio' : `Otras ${A.group(enEstudio)} en estudio` },
-        { label: 'Capital de inversores', icono: 'wallet', valor: A.money(capital), accent: true,
-          sub: `${plural(nInversores, 'inversor', 'inversores')} en ${plural(nObras, 'obra', 'obras')}` },
-        { label: `Gasto registrado en ${mesNombre}`, icono: 'receipt', valor: A.money(gastosMes.reduce((s, g) => s + g.importe, 0)),
-          sub: gastoSub, tono: gastoTono },
-        { label: 'Tareas pendientes', icono: 'bell', valor: A.group(tareas), sub: tareasSub, tono: tareas ? '' : 'ok' }
-      ].map(statCard).join('');
-    }
-
-    /* ---------- Requiere atención ---------- */
-    const TONOS = { gold: 'tone-gold', copper: 'tone-copper', sage: 'tone-sage', ink: 'tone-ink' };
-
-    function renderAtencion() {
-      const n = D.alertas.length;
-      $('pg-resumen-atencion-estado').innerHTML = n ? A.chip(plural(n, 'pendiente', 'pendientes'), 'chip-copper') : A.chip('Al día', 'chip-sage');
-      const box = $('pg-resumen-atencion');
-      if (!n) {
-        box.innerHTML = `<div class="empty pg-resumen-vacio">${A.icon('check')}<p class="strong">Todo al día</p><p>No quedan tareas pendientes.</p></div>`;
-        return;
+      const sinRevisar = bandeja(o.id);
+      if (sinRevisar.length) {
+        const ult = masReciente(sinRevisar);
+        out.push({ orden: 1, fecha: ult.fecha, dias: 0, tono: 'tone-copper', icono: 'mail', urge: false,
+          titulo: plural(sinRevisar.length, 'entrada sin revisar', 'entradas sin revisar'),
+          meta: `${o.nombre} · ${ult.asunto}`, plazo: A.ago(ult.fecha), href: hrefObra(o, '#bandeja') });
       }
-      box.innerHTML = `<div class="list">${D.alertas.map((a) => `
-        <div class="list-item pg-resumen-alerta">
-          <span class="list-icon ${TONOS[a.tono] || 'tone-ink'}">${A.icon(a.icono)}</span>
-          <div class="list-main">
-            <p class="list-title">${A.esc(a.titulo)}</p>
-            <p class="pg-resumen-alerta-texto">${A.esc(a.texto)}</p>
-          </div>
-          <div class="pg-resumen-alerta-acciones">
-            ${a.accion ? `<a class="btn btn-ghost btn-sm" href="${A.esc(a.accion.href)}">${A.esc(a.accion.label)}</a>` : ''}
-            <button class="btn btn-sm pg-resumen-hecho" type="button" data-hecho="${A.esc(a.id)}" aria-label="Marcar como hecho: ${A.esc(a.titulo)}">${A.icon('check')}Marcar como hecho</button>
-          </div>
-        </div>`).join('')}</div>`;
-    }
-
-    // Mantiene coherente el menú de avisos de la barra superior (el shell lo pinta una sola vez al cargar).
-    function sincronizarAvisos(alerta) {
-      const dd = document.getElementById('bell-dd');
-      if (!dd) return;
-      dd.querySelectorAll('.top-dd-item').forEach((item) => {
-        const b = item.querySelector('b');
-        if (b && b.textContent === alerta.titulo) item.remove();
-      });
-      const quedan = dd.querySelectorAll('.top-dd-item').length;
-      const cuenta = dd.querySelector('.top-dd-head span:last-child');
-      if (cuenta) cuenta.textContent = A.group(quedan);
-      const punto = document.querySelector('#bell-btn .dot');
-      if (punto) punto.hidden = quedan === 0;
-      if (!quedan && !dd.querySelector('.pg-resumen-avisos-vacio')) {
-        dd.insertAdjacentHTML('beforeend', '<p class="pg-resumen-avisos-vacio">No hay avisos pendientes.</p>');
-      }
-    }
-
-    $('pg-resumen-atencion').addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-hecho]');
-      if (!btn || btn.disabled) return;
-      const alerta = D.alertas.find((a) => a.id === btn.dataset.hecho);
-      if (!alerta) return;
-      const fila = btn.closest('.pg-resumen-alerta');
-      const teniaFoco = fila.contains(document.activeElement);
-      btn.disabled = true;
-      let cerrada = false;
-      const cerrar = () => {
-        if (cerrada) return;
-        cerrada = true;
-        const i = D.alertas.indexOf(alerta);
-        if (i > -1) D.alertas.splice(i, 1);
-        D.actividad.unshift({ fecha: HOY, quien: D.usuario.id, icono: 'check', texto: `marcó como hecha la tarea «${alerta.titulo}»` });
-        renderAtencion();
-        renderStats();
-        renderActividad();
-        sincronizarAvisos(alerta);
-        if (teniaFoco) $('pg-resumen-atencion-titulo').focus({ preventScroll: true });
-        A.toast(`Tarea «${alerta.titulo}» marcada como hecha`, 'check');
-      };
-      if (sinMovimiento) { cerrar(); return; }
-      fila.style.height = `${fila.offsetHeight}px`;
-      void fila.offsetHeight;
-      fila.classList.add('pg-resumen-saliendo');
-      fila.style.height = '0px';
-      fila.addEventListener('transitionend', (ev) => { if (ev.propertyName === 'height') cerrar(); });
-      setTimeout(cerrar, 450);
     });
 
-    /* ---------- Obras ---------- */
-    function progreso(valor, clase) {
-      const w = Math.max(0, Math.min(100, Math.round(valor)));
-      return `<div class="progress-track"><div class="progress-fill${clase ? ' ' + clase : ''}" style="width:${w}%"></div></div>`;
-    }
-    function metrica(label, valorHtml, barraHtml) {
-      return `<div><div class="pg-resumen-fila"><span>${A.esc(label)}</span><span class="tnum">${valorHtml}</span></div>${barraHtml}</div>`;
-    }
-    function datos(pares) {
-      return `<div class="pg-resumen-datos">${pares.map(([label, valor, sufijo]) => `<div><div class="pg-resumen-dato-label">${A.esc(label)}</div><div class="pg-resumen-dato-valor">${A.esc(valor)}${sufijo ? `<small>${A.esc(sufijo)}</small>` : ''}</div></div>`).join('')}</div>`;
-    }
-    function textoQuedan(dias) {
-      if (dias < 0) return 'Vencido';
-      if (dias === 0) return 'Hoy';
-      if (dias === 1) return 'Mañana';
-      return `${A.group(dias)} días`;
-    }
-    function pie(label, fecha, valorHtml) {
-      return `<div class="pg-resumen-obra-pie">
-        <span class="pg-resumen-pie-icono">${A.icon('calendar')}</span>
-        <div class="pg-resumen-pie-main">
-          <div class="pg-resumen-pie-fila"><span>${A.esc(label)}</span><span class="pg-resumen-pie-fecha">${A.esc(fecha)}</span></div>
-          <div class="pg-resumen-pie-valor">${valorHtml}</div>
-        </div>
-        ${A.icon('arrow-right', 'pg-resumen-flecha')}
+    D.documentos.forEach((d) => {
+      if (!d.vence) return;
+      const dias = A.daysUntil(d.vence);
+      if (dias < 0 || dias > DIAS_AVISO) return;
+      const o = A.obra(d.obra);
+      if (!o) return;
+      out.push({ orden: 2, fecha: d.vence, dias, tono: 'tone-ink', icono: 'file', urge: dias <= DIAS_URGE,
+        titulo: d.nombre, meta: `${o.nombre} · vence el ${A.date(d.vence)}`,
+        plazo: textoPlazo(dias), href: hrefObra(o, '#documentos') });
+    });
+
+    D.obras.forEach((o) => {
+      const op = o.oportunidad;
+      if (!op || !op.cierre) return;
+      const dias = A.daysUntil(op.cierre);
+      if (dias < 0 || dias > DIAS_AVISO) return;
+      const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
+      out.push({ orden: 2, fecha: op.cierre, dias, tono: 'tone-gold', icono: 'trend', urge: dias <= DIAS_URGE,
+        titulo: 'Cierre de la captación', meta: `${o.nombre} · ${A.pct(cubierto)} del objetivo cubierto`,
+        plazo: textoPlazo(dias), href: hrefObra(o) });
+    });
+
+    return out.sort((a, b) => (a.orden - b.orden) || (a.dias - b.dias) || (a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : 0));
+  }
+
+  function renderAtencion() {
+    const lista = avisos();
+    const box = $('#pg-obras-atencion');
+    const marca = $('#pg-obras-atencion-chip');
+
+    if (!lista.length) {
+      marca.innerHTML = A.chip('Al día', 'chip-sage');
+      box.innerHTML = `<div class="pg-obras-aldia">
+        <span class="list-icon tone-sage">${A.icon('check')}</span>
+        <span class="pg-obras-aviso-main">
+          <span class="pg-obras-aviso-t">Todo al día</span>
+          <span class="pg-obras-aviso-m">No quedan avances por publicar ni entradas sin revisar.</span>
+        </span>
       </div>`;
+      return;
     }
-    const pieHito = (o) => (o.proximoHito ? pie('Próximo hito', A.date(o.proximoHito.fecha, 'month'), A.esc(o.proximoHito.texto)) : '');
 
-    function tarjetaObra(o) {
-      let metricas = '';
-      let pieHtml = '';
-      if (o.estado === 'En obra') {
-        metricas = metrica('Avance de obra', `<b>${A.pct(o.avanceObra)}</b>`, progreso(o.avanceObra))
-          + metrica('Ejecutado', `<b>${A.money(o.ejecutado)}</b> de ${A.money(o.presupuesto)}`, A.bar(o.ejecutado, o.presupuesto));
-        pieHtml = pieHito(o);
-      } else if (o.estado === 'En renta') {
-        const distribuido = D.distribuciones
-          .filter((d) => d.obra === o.id && d.estado === 'Pagada' && d.total && Number(d.fecha.slice(0, 4)) === HOY_Y)
-          .reduce((s, d) => s + d.total, 0);
-        metricas = metrica('Ocupación del trimestre', `<b>${A.pct(o.ocupacionTrimestre)}</b>`, progreso(o.ocupacionTrimestre, 'sage'))
-          + datos([['Tarifa media', A.money(o.tarifaMediaNoche), 'por noche'], [`Distribuido en ${HOY_Y}`, A.money(distribuido)]]);
-        pieHtml = pieHito(o);
-      } else if (o.oportunidad) {
-        const op = o.oportunidad;
-        const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
-        const dias = A.daysUntil(op.cierre);
-        const quedan = dias > 1 ? `Quedan ${textoQuedan(dias)}` : dias < 0 ? 'Plazo vencido' : `Cierra ${textoQuedan(dias).toLowerCase()}`;
-        metricas = metrica('Objetivo cubierto', `<b>${A.pct(cubierto)}</b> de ${A.money(op.objetivo)}`, progreso(cubierto, 'pg-resumen-fill-oro'))
-          + datos([['Comprometido', A.money(op.comprometido)], ['Pendiente de cubrir', A.money(Math.max(0, op.objetivo - op.comprometido))]]);
-        pieHtml = pie('Cierre estimado', A.date(op.cierre), `<span class="${dias < DIAS_AVISO ? 'pg-resumen-quedan-aviso' : ''}">${A.esc(quedan)}</span>`);
+    marca.innerHTML = A.chip(plural(lista.length, 'aviso', 'avisos'), 'chip-copper');
+    const visibles = lista.slice(0, MAX_AVISOS);
+    const resto = lista.length - visibles.length;
+    box.innerHTML = `<div class="pg-obras-avisos">${visibles.map((a) => `
+      <a class="pg-obras-aviso" href="${A.esc(a.href)}">
+        <span class="list-icon ${A.esc(a.tono)}">${A.icon(a.icono)}</span>
+        <span class="pg-obras-aviso-main">
+          <span class="pg-obras-aviso-t">${A.esc(a.titulo)}</span>
+          <span class="pg-obras-aviso-m">${A.esc(a.meta)}</span>
+        </span>
+        <span class="pg-obras-plazo${a.urge ? ' pg-obras-urge' : ''}">${A.esc(a.plazo)}</span>
+      </a>`).join('')}</div>${resto ? `<p class="pg-obras-mas">${A.esc(`${plural(resto, 'aviso más', 'avisos más')} dentro de las obras.`)}</p>` : ''}`;
+  }
+
+  /* ---------- Tarjeta de obra ---------- */
+  function progreso(valor, clase) {
+    const w = Math.max(0, Math.min(100, Math.round(valor)));
+    return `<div class="progress-track"><div class="progress-fill${clase ? ' ' + clase : ''}" style="width:${w}%"></div></div>`;
+  }
+  function fila(label, valorHtml) {
+    return `<div class="pg-obras-fila"><span>${A.esc(label)}</span><span class="tnum">${valorHtml}</span></div>`;
+  }
+  function bloque(label, valorHtml, barraHtml, subHtml) {
+    return `<div>${fila(label, valorHtml)}${barraHtml}${subHtml ? `<div class="pg-obras-subfila">${subHtml}</div>` : ''}</div>`;
+  }
+
+  function metricas(o) {
+    const partes = [];
+    if (o.oportunidad) {
+      const op = o.oportunidad;
+      const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
+      const dias = A.daysUntil(op.cierre);
+      partes.push(bloque('Captación', `<b>${A.money(op.comprometido)}</b> de ${A.money(op.objetivo)}`, progreso(cubierto, 'gold'),
+        `<span>${A.esc(A.pct(cubierto))} del objetivo</span><span class="${dias <= DIAS_URGE ? 'pg-obras-urge' : ''}">${A.esc(textoCierre(dias))} · ${A.esc(A.date(op.cierre))}</span>`));
+    } else if (o.estado === 'En renta' && o.ocupacionTrimestre != null) {
+      partes.push(bloque('Ocupación del trimestre', `<b>${A.pct(o.ocupacionTrimestre)}</b>`, progreso(o.ocupacionTrimestre, 'sage')));
+      const prox = D.distribuciones
+        .filter((d) => d.obra === o.id && d.estado !== 'Pagada' && A.daysUntil(d.fecha) >= 0)
+        .sort((a, b) => A.daysUntil(a.fecha) - A.daysUntil(b.fecha))[0];
+      partes.push(fila('Próxima distribución', prox
+        ? `<b>${A.esc(prox.periodo)}</b> · ${A.esc(A.date(prox.fecha))}`
+        : '<span class="muted">Sin programar</span>'));
+    } else {
+      if (o.estado !== 'En estudio' && o.avanceObra != null) {
+        partes.push(bloque('Avance de obra', `<b>${A.pct(o.avanceObra)}</b>`, progreso(o.avanceObra)));
       }
-      const borradores = D.avances.filter((a) => a.obra === o.id && a.estado === 'borrador').length;
-      const ficha = [
-        o.m2 ? `${A.group(o.m2)} m²` : '',
-        o.ambientes ? plural(o.ambientes, 'ambiente', 'ambientes') : '',
-        o.piso ? `${o.piso} piso` : ''
-      ].filter(Boolean).join(' · ');
-      return `<a class="card pg-resumen-obra" href="obra.html?id=${encodeURIComponent(o.id)}">
-        <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-resumen-foto">
-          ${borradores ? `<em class="pg-resumen-foto-aviso">${A.esc(plural(borradores, 'avance por publicar', 'avances por publicar'))}</em>` : ''}
-          ${ficha ? `<span>${A.esc(ficha)}</span>` : ''}
-        </div>
-        <div class="pg-resumen-obra-cuerpo">
-          <div class="pg-resumen-obra-top">
-            <div class="pg-resumen-obra-titulo"><h3>${A.esc(o.nombre)}</h3><p>${A.esc(o.barrio)}</p></div>
-            ${A.estadoChip(o.estado)}
-          </div>
-          ${metricas}
-          ${pieHtml}
-        </div>
-      </a>`;
-    }
-
-    /* ---------- Próximos vencimientos ---------- */
-    function renderVencimientos() {
-      const items = [];
-      D.documentos.filter((d) => d.vence).forEach((d) => {
-        const o = A.obra(d.obra);
-        items.push({ fecha: d.vence, titulo: d.nombre, meta: [o && o.nombre], href: `documentos.html?obra=${encodeURIComponent(d.obra)}` });
-      });
-      D.distribuciones.filter((d) => d.estado === 'Programada').forEach((d) => {
-        const o = A.obra(d.obra);
-        items.push({ fecha: d.fecha, titulo: `Distribución ${d.periodo}`, meta: [o && o.nombre, d.estado], href: 'inversores.html#distribuciones' });
-      });
-      D.obras.filter((o) => o.oportunidad && o.oportunidad.cierre).forEach((o) => {
-        const op = o.oportunidad;
-        const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
-        items.push({ fecha: op.cierre, titulo: 'Cierre de la oportunidad', meta: [o.nombre, `${A.pct(cubierto)} cubierto`], href: `obra.html?id=${encodeURIComponent(o.id)}` });
-      });
-      const proximos = items
-        .filter((v) => A.daysUntil(v.fecha) >= 0)
-        .sort((a, b) => A.daysUntil(a.fecha) - A.daysUntil(b.fecha));
-
-      const box = $('pg-resumen-venc');
-      if (!proximos.length) {
-        box.innerHTML = `<div class="empty">${A.icon('calendar')}Sin vencimientos próximos.</div>`;
-        return;
+      if (o.presupuesto) {
+        const ej = o.ejecutado || 0;
+        partes.push(bloque('Ejecutado', `<b>${A.money(ej)}</b> de ${A.money(o.presupuesto)}`, A.bar(ej, o.presupuesto),
+          `<span>${A.esc(A.pct((ej / o.presupuesto) * 100, 1))} del presupuesto</span>`));
       }
-      box.innerHTML = `<div class="list">${proximos.map((v) => {
-        const dias = A.daysUntil(v.fecha);
-        const [dia, mes] = A.date(v.fecha, 'medium').split(' ');
-        return `<a class="list-item pg-resumen-venc-item${dias < DIAS_AVISO ? ' pg-resumen-aviso' : ''}" href="${A.esc(v.href)}">
-          <span class="pg-resumen-dia" title="${A.esc(A.date(v.fecha, 'long'))}"><b>${A.esc(dia)}</b><small>${A.esc(mes)}</small></span>
-          <div class="list-main">
-            <div class="list-title">${A.esc(v.titulo)}</div>
-            <div class="list-meta">${A.esc(v.meta.filter(Boolean).join(' · '))}</div>
-          </div>
-          <span class="pg-resumen-quedan">${A.esc(textoQuedan(dias))}</span>
-        </a>`;
-      }).join('')}</div>`;
     }
+    if (!partes.length) partes.push('<p class="muted pg-obras-sin">Sin datos de seguimiento todavía.</p>');
+    return `<div class="pg-obras-metricas">${partes.join('')}</div>`;
+  }
 
-    /* ---------- Actividad reciente ---------- */
-    function renderActividad() {
-      $('pg-resumen-actividad').innerHTML = `<div class="list">${D.actividad.slice(0, 8).map((a) => {
-        const p = A.persona(a.quien);
-        return `<div class="list-item pg-resumen-act">
-          ${A.avatar(p, 'sm')}
-          <div class="list-main">
-            <p class="pg-resumen-act-texto">${p ? `<span class="strong">${A.esc(p.nombre)}</span> ` : ''}${A.esc(a.texto)}</p>
-            <p class="list-meta pg-resumen-act-meta">${A.icon(a.icono)}<span>${A.esc(A.ago(a.fecha))}</span></p>
-          </div>
-        </div>`;
-      }).join('')}</div>`;
+  function personas(o) {
+    const caras = (gente) => {
+      const vistos = gente.slice(0, 4).map((p) => A.avatar(p, 'sm')).join('');
+      const extra = gente.length > 4 ? `<span class="pg-obras-avatares-mas">+${A.group(gente.length - 4)}</span>` : '';
+      return `<span class="pg-obras-avatares">${vistos}${extra}</span>`;
+    };
+    const parts = A.participaciones({ obra: o.id });
+    if (parts.length) {
+      const gente = parts.map((p) => A.persona(p.inversor)).filter(Boolean);
+      return `<span class="pg-obras-personas" title="Inversores con participación en esta obra">${caras(gente)}<span>${A.esc(plural(parts.length, 'inversor', 'inversores'))}</span></span>`;
     }
+    const comp = (D.compromisos || []).filter((c) => c.obra === o.id);
+    if (comp.length) {
+      const gente = comp.map((c) => A.persona(c.inversor)).filter(Boolean);
+      return `<span class="pg-obras-personas" title="Inversores con compromiso registrado en esta oportunidad">${caras(gente)}<span>${A.esc(plural(comp.length, 'interesado', 'interesados'))}</span></span>`;
+    }
+    return `<span class="pg-obras-personas"><span class="pg-obras-noavatar" title="Sin inversores">${A.icon('user')}</span><span class="muted">Sin inversores</span></span>`;
+  }
 
+  function tarjeta(o) {
+    const href = hrefObra(o);
+    const foto = portadas[o.id] ? ` style="background-image:url('${A.esc(portadas[o.id])}')"` : '';
+    const ficha = [
+      o.m2 ? `${A.group(o.m2)} m²` : '',
+      o.ambientes ? plural(o.ambientes, 'ambiente', 'ambientes') : '',
+      o.piso ? `${o.piso} piso` : ''
+    ].filter(Boolean).join(' · ');
+    const lugar = [o.barrio, o.ciudad].filter(Boolean).join(' · ');
+
+    const nBorr = borradores(o.id).length;
+    const nBand = bandeja(o.id).length;
+    const chips = [];
+    if (nBorr) chips.push(A.chip(plural(nBorr, 'avance por publicar', 'avances por publicar'), 'chip-gold'));
+    if (nBand) chips.push(A.chip(plural(nBand, 'sin revisar', 'sin revisar'), 'chip-copper'));
+
+    const ult = masReciente(publicados(o.id));
+    const ultima = ult
+      ? `<span>Último avance</span><b>${A.esc(A.ago(ult.fecha))}</b>`
+      : '<span>Sin avances publicados</span>';
+
+    return `<a class="card pg-obras-tarjeta${recienCreada === o.id ? ' pg-obras-recien' : ''}" href="${A.esc(href)}"${o.nueva ? ' data-nueva="1"' : ''}>
+      <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-obras-foto"${foto}>${ficha ? `<span>${A.esc(ficha)}</span>` : ''}</div>
+      <div class="pg-obras-cuerpo">
+        <div class="pg-obras-top">
+          <div class="pg-obras-titulo">
+            <h3>${A.esc(o.nombre)}</h3>
+            <p>${A.esc(lugar)}</p>
+          </div>
+          ${A.estadoChip(o.estado)}
+        </div>
+        ${chips.length ? `<div class="pg-obras-chips">${chips.join('')}</div>` : ''}
+        ${metricas(o)}
+        <div class="pg-obras-pie">
+          ${personas(o)}
+          <span class="pg-obras-ultima">${ultima}${A.icon('chevron-right', 'pg-obras-flecha')}</span>
+        </div>
+      </div>
+    </a>`;
+  }
+
+  /* ---------- Lista y filtros ---------- */
+  function visibles() {
+    const q = norm(busqueda);
+    return D.obras.filter((o) => (filtro === 'todas' || o.estado === filtro)
+      && (!q || norm(o.nombre).includes(q) || norm(o.barrio).includes(q)));
+  }
+
+  function renderCuentas() {
+    document.querySelectorAll('#pg-obras-seg [data-n]').forEach((el) => {
+      const v = el.dataset.n;
+      el.textContent = v === 'todas' ? D.obras.length : D.obras.filter((o) => o.estado === v).length;
+    });
+  }
+
+  function render() {
+    const lista = visibles();
+    $('#pg-obras-lista').innerHTML = lista.length ? lista.map(tarjeta).join('') : `
+      <div class="card pg-obras-vacio"><div class="empty">${A.icon('search')}
+        <div class="strong">Ninguna obra coincide con el filtro</div>
+        <div class="muted mt-4">Pruebe con otro nombre o con otro estado.</div>
+        <button type="button" class="btn btn-ghost btn-sm mt-12" data-pg-limpiar>Quitar filtros</button>
+      </div></div>`;
+    const total = plural(D.obras.length, 'obra', 'obras');
+    $('#pg-obras-total').textContent = lista.length === D.obras.length ? total : `Mostrando ${lista.length} de ${total}`;
+    renderCuentas();
     renderStats();
     renderAtencion();
-    $('pg-resumen-obras').innerHTML = D.obras.map(tarjetaObra).join('');
-    renderVencimientos();
-    renderActividad();
-  })();
+    recienCreada = null;
+  }
+
+  function setFiltro(v) {
+    filtro = v;
+    document.querySelectorAll('#pg-obras-seg button').forEach((b) => {
+      const on = b.dataset.value === v;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
+  $('#pg-obras-seg').addEventListener('segmented:change', (e) => { filtro = e.detail; render(); });
+  $('#pg-obras-search').addEventListener('input', (e) => { busqueda = e.target.value; render(); });
+
+  $('#pg-obras-lista').addEventListener('click', (e) => {
+    if (e.target.closest('[data-pg-limpiar]')) {
+      setFiltro('todas');
+      busqueda = '';
+      $('#pg-obras-search').value = '';
+      render();
+      return;
+    }
+    const nueva = e.target.closest('a[data-nueva]');
+    if (nueva) {
+      e.preventDefault();
+      A.toast('La ficha de una obra nueva no se conserva en esta demostración', 'info');
+    }
+  });
+
+  /* ---------- Modal «Nueva obra» ---------- */
+  const form = $('#pg-form-nueva');
+  const files = $('#pg-nueva-files');
+  $('#pg-nueva-fase').innerHTML = D.fases.map((f, i) => `<option value="${i}">${A.esc(f)}</option>`).join('');
+  $('#pg-nueva-resp').innerHTML = '<option value="">Sin asignar</option>' +
+    D.equipo.filter((p) => p.perfil === 'obra').map((p) => `<option value="${A.esc(p.id)}">${A.esc(p.nombre)}</option>`).join('');
+
+  $('#pg-nueva-drop').addEventListener('dropzone:files', (e) => {
+    const f = (e.detail.files || [])[0];
+    if (!f) return;
+    portadaPendiente = /^image\//.test(f.type) ? URL.createObjectURL(f) : null;
+    files.innerHTML = `<div class="file-row">${A.icon('image')}<span></span></div>`;
+    files.querySelector('span').textContent = f.name;
+  });
+
+  form.addEventListener('submit', () => {
+    const fd = new FormData(form);
+    const txt = (k) => String(fd.get(k) || '').trim();
+    const num = (k) => { const n = parseInt(txt(k).replace(/\D/g, ''), 10); return Number.isFinite(n) && n > 0 ? n : null; };
+    const nombre = txt('nombre') || 'Obra sin nombre';
+    const fase = Math.max(0, Math.min(D.fases.length - 1, parseInt(txt('fase'), 10) || 0));
+    const mes = D.instalacion.hoy.slice(0, 7);
+    const presupuesto = num('presupuesto');
+    seq += 1;
+    const id = `nueva-${seq}`;
+    D.obras.unshift({
+      id, nombre, barrio: txt('barrio'), ciudad: txt('ciudad'), m2: num('m2'), ambientes: num('ambientes'), piso: null,
+      estado: D.fases[fase], faseActual: fase, fechasFases: D.fases.map((_, i) => (i === fase ? mes : null)),
+      avanceObra: 0, portada: `ph-${(D.obras.length % 5) + 1}`, responsable: txt('responsable') || null,
+      presupuesto, ejecutado: presupuesto ? 0 : null, nueva: true
+    });
+    if (portadaPendiente) portadas[id] = portadaPendiente;
+    portadaPendiente = null;
+    form.dataset.demo = `Obra «${nombre}» creada`;
+    setFiltro('todas');
+    busqueda = '';
+    $('#pg-obras-search').value = '';
+    recienCreada = id;
+    render();
+  });
+
+  $('#modal-nueva-obra').addEventListener('modal:close', () => {
+    form.reset();
+    files.innerHTML = '';
+    portadaPendiente = null;
+  });
+
+  $('#pg-obras-fecha').textContent = `Actualizado el ${A.date(D.instalacion.hoy)}`;
+  render();
+})();
 </script>
 </body>
 </html>

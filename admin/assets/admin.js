@@ -195,15 +195,8 @@
 
   /* ---------- Shell: barra lateral y barra superior ---------- */
   const NAV = [
-    { group: 'Gestión', items: [
-      { id: 'resumen', label: 'Resumen', href: 'index.html', icon: 'home' },
-      { id: 'obras', label: 'Obras', href: 'obras.html', icon: 'building' },
-      { id: 'gastos', label: 'Presupuesto y gastos', href: 'gastos.html', icon: 'receipt' },
-      { id: 'documentos', label: 'Contratos y documentos', href: 'documentos.html', icon: 'file' },
-      { id: 'inversores', label: 'Inversores', href: 'inversores.html', icon: 'users' },
-      { id: 'camaras', label: 'Cámaras', href: 'camaras.html', icon: 'camera' }
-    ] },
-    { group: 'Equipo de obra', items: [
+    { group: 'Obras', items: [
+      { id: 'obras', label: 'Todas las obras', href: 'index.html', icon: 'building' },
       { id: 'movil', label: 'Carga desde el móvil', href: 'movil.html', icon: 'phone' }
     ] },
     { group: 'Configuración', items: [
@@ -212,19 +205,18 @@
     ] }
   ];
   const TITLES = {
-    resumen: 'Resumen', obras: 'Obras', obra: 'Obra', gastos: 'Presupuesto y gastos', documentos: 'Contratos y documentos',
-    inversores: 'Inversores', camaras: 'Cámaras', movil: 'Carga desde el móvil', ajustes: 'Ajustes'
+    obras: 'Obras', obra: 'Obra', movil: 'Carga desde el móvil', ajustes: 'Ajustes'
   };
 
   function renderSidebar(page) {
     const el = document.getElementById('sidebar');
     if (!el) return;
     const active = page === 'obra' ? 'obras' : page;
-    const pendientes = D.avances.filter((a) => a.estado === 'borrador').length;
+    const pendientes = D.avances.filter((a) => a.estado === 'borrador').length + (D.bandeja || []).filter((b) => b.estado === 'pendiente').length;
     const inst = D.instalacion;
     const nav = NAV.map((g) => `<div class="sb-group">${esc(g.group)}</div>` + g.items.map((it) => {
       const on = it.id === active;
-      const count = it.id === 'obras' && pendientes ? `<span class="sb-count" title="Avances pendientes de publicar">${pendientes}</span>` : '';
+      const count = it.id === 'obras' && pendientes ? `<span class="sb-count" title="Entradas pendientes de revisar">${pendientes}</span>` : '';
       const ext = it.external ? icon('external', 'sb-ext') : '';
       return `<a class="sb-link${on ? ' active' : ''}" href="${it.href}"${on ? ' aria-current="page"' : ''}>${icon(it.icon)}<span>${esc(it.label)}</span>${count}${ext}</a>`;
     }).join('')).join('');
@@ -243,7 +235,7 @@
     let crumbs = '<a href="index.html">Administración</a><span class="sep">/</span>';
     if (page === 'obra') {
       const o = obra(qs('id')) || D.obras[0];
-      crumbs += `<a href="obras.html">Obras</a><span class="sep">/</span><span class="current">${esc(o.nombre)}</span>`;
+      crumbs += `<a href="index.html">Obras</a><span class="sep">/</span><span class="current">${esc(o.nombre)}</span>`;
     } else {
       crumbs += `<span class="current">${esc(TITLES[page] || '')}</span>`;
     }
@@ -258,7 +250,7 @@
           ${alertas.map((a) => `<a class="top-dd-item" role="menuitem" href="${esc(a.accion ? a.accion.href : '#')}"><span class="list-icon tone-${esc(a.tono)}">${icon(a.icono)}</span><span><b>${esc(a.titulo)}</b><small>${esc(a.texto)}</small></span></a>`).join('')}
         </div>
       </div>
-      <a class="btn btn-copper btn-sm" href="obra.html?id=ayacucho#publicar" aria-label="Publicar avance">${icon('plus')}<span class="btn-label">Publicar avance</span></a>`;
+      <a class="btn btn-copper btn-sm" href="obra.html?id=${esc(page === 'obra' ? (obra(qs('id')) || D.obras[0]).id : D.obras[0].id)}#publicar" aria-label="Publicar avance">${icon('plus')}<span class="btn-label">Publicar avance</span></a>`;
 
     const btn = el.querySelector('#bell-btn');
     const dd = el.querySelector('#bell-dd');

@@ -171,6 +171,16 @@
   .pg-ajustes-aviso-subject > span { font-size: 10.5px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-mute); }
   .pg-ajustes-aviso-subject .input { padding: 7px 11px; font-size: 13.5px; }
 
+  /* ---------- Dirección de correo de cada obra ---------- */
+  /* Anchos fijos en las tres últimas columnas: las filas quedan alineadas entre sí. */
+  .pg-ajustes-mailrow { display: grid; grid-template-columns: minmax(0, 1fr) 240px 124px auto; align-items: center; gap: 10px 18px; padding: 13px 22px; border-bottom: 1px solid var(--line); }
+  .pg-ajustes-mailrow:last-child { border-bottom: 0; }
+  .pg-ajustes-mail-obra { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .pg-ajustes-mail-obra .list-icon { width: 32px; height: 32px; border-radius: 9px; }
+  .pg-ajustes-mail-obra .list-icon .ico { width: 16px; height: 16px; }
+  .pg-ajustes-mail-dir { display: inline-block; max-width: 100%; padding: 5px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: all; }
+  .pg-ajustes-mail-state { justify-self: end; font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+
   /* ---------- Instalación ---------- */
   .pg-ajustes-owner { display: flex; align-items: center; gap: 14px; }
   .pg-ajustes-owner .list-icon { width: 42px; height: 42px; border-radius: 12px; }
@@ -231,6 +241,11 @@
     .pg-ajustes-dl-text { grid-template-columns: minmax(0, 1fr); }
     .pg-ajustes-dl-row > .chip { margin-top: 6px; }
     .pg-ajustes-sender { white-space: normal; }
+    .pg-ajustes-mailrow { grid-template-columns: minmax(0, 1fr) auto; padding: 14px 18px; }
+    .pg-ajustes-mail-obra { grid-column: 1 / -1; grid-row: 1; }
+    .pg-ajustes-mail-dir { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+    .pg-ajustes-mail-state { grid-column: 1; grid-row: 3; justify-self: start; }
+    .pg-ajustes-mailrow > .btn { grid-column: 2; grid-row: 3; }
   }
 </style>
 </head>
@@ -245,7 +260,7 @@
         <div>
           <p class="eyebrow">Configuración</p>
           <h1>Ajustes</h1>
-          <p class="page-sub">Marca, personas con acceso, perfiles y datos de la instalación.</p>
+          <p class="page-sub">Marca, equipo interno, formas de entrar, avisos y datos de la instalación.</p>
         </div>
       </div>
 
@@ -352,7 +367,7 @@
           <div class="card">
             <div class="card-head pg-ajustes-head-wrap">
               <div>
-                <h3>Equipo</h3>
+                <h3>Equipo interno</h3>
                 <div class="card-sub" id="pg-ajustes-team-sub"></div>
               </div>
               <button class="btn btn-copper" type="button" id="pg-ajustes-invitar" data-open-modal="pg-ajustes-modal-invitar"><span data-icon="plus"></span>Invitar persona del equipo</button>
@@ -377,10 +392,10 @@
           <div class="alert alert-ink pg-ajustes-note mt-16">
             <span data-icon="users"></span>
             <div>
-              <div class="alert-title">Los inversores se gestionan aparte</div>
-              <div class="alert-text">Se invitan desde Inversores y en el portal solo ven lo suyo.</div>
+              <div class="alert-title">Aquí solo se gestiona el equipo interno</div>
+              <div class="alert-text">Los inversores se invitan dentro de cada obra y en el portal ven solo lo suyo.</div>
             </div>
-            <a class="btn btn-ghost btn-sm" href="inversores.html">Ir a Inversores<span data-icon="arrow-right"></span></a>
+            <a class="btn btn-ghost btn-sm" href="index.html">Ir a Obras<span data-icon="arrow-right"></span></a>
           </div>
 
           <h2 class="section-title">Perfiles</h2>
@@ -512,6 +527,20 @@
             <div class="card-foot">
               <span class="hint">Entre llaves, los datos que se completan en cada envío: {obra}, {persona}, {periodo}…</span>
               <span class="cell-meta tnum" id="pg-ajustes-avisos-count"></span>
+            </div>
+          </div>
+
+          <div class="card mt-20">
+            <div class="card-head pg-ajustes-head-wrap">
+              <div>
+                <h3>Dirección de correo de cada obra</h3>
+                <div class="card-sub">Lo que se reenvía a estas direcciones entra en la bandeja de esa obra y espera revisión.</div>
+              </div>
+              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Dominio <b id="pg-ajustes-dominio-obras"></b></span>
+            </div>
+            <div id="pg-ajustes-correos"></div>
+            <div class="card-foot">
+              <span class="hint">Facturas de proveedores, presupuestos y fotos del equipo. Nada se publica sin revisar.</span>
             </div>
           </div>
         </section>
@@ -877,7 +906,7 @@
       $('#pg-ajustes-team-body').innerHTML = D.equipo.map(teamRow).join('');
       const pendientes = D.equipo.filter((p) => p.estado === 'invitado').length;
       $('#pg-ajustes-count-equipo').textContent = D.equipo.length;
-      $('#pg-ajustes-team-sub').textContent = plural(D.equipo.length, 'persona en el equipo', 'personas en el equipo') +
+      $('#pg-ajustes-team-sub').textContent = 'Administración y Obra · ' + plural(D.equipo.length, 'persona', 'personas') +
         (pendientes ? ` · ${plural(pendientes, 'invitación pendiente', 'invitaciones pendientes')}` : '');
       if (flashId) {
         const tr = $(`tr[data-person="${CSS.escape(flashId)}"]`);
@@ -892,7 +921,7 @@
         const ui = PERFIL_UI[pf.id] || { icon: 'user', tone: 'tone-ink', donde: '' };
         const n = pf.id === 'inversor' ? D.inversores.length : D.equipo.filter((p) => p.perfil === pf.id).length;
         const quien = pf.id === 'inversor'
-          ? `<a href="inversores.html">${plural(n, 'inversor', 'inversores')}${A.icon('arrow-right')}</a>`
+          ? `<span>${plural(n, 'inversor', 'inversores')} · se invitan en cada obra</span>`
           : `<span>${plural(n, 'persona', 'personas')}</span>`;
         return `<div class="card card-pad pg-ajustes-profile">
           <div class="pg-ajustes-profile-top"><span class="list-icon ${ui.tone}">${A.icon(ui.icon)}</span><h3>${A.esc(pf.nombre)}</h3></div>
@@ -1111,6 +1140,37 @@
       if (n) A.toast(`Prueba de «${n.nombre}» enviada a ${D.usuario.email}`, 'send');
     });
 
+    /* Dirección de correo de cada obra: lo reenviado ahí entra en su bandeja */
+    const correosBox = $('#pg-ajustes-correos');
+    $('#pg-ajustes-dominio-obras').textContent = inst.dominioObras;
+    function renderCorreos() {
+      correosBox.innerHTML = D.obras.map((o) => {
+        const pend = (D.bandeja || []).filter((b) => b.obra === o.id && b.estado === 'pendiente').length;
+        const estado = pend
+          ? A.chip(`${A.group(pend)} sin revisar`, 'chip-gold')
+          : '<span class="soft">Sin entradas</span>';
+        return `<div class="pg-ajustes-mailrow">
+          <div class="pg-ajustes-mail-obra">
+            <span class="list-icon tone-copper">${A.icon('building')}</span>
+            <div>
+              <div class="list-title">${A.esc(o.nombre)}</div>
+              <div class="list-meta">${A.esc(o.barrio)} · ${A.esc(o.estado)}</div>
+            </div>
+          </div>
+          <span class="pg-ajustes-mail-dir mono">${A.esc(o.email)}</span>
+          <span class="pg-ajustes-mail-state">${estado}</span>
+          <button class="btn btn-ghost btn-sm" type="button" data-copiar="${A.esc(o.email)}" aria-label="Copiar la dirección de ${A.esc(o.nombre)}">${A.icon('copy')}Copiar</button>
+        </div>`;
+      }).join('');
+    }
+    correosBox.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-copiar]');
+      if (!b) return;
+      const dir = b.dataset.copiar;
+      try { if (navigator.clipboard) navigator.clipboard.writeText(dir).catch(() => {}); } catch (err) { /* sin portapapeles */ }
+      A.toast(`Dirección copiada: ${dir}`, 'copy');
+    });
+
     /* ============================================================
        Instalación
        ============================================================ */
@@ -1154,6 +1214,7 @@
 
     renderTeam();
     renderAvisos();
+    renderCorreos();
     renderInstalacion();
   })();
 </script>

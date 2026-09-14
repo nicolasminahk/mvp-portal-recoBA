@@ -31,6 +31,15 @@
   .pg-movil-detalle { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
   .pg-movil-detalle .ico { width: 16px; height: 16px; color: var(--copper); flex-shrink: 0; margin-top: 2px; }
 
+  /* ---------- Columna izquierda: reenvío por correo ---------- */
+  .pg-movil-correo-intro { font-size: 13px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
+  .pg-movil-correo { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  .pg-movil-correo .list-icon { background: var(--paper-card); }
+  .pg-movil-correo-main { min-width: 0; }
+  .pg-movil-correo-dir { display: block; font-size: 13px; font-weight: 600; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; user-select: all; }
+  .pg-movil-correo-obra { font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .card-foot.pg-movil-foot { flex-wrap: wrap; }
+
   /* ---------- Columna izquierda: qué ve el perfil Obra ---------- */
   .pg-movil-persona { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; white-space: nowrap; }
   .pg-movil-ve { display: flex; flex-direction: column; gap: 10px; }
@@ -149,6 +158,10 @@
     .pg-movil-lado { position: static; }
   }
   @media (max-width: 860px) {
+    .pg-movil-correo { grid-template-columns: auto minmax(0, 1fr); }
+    .pg-movil-correo .btn { grid-column: 1 / -1; justify-self: start; }
+    .card-foot.pg-movil-foot { justify-content: flex-start; }
+    .card-foot.pg-movil-foot > span { flex: 1 1 100%; }
     .pg-movil-lado { align-items: stretch; }
     .pg-movil-pie { max-width: none; }
     .pg-movil-marco { width: 100%; padding: 0; border-radius: 14px; background: transparent; box-shadow: none; }
@@ -174,7 +187,7 @@
         <div>
           <p class="eyebrow">Equipo de obra</p>
           <h1>Carga desde el móvil</h1>
-          <p class="page-sub">Pensada para el jefe de obra: se sacan las fotos, se escriben dos líneas y se envía. Administración revisa y publica.</p>
+          <p class="page-sub">Pensada para el jefe de obra: se sacan las fotos, se escriben dos líneas y se envía. También se puede reenviar por correo a la dirección de la obra. Administración revisa y publica.</p>
         </div>
         <div class="page-actions">
           <a class="btn btn-ghost" href="obra.html?id=ayacucho#diario"><span data-icon="clock"></span>Ver avances pendientes</a>
@@ -193,6 +206,7 @@
                 <h2 id="pg-movil-pasos-titulo">Tres pasos desde la obra</h2>
                 <p class="card-sub">Se tarda lo mismo que en mandar un mensaje</p>
               </div>
+              <span class="chip chip-outline no-dot">Desde el móvil</span>
             </div>
             <div class="card-body">
               <ol class="pg-movil-pasos">
@@ -227,6 +241,35 @@
                 <p class="pg-movil-detalle"><span data-icon="refresh"></span><span>Si la señal de la obra es mala, el envío se reintenta hasta que entra.</span></p>
                 <p class="pg-movil-detalle"><span data-icon="image"></span><span>Las fotos se comprimen al subir: pesan poco y suben rápido.</span></p>
               </div>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="pg-movil-correo-titulo">
+            <div class="card-head">
+              <div>
+                <h2 id="pg-movil-correo-titulo">Reenviar por correo</h2>
+                <p class="card-sub">Cada obra tiene su dirección</p>
+              </div>
+              <span class="chip chip-outline no-dot">Por correo</span>
+            </div>
+            <div class="card-body">
+              <p class="pg-movil-correo-intro">El equipo y los proveedores pueden reenviar una foto, una factura o un presupuesto a la dirección de la obra.</p>
+              <div class="pg-movil-correo mt-12">
+                <span class="list-icon tone-copper"><span data-icon="mail"></span></span>
+                <span class="pg-movil-correo-main">
+                  <span class="pg-movil-correo-dir mono" id="pg-movil-correo-dir"></span>
+                  <span class="pg-movil-correo-obra" id="pg-movil-correo-obra"></span>
+                </span>
+                <button class="btn btn-ghost btn-sm" type="button" id="pg-movil-copiar-correo"><span data-icon="copy"></span>Copiar</button>
+              </div>
+              <div class="pg-movil-detalles mt-12">
+                <p class="pg-movil-detalle"><span data-icon="receipt"></span><span>Sirve para lo que ya llega por email: facturas, presupuestos y liquidaciones.</span></p>
+                <p class="pg-movil-detalle"><span data-icon="clock"></span><span>Entra en la bandeja de esa obra y espera revisión. No se publica solo.</span></p>
+              </div>
+            </div>
+            <div class="card-foot pg-movil-foot">
+              <span class="pg-movil-ve-pie">Una dirección distinta por obra.</span>
+              <a class="btn btn-text btn-sm" href="ajustes.html#avisos">Ver todas las direcciones<span data-icon="arrow-right"></span></a>
             </div>
           </section>
 
@@ -389,6 +432,15 @@
   $('pg-movil-pie').innerHTML = `El equipo entra desde el navegador del móvil en <span class="mono">${A.esc(ENLACE)}</span>`;
   $('pg-movil-copiar').addEventListener('click', () => {
     try { if (navigator.clipboard) navigator.clipboard.writeText(`https://${ENLACE}`).catch(() => {}); } catch (e) { /* sin portapapeles */ }
+  });
+
+  /* ---------- Segunda vía: la dirección de correo de la obra ---------- */
+  const OBRA = A.obra(OBRA_ID) || D.obras[0];
+  $('pg-movil-correo-dir').textContent = OBRA.email;
+  $('pg-movil-correo-obra').textContent = `${OBRA.nombre} · ${OBRA.barrio}`;
+  $('pg-movil-copiar-correo').addEventListener('click', () => {
+    try { if (navigator.clipboard) navigator.clipboard.writeText(OBRA.email).catch(() => {}); } catch (e) { /* sin portapapeles */ }
+    A.toast(`Dirección copiada: ${OBRA.email}`, 'copy');
   });
 
   /* ---------- Qué ve el perfil Obra ---------- */
