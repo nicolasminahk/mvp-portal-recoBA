@@ -40,8 +40,8 @@ Partir de `_plantilla.html`:
 - `<body data-page="…">` con uno de estos valores: `obras`, `obra`, `movil` o `ajustes`.
   Marca la sección activa y la ruta de la barra superior.
 - Mantener `#sidebar`, `#topbar` y `main.content` (el shell los rellena solo).
-- Scripts al final del `<body>`, en este orden: `assets/data.js`, `assets/admin.js` y
-  después el script de la página.
+- Scripts al final del `<body>`, en este orden: `assets/data.js`, `assets/demo-store.js`,
+  `assets/admin.js` y después el script de la página.
 - Modales fuera de `.app`, como hermanos al final del `<body>`.
 - `<title>`: `Nombre de la pantalla · Administración recoBA`.
 
@@ -111,8 +111,9 @@ enormes ni efectos llamativos; la estética es la del portal: cálida, editorial
 
 Obras: `ayacucho` (Ayacucho 1400, **en obra**, la protagonista), `guemes` (Güemes 3800,
 en renta), `junin` y `aguirre` (en estudio, con oportunidad abierta a inversión).
-Cada obra tiene `email` (su dirección de correo) y entradas en `bandeja` (lo reenviado
-que espera revisión). Hay además `partidas`, `gastos` (Ayacucho completo, hoy solo se usa
+Hay **una sola dirección de correo** para toda la instalación (`instalacion.emailObras`).
+Lo reenviado ahí llega a `bandeja`: `estado: 'sin-asignar'` (con `obraSugerida`) hasta que
+alguien le asigna obra desde la portada, y luego `estado: 'pendiente'` dentro de esa obra. Hay además `partidas`, `gastos` (Ayacucho completo, hoy solo se usa
 para totales: el panel base no lleva lista de gastos), `avances` (con un **borrador** de
 Carlos R. pendiente de publicar), `documentos`, `inversores`, `participaciones`,
 `compromisos`, `distribuciones`, `camaras`, `tiposSenal`, `capturas`,
@@ -123,7 +124,8 @@ Reglas:
 - Si una pantalla necesita un número derivado, calcularlo a partir de los datos.
 - Si necesita un dato nuevo que no existe (p. ej. un historial), crearlo en la página, coherente con lo existente, y declararlo en el informe.
 - Moneda de la instalación: US$.
-- Las acciones de demostración pueden modificar los arrays en memoria para que la interfaz responda. No se guarda nada: nada de `localStorage` ni peticiones de red.
+- Las acciones de demostración pueden modificar los arrays en memoria para que la interfaz responda.
+- Lo que se **publica** (avances, documentos, números, personas) sí se guarda, con `window.RecoBADemo` (`assets/demo-store.js`), para que el **portal del inversor** lo muestre: es lo que se enseña en las reuniones. Nada de peticiones de red. El botón «Reiniciar» de la barra lateral vacía ese almacén.
 
 ## Lenguaje
 

@@ -533,10 +533,10 @@
           <div class="card mt-20">
             <div class="card-head pg-ajustes-head-wrap">
               <div>
-                <h3>Dirección de correo de cada obra</h3>
-                <div class="card-sub">Lo que se reenvía a estas direcciones entra en la bandeja de esa obra y espera revisión.</div>
+                <h3>Dirección de correo del panel</h3>
+                <div class="card-sub">Lo que se reenvía aquí entra en el panel y se asigna a su obra antes de revisarlo.</div>
               </div>
-              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Dominio <b id="pg-ajustes-dominio-obras"></b></span>
+              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Una para todas las obras</span>
             </div>
             <div id="pg-ajustes-correos"></div>
             <div class="card-foot">
@@ -674,6 +674,7 @@
 </div>
 
 <script src="assets/data.js"></script>
+<script src="assets/demo-store.js"></script>
 <script src="assets/admin.js"></script>
 <script>
   (function () {
@@ -1142,26 +1143,26 @@
 
     /* Dirección de correo de cada obra: lo reenviado ahí entra en su bandeja */
     const correosBox = $('#pg-ajustes-correos');
-    $('#pg-ajustes-dominio-obras').textContent = inst.dominioObras;
     function renderCorreos() {
-      correosBox.innerHTML = D.obras.map((o) => {
-        const pend = (D.bandeja || []).filter((b) => b.obra === o.id && b.estado === 'pendiente').length;
-        const estado = pend
-          ? A.chip(`${A.group(pend)} sin revisar`, 'chip-gold')
-          : '<span class="soft">Sin entradas</span>';
-        return `<div class="pg-ajustes-mailrow">
+      const dir = inst.emailObras;
+      const sinAsignar = (D.bandeja || []).filter((b) => b.estado === 'sin-asignar').length;
+      const enObras = (D.bandeja || []).filter((b) => b.estado === 'pendiente').length;
+      const estado = sinAsignar
+        ? A.chip(`${A.group(sinAsignar)} sin asignar`, 'chip-gold')
+        : '<span class="soft">Todo asignado</span>';
+      correosBox.innerHTML = `<div class="pg-ajustes-mailrow">
           <div class="pg-ajustes-mail-obra">
-            <span class="list-icon tone-copper">${A.icon('building')}</span>
+            <span class="list-icon tone-copper">${A.icon('mail')}</span>
             <div>
-              <div class="list-title">${A.esc(o.nombre)}</div>
-              <div class="list-meta">${A.esc(o.barrio)} · ${A.esc(o.estado)}</div>
+              <div class="list-title">Dirección del panel</div>
+              <div class="list-meta">Vale para todas las obras</div>
             </div>
           </div>
-          <span class="pg-ajustes-mail-dir mono">${A.esc(o.email)}</span>
+          <span class="pg-ajustes-mail-dir mono">${A.esc(dir)}</span>
           <span class="pg-ajustes-mail-state">${estado}</span>
-          <button class="btn btn-ghost btn-sm" type="button" data-copiar="${A.esc(o.email)}" aria-label="Copiar la dirección de ${A.esc(o.nombre)}">${A.icon('copy')}Copiar</button>
-        </div>`;
-      }).join('');
+          <button class="btn btn-ghost btn-sm" type="button" data-copiar="${A.esc(dir)}" aria-label="Copiar la dirección del panel">${A.icon('copy')}Copiar</button>
+        </div>
+        <p class="hint" style="padding:0 22px 14px">Cada entrada se asigna a su obra desde Obras. Ahora mismo hay ${A.group(enObras)} esperando revisión dentro de las obras.</p>`;
     }
     correosBox.addEventListener('click', (e) => {
       const b = e.target.closest('[data-copiar]');

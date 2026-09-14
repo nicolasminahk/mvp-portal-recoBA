@@ -23,7 +23,7 @@ window.RECOBA_DATA = {
     licencia: 'Licencia de uso perpetua sobre esta instalación',
     mantenimiento: { plan: 'Básico', horasMes: 2, horasUsadas: 0.5, renovacion: '2027-09-11' },
     copias: 'Diarias, gestionadas por la plataforma de datos',
-    dominioObras: 'obras.recoba.casa'
+    emailObras: 'obras@recoba.casa'
   },
 
   usuario: { id: 'u-nicolas', nombre: 'Nicolás Minahk', iniciales: 'NM', perfil: 'admin', email: 'nicolasminahk@gmail.com' },
@@ -60,7 +60,7 @@ window.RECOBA_DATA = {
 
   obras: [
     {
-      id: 'ayacucho', email: 'ayacucho@obras.recoba.casa', nombre: 'Ayacucho 1400', barrio: 'Recoleta', ciudad: 'Buenos Aires',
+      id: 'ayacucho', nombre: 'Ayacucho 1400', barrio: 'Recoleta', ciudad: 'Buenos Aires',
       m2: 50, ambientes: 2, piso: '3º', estado: 'En obra', faseActual: 3,
       fechasFases: ['2026-02', '2026-04', '2026-05', '2026-06', null, null, null, null],
       avanceObra: 45, proximoHito: { texto: 'Fin de instalaciones', fecha: '2026-09' },
@@ -71,7 +71,7 @@ window.RECOBA_DATA = {
       tir: { conservador: 6.4, base: 9.1, optimista: 12.1 }
     },
     {
-      id: 'guemes', email: 'guemes@obras.recoba.casa', nombre: 'Güemes 3800', barrio: 'Palermo', ciudad: 'Buenos Aires',
+      id: 'guemes', nombre: 'Güemes 3800', barrio: 'Palermo', ciudad: 'Buenos Aires',
       m2: 44, ambientes: 2, piso: '2º', estado: 'En renta', faseActual: 5,
       fechasFases: ['2024-11', '2025-01', '2025-02', '2025-03', '2025-10', '2025-11', null, null],
       avanceObra: 100, ocupacionTrimestre: 71, tarifaMediaNoche: 74,
@@ -80,14 +80,14 @@ window.RECOBA_DATA = {
       capital: 125000, presupuesto: 114340, ejecutado: 114300
     },
     {
-      id: 'junin', email: 'junin@obras.recoba.casa', nombre: 'Junín 600', barrio: 'Barrio Norte', ciudad: 'Buenos Aires',
+      id: 'junin', nombre: 'Junín 600', barrio: 'Barrio Norte', ciudad: 'Buenos Aires',
       m2: 47, ambientes: 2, piso: null, estado: 'En estudio', faseActual: 0,
       fechasFases: ['2026-08', null, null, null, null, null, null, null],
       portada: 'ph-3', responsable: null,
       oportunidad: { estado: 'Abierta', objetivo: 97000, comprometido: 60140, ticketMinimo: 25000, tirBase: '9 – 11%', cierre: '2026-09-30', compraPrevista: 45900, puntuacionRadar: 78 }
     },
     {
-      id: 'aguirre', email: 'aguirre@obras.recoba.casa', nombre: 'Aguirre 1300', barrio: 'Villa Crespo', ciudad: 'Buenos Aires',
+      id: 'aguirre', nombre: 'Aguirre 1300', barrio: 'Villa Crespo', ciudad: 'Buenos Aires',
       m2: 38, ambientes: 2, piso: null, estado: 'En estudio', faseActual: 0,
       fechasFases: ['2026-08', null, null, null, null, null, null, null],
       portada: 'ph-5', responsable: null,
@@ -172,11 +172,13 @@ window.RECOBA_DATA = {
       media: [ { tipo: 'foto', etiqueta: 'Demolición', ph: 'ph-4' } ] }
   ],
 
-  // Bandeja de la obra: lo que llega reenviado a su dirección de correo y espera revisión.
+  // Bandeja: lo que llega reenviado a la dirección única de la instalación (instalacion.emailObras).
+  // estado 'pendiente' = ya asignado a una obra · 'sin-asignar' = espera que alguien le asigne obra (obraSugerida es la propuesta del panel).
   bandeja: [
     { id: 'bz1', obra: 'ayacucho', tipo: 'foto', remitente: 'Carlos R.', via: 'Reenviado desde el móvil', asunto: 'Fotos de la cocina terminada', fecha: '2026-09-11T09:40', adjuntos: 3, estado: 'pendiente' },
     { id: 'bz2', obra: 'ayacucho', tipo: 'factura', remitente: 'Marmolería Arenales', via: 'Email del proveedor', asunto: 'Factura 0001-00042 · mesada de granito', fecha: '2026-09-10T17:12', adjuntos: 1, estado: 'pendiente' },
-    { id: 'bz3', obra: 'guemes', tipo: 'documento', remitente: 'Administración del edificio', via: 'Email', asunto: 'Liquidación de expensas de agosto', fecha: '2026-09-08T11:05', adjuntos: 1, estado: 'pendiente' }
+    { id: 'bz3', obra: null, obraSugerida: 'guemes', tipo: 'documento', remitente: 'Administración del edificio', via: 'Email', asunto: 'Liquidación de expensas de agosto', fecha: '2026-09-08T11:05', adjuntos: 1, estado: 'sin-asignar' },
+    { id: 'bz4', obra: null, tipo: 'factura', remitente: 'Pinturería Centro', via: 'Email del proveedor', asunto: 'Presupuesto de pintura y terminaciones', fecha: '2026-09-11T08:20', adjuntos: 2, estado: 'sin-asignar' }
   ],
 
   categoriasDocumento: ['Contratos', 'Escrituras y dominio', 'Seguros y permisos', 'Presupuestos', 'Facturas y comprobantes', 'Rendiciones e informes'],
@@ -270,7 +272,7 @@ window.RECOBA_DATA = {
 
   alertas: [
     { id: 'al1', tono: 'gold', icono: 'clock', titulo: 'Avance pendiente de publicar', texto: 'Carlos R. envió «Cocina: bajo mesada y alacenas» con 4 fotos.', obra: 'ayacucho', accion: { label: 'Revisar', href: 'obra.html?id=ayacucho#diario' } },
-    { id: 'al2', tono: 'copper', icono: 'mail', titulo: 'Entradas sin revisar', texto: 'Llegaron 2 entradas al correo de Ayacucho 1400: fotos de la cocina y una factura.', obra: 'ayacucho', accion: { label: 'Ver bandeja', href: 'obra.html?id=ayacucho#bandeja' } },
+    { id: 'al2', tono: 'copper', icono: 'mail', titulo: 'Entradas sin revisar', texto: 'Dos entradas del correo del panel, ya asignadas a Ayacucho 1400: fotos de la cocina y una factura.', obra: 'ayacucho', accion: { label: 'Ver bandeja', href: 'obra.html?id=ayacucho#bandeja' } },
     { id: 'al3', tono: 'copper', icono: 'trend', titulo: 'Partida cerca del límite', texto: 'Instalaciones lleva el 90% de su presupuesto con la obra al 45%.', obra: 'ayacucho', accion: { label: 'Ver números', href: 'obra.html?id=ayacucho#numeros' } },
     { id: 'al4', tono: 'ink', icono: 'users', titulo: 'Invitación sin aceptar', texto: 'Andrés T. aún no ha accedido al portal (invitado el 05/09/2026).', obra: 'junin', accion: { label: 'Ver personas', href: 'obra.html?id=junin#personas' } },
     { id: 'al5', tono: 'gold', icono: 'file', titulo: 'Contrato próximo a vencer', texto: 'La administración de renta temporal de Güemes 3800 vence el 31/10/2026.', obra: 'guemes', accion: { label: 'Ver documentos', href: 'obra.html?id=guemes#documentos' } }

@@ -164,6 +164,10 @@
     }, 0);
   }
   const visibilidad = (id) => (D.visibilidades.find((v) => v.id === id) || { nombre: id }).nombre;
+  /* Trabajo pendiente dentro de las obras: borradores por publicar + entradas ya asignadas.
+     Lo que llega sin asignar se cuenta aparte, en la bandeja de la portada. */
+  const pendientes = () => D.avances.filter((a) => a.estado === 'borrador').length
+    + (D.bandeja || []).filter((b) => b.estado === 'pendiente').length;
 
   /* ---------- Piezas de interfaz reutilizables ---------- */
   const ESTADO_CHIP = {
@@ -226,7 +230,13 @@
       <div class="sb-install"><b>${esc(inst.cliente)}</b>${esc(inst.dominio)}</div>
       <nav aria-label="Secciones del panel">${nav}</nav>
       <div class="sb-foot">${avatar(u)}<div><div class="sb-foot-name">${esc(u.nombre)}</div><div class="sb-foot-role">${esc((perfil(u.perfil) || {}).nombre || '')}</div></div></div>
-      <p class="sb-demo">Maqueta navegable · datos ilustrativos</p>`;
+      <p class="sb-demo">Maqueta navegable · datos ilustrativos<button class="sb-reset" type="button" id="sb-reset" title="Borra lo publicado en la demostración">Reiniciar</button></p>`;
+    const reset = el.querySelector('#sb-reset');
+    if (reset) reset.addEventListener('click', () => {
+      if (window.RecoBADemo) window.RecoBADemo.reset();
+      toast('Demostración reiniciada', 'refresh');
+      setTimeout(() => window.location.reload(), 600);
+    });
   }
 
   function renderTopbar(page) {
@@ -442,7 +452,7 @@
     data: D, icon, esc,
     group, money, pct, date, ago, daysUntil,
     obra, persona, perfil, qs, partidas, partidasPlanas, partidaNombre,
-    gastos, avances, documentos, camaras, participaciones, capitalDe, distribucionesDe, visibilidad,
+    gastos, avances, documentos, camaras, participaciones, capitalDe, distribucionesDe, visibilidad, pendientes,
     chip, estadoChip, avatar, bar, phases,
     toast, openModal, closeModal, activateTab, hydrate
   };

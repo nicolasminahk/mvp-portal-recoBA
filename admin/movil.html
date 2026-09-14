@@ -187,7 +187,7 @@
         <div>
           <p class="eyebrow">Equipo de obra</p>
           <h1>Carga desde el móvil</h1>
-          <p class="page-sub">Pensada para el jefe de obra: se sacan las fotos, se escriben dos líneas y se envía. También se puede reenviar por correo a la dirección de la obra. Administración revisa y publica.</p>
+          <p class="page-sub">Pensada para el jefe de obra: se sacan las fotos, se escriben dos líneas y se envía. También se puede reenviar por correo a la dirección del panel. Administración revisa y publica.</p>
         </div>
         <div class="page-actions">
           <a class="btn btn-ghost" href="obra.html?id=ayacucho#diario"><span data-icon="clock"></span>Ver avances pendientes</a>
@@ -248,12 +248,12 @@
             <div class="card-head">
               <div>
                 <h2 id="pg-movil-correo-titulo">Reenviar por correo</h2>
-                <p class="card-sub">Cada obra tiene su dirección</p>
+                <p class="card-sub">Una dirección para todas las obras</p>
               </div>
               <span class="chip chip-outline no-dot">Por correo</span>
             </div>
             <div class="card-body">
-              <p class="pg-movil-correo-intro">El equipo y los proveedores pueden reenviar una foto, una factura o un presupuesto a la dirección de la obra.</p>
+              <p class="pg-movil-correo-intro">El equipo y los proveedores pueden reenviar una foto, una factura o un presupuesto a la dirección del panel.</p>
               <div class="pg-movil-correo mt-12">
                 <span class="list-icon tone-copper"><span data-icon="mail"></span></span>
                 <span class="pg-movil-correo-main">
@@ -264,12 +264,12 @@
               </div>
               <div class="pg-movil-detalles mt-12">
                 <p class="pg-movil-detalle"><span data-icon="receipt"></span><span>Sirve para lo que ya llega por email: facturas, presupuestos y liquidaciones.</span></p>
-                <p class="pg-movil-detalle"><span data-icon="clock"></span><span>Entra en la bandeja de esa obra y espera revisión. No se publica solo.</span></p>
+                <p class="pg-movil-detalle"><span data-icon="clock"></span><span>Entra al panel, se asigna a su obra y espera revisión. No se publica solo.</span></p>
               </div>
             </div>
             <div class="card-foot pg-movil-foot">
-              <span class="pg-movil-ve-pie">Una dirección distinta por obra.</span>
-              <a class="btn btn-text btn-sm" href="ajustes.html#avisos">Ver todas las direcciones<span data-icon="arrow-right"></span></a>
+              <span class="pg-movil-ve-pie">Una sola dirección para toda la empresa.</span>
+              <a class="btn btn-text btn-sm" href="ajustes.html#avisos">Ver ajustes de avisos<span data-icon="arrow-right"></span></a>
             </div>
           </section>
 
@@ -436,8 +436,8 @@
 
   /* ---------- Segunda vía: la dirección de correo de la obra ---------- */
   const OBRA = A.obra(OBRA_ID) || D.obras[0];
-  $('pg-movil-correo-dir').textContent = OBRA.email;
-  $('pg-movil-correo-obra').textContent = `${OBRA.nombre} · ${OBRA.barrio}`;
+  $('pg-movil-correo-dir').textContent = window.RECOBA_DATA.instalacion.emailObras;
+  $('pg-movil-correo-obra').textContent = 'Entra al panel y se asigna a su obra';
   $('pg-movil-copiar-correo').addEventListener('click', () => {
     try { if (navigator.clipboard) navigator.clipboard.writeText(OBRA.email).catch(() => {}); } catch (e) { /* sin portapapeles */ }
     A.toast(`Dirección copiada: ${OBRA.email}`, 'copy');

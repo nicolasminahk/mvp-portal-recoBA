@@ -4099,5 +4099,524 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 })();
 </script>
+
+<!-- ============================================================
+     Puente con el panel de administración (demo)
+     Lee lo que el panel dejó guardado en el navegador (mismo
+     dominio, clave "recoba-demo-v1") y lo suma a lo que ya existe:
+     avances arriba de la línea de tiempo, documentos visibles para
+     inversores, partidas de gastos, campana y "Últimas novedades".
+     Si no hay nada guardado —o el navegador bloquea el
+     almacenamiento— no toca absolutamente nada del portal.
+     ============================================================ -->
+<script src="admin/assets/demo-store.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var API = window.RecoBADemo;
+  if (!API || typeof API.deObra !== "function") return;
+
+  /* ------------------------------------------------------------
+     Constantes
+     ------------------------------------------------------------ */
+  var MARCA = "data-demo-panel";   /* marca todo lo que inyectamos */
+  var TOPE_AVISOS = 5;             /* no inundar campana ni novedades */
+  var MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
+               "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+
+  var OBRAS = [
+    { id: "ayacucho", nombre: "Ayacucho 1400" },
+    { id: "guemes", nombre: "Güemes 3800" }
+  ];
+
+  var SVG_FOTO = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg>';
+  var SVG_PLAY = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="var(--ink)"/></svg>';
+  var SVG_DOC  = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg>';
+  var SVG_CASA = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11 12 4l9 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9.6V20h12V9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var SVG_HOJA = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg>';
+
+  /* Estilos propios: solo clases nuevas, usadas únicamente por lo
+     que inyectamos. Se añaden la primera vez que hay algo que pintar. */
+  var CSS = '.demo-nuevo{margin-left:8px;padding:3px 8px;font-size:9.5px;vertical-align:2px;}' +
+            '.demo-avance-titulo{font-size:15px;font-weight:700;color:var(--ink);line-height:1.35;margin-bottom:5px;}';
+  var cssPuesto = false;
+
+  function ponerEstilos() {
+    if (cssPuesto) return;
+    cssPuesto = true;
+    var st = document.createElement("style");
+    st.setAttribute("data-demo-panel-css", "");
+    st.appendChild(document.createTextNode(CSS));
+    (document.head || document.documentElement).appendChild(st);
+  }
+
+  /* ------------------------------------------------------------
+     Utilidades
+     ------------------------------------------------------------ */
+  function esc(v) {
+    return String(v == null ? "" : v)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function dd(n) { return (n < 10 ? "0" : "") + n; }
+
+  function aFecha(valor) {
+    if (!valor) return null;
+    var m = String(valor).match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    var d = new Date(valor);
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  function fechaLarga(valor) {          /* 22 de agosto, 2026 */
+    var d = aFecha(valor);
+    if (!d) return String(valor || "");
+    return dd(d.getDate()) + " de " + MESES[d.getMonth()] + ", " + d.getFullYear();
+  }
+
+  function fechaCorta(valor) {          /* 22/08 */
+    var d = aFecha(valor);
+    if (!d) return String(valor || "");
+    return dd(d.getDate()) + "/" + dd(d.getMonth() + 1);
+  }
+
+  function fechaPlena(valor) {          /* 22/08/2026 */
+    var d = aFecha(valor);
+    if (!d) return String(valor || "");
+    return dd(d.getDate()) + "/" + dd(d.getMonth() + 1) + "/" + d.getFullYear();
+  }
+
+  function orden(valor) {
+    var d = aFecha(valor);
+    return d ? d.getTime() : 0;
+  }
+
+  function miles(n) {
+    return String(Math.round(Math.abs(Number(n) || 0)))
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function usd(n) {
+    var v = Number(n) || 0;
+    return (v < 0 ? "-US$" : "US$") + miles(v);
+  }
+
+  function pct1(n) {
+    return String(Math.round((Number(n) || 0) * 10) / 10).replace(".", ",");
+  }
+
+  function normPh(ph, i) {
+    var m = String(ph == null ? "" : ph).match(/([1-5])\s*$/);
+    return "ph-" + (m ? m[1] : ((i % 5) + 1));
+  }
+
+  function frase(t) {
+    var s = String(t || "").replace(/\s+/g, " ").trim();
+    if (!s) return s;
+    return /[.!?…]$/.test(s) ? s : s + ".";
+  }
+
+  /* ------------------------------------------------------------
+     Avances
+     ------------------------------------------------------------ */
+  function htmlMedia(fotos) {
+    if (!fotos || !fotos.length) return "";
+    var out = "";
+    for (var i = 0; i < fotos.length && i < 6; i++) {
+      var f = fotos[i] || {};
+      var ph = normPh(f.ph, i);
+      var etiqueta = esc(f.etiqueta || f.nombre || "Obra");
+      if (String(f.tipo || "").toLowerCase() === "video") {
+        out += '<div class="media-ph video ' + ph + '">' +
+                 '<span class="play-circle">' + SVG_PLAY + '</span>' +
+                 '<span class="media-label">Video · ' + etiqueta +
+                 (f.duracion ? " · " + esc(f.duracion) : "") + '</span></div>';
+      } else {
+        out += '<div class="media-ph ' + ph + '">' +
+                 '<span class="media-icon">' + SVG_FOTO + '</span>' +
+                 '<span class="media-label">Foto · ' + etiqueta + '</span></div>';
+      }
+    }
+    return '<div class="media-row">' + out + '</div>';
+  }
+
+  function nodoAvance(av) {
+    var el = document.createElement("div");
+    el.className = "timeline-item";
+    el.setAttribute(MARCA, "avance");
+    el.innerHTML =
+      '<div class="timeline-date">' + esc(fechaLarga(av.fecha)) +
+        '<span class="chip chip-copper demo-nuevo">Nuevo</span></div>' +
+      (av.titulo ? '<div class="demo-avance-titulo">' + esc(av.titulo) + '</div>' : "") +
+      (av.texto ? '<p class="timeline-text">' + esc(av.texto) + '</p>' : "") +
+      htmlMedia(av.fotos || av.media);
+    return el;
+  }
+
+  /* ------------------------------------------------------------
+     Documentos
+     ------------------------------------------------------------ */
+  function loVeElInversor(doc) {
+    var v = String(doc.visibilidad == null ? "inversores" : doc.visibilidad).toLowerCase();
+    return v.indexOf("equipo") === -1 && v !== "interno" && v !== "privado" && v !== "borrador";
+  }
+
+  function nodoDocumento(doc) {
+    var li = document.createElement("li");
+    li.className = "doc-item";
+    li.setAttribute(MARCA, "documento");
+    var estado = doc.estado ? String(doc.estado) : "";
+    estado = estado ? estado.charAt(0).toLowerCase() + estado.slice(1) : "publicado";
+    var meta = esc(doc.tipo || "PDF") + " · " + esc(estado) +
+               (doc.fecha ? " " + esc(fechaPlena(doc.fecha)) : "");
+    li.innerHTML =
+      '<span class="doc-icon">' + SVG_DOC + '</span>' +
+      '<div class="doc-info">' +
+        '<div class="doc-name">' + esc(doc.nombre || "Documento") +
+          '<span class="chip chip-copper demo-nuevo">Nuevo</span></div>' +
+        '<div class="doc-meta">' + meta + '</div>' +
+      '</div>' +
+      '<span class="tooltip-wrap"><button class="btn btn-ghost" type="button" disabled>Descargar</button>' +
+      '<span class="tooltip-bubble">Disponible en la versión final</span></span>';
+    return li;
+  }
+
+  /* ------------------------------------------------------------
+     Contenedores (si la vista no los tiene, se crean con los
+     mismos componentes del portal)
+     ------------------------------------------------------------ */
+  function crearSeccion(vista, titulo, html, sel) {
+    var wrap = vista.querySelector(".wrap");
+    if (!wrap) return null;
+    /* rótulo y caja van sueltos dentro de .wrap para heredar los
+       mismos márgenes que el resto de secciones de la vista */
+    var rotulo = document.createElement("div");
+    rotulo.className = "section-title";
+    rotulo.setAttribute(MARCA, "seccion");
+    rotulo.appendChild(document.createTextNode(titulo));
+    wrap.appendChild(rotulo);
+    var caja = document.createElement("div");
+    caja.setAttribute(MARCA, "seccion");
+    caja.innerHTML = html;
+    wrap.appendChild(caja);
+    return caja.querySelector(sel);
+  }
+
+  function lineaDeTiempo(vista) {
+    return vista.querySelector('[data-tab-panel="avances"] .timeline') ||
+           vista.querySelector(".timeline") ||
+           crearSeccion(vista, "Avances de obra", '<div class="timeline"></div>', ".timeline");
+  }
+
+  function listaDocumentos(vista) {
+    return vista.querySelector('[data-tab-panel="documentos"] .doc-list') ||
+           vista.querySelector(".doc-list") ||
+           crearSeccion(vista, "Documentos", '<ul class="doc-list"></ul>', ".doc-list");
+  }
+
+  /* ------------------------------------------------------------
+     Gastos: se reescribe la tabla y las tres cifras de arriba a
+     partir de las partidas guardadas. Se conserva copia del
+     original para poder volver atrás en cada repintado.
+     ------------------------------------------------------------ */
+  var respaldos = {};
+
+  function guardarRespaldo(obraId, panel) {
+    if (respaldos[obraId]) return;
+    var tbody = panel.querySelector(".budget-table tbody");
+    var nota = panel.querySelector(".budget-note");
+    var cards = panel.querySelectorAll(".budget-summary .stat-card");
+    var copias = [];
+    for (var i = 0; i < cards.length; i++) copias.push(cards[i].innerHTML);
+    respaldos[obraId] = {
+      tbody: tbody ? tbody.innerHTML : null,
+      nota: nota ? nota.textContent : null,
+      cards: copias
+    };
+  }
+
+  function restaurarGastos(obraId, panel) {
+    var r = respaldos[obraId];
+    if (!r) return;
+    var tbody = panel.querySelector(".budget-table tbody");
+    if (tbody && r.tbody !== null) tbody.innerHTML = r.tbody;
+    var nota = panel.querySelector(".budget-note");
+    if (nota && r.nota !== null) nota.textContent = r.nota;
+    var cards = panel.querySelectorAll(".budget-summary .stat-card");
+    for (var i = 0; i < cards.length && i < r.cards.length; i++) cards[i].innerHTML = r.cards[i];
+  }
+
+  function filaGasto(p, clase, conPct) {
+    p = p || {};
+    var pre = Number(p.presupuesto) || 0;
+    var eje = Number(p.ejecutado) || 0;
+    var pct = pre > 0 ? Math.round((eje / pre) * 100) : (eje > 0 ? 100 : 0);
+    var ancho = Math.max(0, Math.min(100, pct));
+    var extra = pct >= 100 ? " full" : (eje <= 0 ? " zero" : "");
+    var nombre = esc(p.nombre || p.id || "Partida");
+    if (p.detalle) {
+      nombre += ' <span style="color:var(--ink-mute); font-weight:400;">(' + esc(p.detalle) + ')</span>';
+    }
+    return '<tr class="' + clase + '">' +
+      '<td>' + nombre + '</td>' +
+      '<td class="budget-amt">' + usd(pre) + ' / ' + usd(eje) + '</td>' +
+      '<td class="budget-bar-cell"><div class="mini-bar">' +
+        '<div class="mini-bar-fill' + extra + '" style="width:' + ancho + '%"></div></div>' +
+        (conPct ? '<div class="budget-pct">' + pct + '%</div>' : "") +
+      '</td></tr>';
+  }
+
+  function ponerCifra(card, valor, sub) {
+    if (!card) return;
+    var v = card.querySelector(".stat-value");
+    if (v) v.textContent = valor;
+    var s = card.querySelector(".stat-sub");
+    if (s && sub != null) s.textContent = sub;
+  }
+
+  function pintarGastos(obraId, vista, partidas, sello) {
+    var panel = vista.querySelector('[data-tab-panel="gastos"]');
+    if (!panel) return;
+    if (!partidas || !partidas.length) {
+      if (respaldos[obraId]) restaurarGastos(obraId, panel);
+      return;
+    }
+    guardarRespaldo(obraId, panel);
+    restaurarGastos(obraId, panel);
+
+    var total = 0, ejec = 0, filas = "";
+    for (var i = 0; i < partidas.length; i++) {
+      var p = partidas[i] || {};
+      total += Number(p.presupuesto) || 0;
+      ejec += Number(p.ejecutado) || 0;
+      filas += filaGasto(p, "row-main", true);
+      var subs = p.sub || p.subpartidas || [];
+      for (var j = 0; j < subs.length; j++) filas += filaGasto(subs[j], "row-sub", false);
+    }
+
+    var tbody = panel.querySelector(".budget-table tbody");
+    if (tbody) tbody.innerHTML = filas;
+
+    var cards = panel.querySelectorAll(".budget-summary .stat-card");
+    ponerCifra(cards[0], usd(total));
+    ponerCifra(cards[1], usd(ejec), total > 0 ? pct1((ejec / total) * 100) + "% del presupuesto" : "");
+    ponerCifra(cards[2], usd(total - ejec));
+
+    var nota = panel.querySelector(".budget-note");
+    if (nota) {
+      var f = aFecha(sello) || new Date();
+      nota.textContent = nota.textContent.replace(/\d{2}\/\d{2}\/\d{4}/,
+        dd(f.getDate()) + "/" + dd(f.getMonth() + 1) + "/" + f.getFullYear());
+    }
+  }
+
+  /* ------------------------------------------------------------
+     Campana y banda "Últimas novedades"
+     ------------------------------------------------------------ */
+  function irA(destino) {
+    var nav = window.recobaNav;
+    if (nav && typeof nav.showView === "function") nav.showView(destino);
+  }
+
+  function cerrarCampana() {
+    var dd_ = document.getElementById("ntf-dropdown");
+    var btn = document.getElementById("ntf-bell-btn");
+    if (dd_) dd_.classList.remove("open");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  }
+
+  function actualizarBadge() {
+    var lista = document.getElementById("ntf-dropdown");
+    if (!lista) return;
+    var badge = document.getElementById("ntf-badge");
+    var btn = document.getElementById("ntf-bell-btn");
+    var sinLeer = lista.querySelectorAll(".ntf-unread").length;
+    if (badge) {
+      badge.textContent = String(sinLeer);
+      badge.style.display = sinLeer > 0 ? "flex" : "none";
+    }
+    if (btn) {
+      btn.setAttribute("aria-label",
+        sinLeer > 0 ? "Notificaciones (" + sinLeer + " sin leer)" : "Notificaciones");
+    }
+  }
+
+  function nodoNotificacion(aviso) {
+    var li = document.createElement("li");
+    li.className = "ntf-unread";
+    li.setAttribute(MARCA, "notificacion");
+    li.innerHTML =
+      '<button class="ntf-item" type="button" data-ntf-nav="' + esc(aviso.obra) + '">' +
+        '<span class="ntf-item-icon">' + (aviso.tipo === "documento" ? SVG_HOJA : SVG_CASA) + '</span>' +
+        '<span class="ntf-item-body">' +
+          '<span class="ntf-item-title">' + esc(aviso.titulo) + '</span>' +
+          '<span class="ntf-item-text">' + esc(aviso.texto) + '</span>' +
+          '<span class="ntf-item-time">recién</span>' +
+        '</span>' +
+      '</button>';
+    li.querySelector(".ntf-item").addEventListener("click", function () {
+      if (li.classList.contains("ntf-unread")) {
+        li.classList.remove("ntf-unread");
+        li.classList.add("ntf-read");
+      }
+      cerrarCampana();
+      actualizarBadge();
+      irA(aviso.obra);
+    });
+    return li;
+  }
+
+  function nodoNovedad(nv) {
+    var li = document.createElement("li");
+    li.className = "adv-news-item";
+    li.setAttribute(MARCA, "novedad");
+    li.innerHTML =
+      '<span class="adv-news-date numeral">' + esc(fechaCorta(nv.fecha)) + '</span>' +
+      '<span class="adv-news-text">' + esc(nv.texto) + '</span>' +
+      '<a href="#" class="adv-news-link">Ver →</a>';
+    li.querySelector("a").addEventListener("click", function (e) {
+      e.preventDefault();
+      irA(nv.obra);
+    });
+    return li;
+  }
+
+  /* ------------------------------------------------------------
+     Pintado completo (idempotente: se puede repetir)
+     ------------------------------------------------------------ */
+  var huboAvisos = false;
+
+  function limpiar() {
+    var previos = document.querySelectorAll("[" + MARCA + "]");
+    for (var i = 0; i < previos.length; i++) {
+      if (previos[i].parentNode) previos[i].parentNode.removeChild(previos[i]);
+    }
+  }
+
+  function insertarArriba(contenedor, nodos) {
+    if (!contenedor || !nodos.length) return;
+    var ancla = contenedor.firstChild;
+    for (var i = 0; i < nodos.length; i++) contenedor.insertBefore(nodos[i], ancla);
+  }
+
+  function porFechaDesc(a, b) { return orden(b.fecha) - orden(a.fecha); }
+
+  function aplicar() {
+    limpiar();
+
+    var sello = null;
+    try { sello = (API.resumen() || {}).sello; } catch (e) { sello = null; }
+
+    var avisos = [], novedades = [], hayAlgo = false;
+
+    for (var i = 0; i < OBRAS.length; i++) {
+      var obra = OBRAS[i];
+      var vista = document.getElementById("view-" + obra.id);
+      if (!vista) continue;
+
+      var datos = {};
+      try { datos = API.deObra(obra.id) || {}; } catch (e) { datos = {}; }
+
+      var avances = (datos.avances || []).slice().sort(porFechaDesc);
+      var docs = [];
+      var todos = datos.documentos || [];
+      for (var d = 0; d < todos.length; d++) {
+        if (loVeElInversor(todos[d])) docs.push(todos[d]);
+      }
+      docs.sort(porFechaDesc);
+
+      if (avances.length || docs.length) { hayAlgo = true; ponerEstilos(); }
+
+      if (avances.length) {
+        var nodos = [];
+        for (var a = 0; a < avances.length; a++) {
+          nodos.push(nodoAvance(avances[a]));
+          novedades.push({
+            fecha: avances[a].fecha,
+            obra: obra.id,
+            texto: "Nuevo avance de obra en " + obra.nombre + ": " +
+                   frase(avances[a].titulo || avances[a].texto)
+          });
+          if (avances[a].avisar !== false) {
+            avisos.push({
+              fecha: avances[a].fecha, obra: obra.id, tipo: "avance",
+              titulo: "Nuevo avance de obra",
+              texto: obra.nombre + ": " + (avances[a].titulo || avances[a].texto || "")
+            });
+          }
+        }
+        insertarArriba(lineaDeTiempo(vista), nodos);
+      }
+
+      if (docs.length) {
+        var nodosDoc = [];
+        for (var k = 0; k < docs.length; k++) {
+          nodosDoc.push(nodoDocumento(docs[k]));
+          novedades.push({
+            fecha: docs[k].fecha, obra: obra.id,
+            texto: "Nuevo documento en " + obra.nombre + ": " + frase(docs[k].nombre)
+          });
+          avisos.push({
+            fecha: docs[k].fecha, obra: obra.id, tipo: "documento",
+            titulo: "Nuevo documento disponible",
+            texto: obra.nombre + ": " + (docs[k].nombre || "")
+          });
+        }
+        insertarArriba(listaDocumentos(vista), nodosDoc);
+      }
+
+      pintarGastos(obra.id, vista, datos.numeros, sello);
+      if (datos.numeros && datos.numeros.length) hayAlgo = true;
+    }
+
+    /* Campana */
+    avisos.sort(porFechaDesc);
+    avisos = avisos.slice(0, TOPE_AVISOS);
+    var listaNtf = document.querySelector("#ntf-dropdown .ntf-list");
+    if (listaNtf && avisos.length) {
+      var nodosNtf = [];
+      for (var n = 0; n < avisos.length; n++) nodosNtf.push(nodoNotificacion(avisos[n]));
+      insertarArriba(listaNtf, nodosNtf);
+      huboAvisos = true;
+      actualizarBadge();
+    } else if (huboAvisos) {
+      huboAvisos = false;
+      actualizarBadge();
+    }
+
+    /* Banda "Últimas novedades" */
+    novedades.sort(porFechaDesc);
+    novedades = novedades.slice(0, TOPE_AVISOS);
+    var bandaNov = document.querySelector(".adv-news");
+    if (bandaNov && novedades.length) {
+      var nodosNov = [];
+      for (var v = 0; v < novedades.length; v++) nodosNov.push(nodoNovedad(novedades[v]));
+      insertarArriba(bandaNov, nodosNov);
+    }
+
+    return hayAlgo;
+  }
+
+  function aplicarSeguro() {
+    try { aplicar(); } catch (e) { /* la demo nunca debe romper el portal */ }
+  }
+
+  function arrancar() {
+    aplicarSeguro();
+    try { API.onCambio(aplicarSeguro); } catch (e) { /* sin almacenamiento: nada que escuchar */ }
+  }
+
+  /* Después del módulo de notificaciones, para que la campana ya
+     tenga sus propios manejadores puestos. */
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", arrancar);
+  } else {
+    arrancar();
+  }
+
+})();
+</script>
 </body>
 </html>

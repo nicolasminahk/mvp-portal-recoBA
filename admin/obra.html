@@ -29,6 +29,9 @@
   .pg-obra-mailrow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
   .pg-obra-mailaddr { font-size: 13.5px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
   .pg-obra-mailbar .hint { margin-top: 4px; text-wrap: pretty; }
+  .pg-obra-sinasignar { margin: 6px 0 0; font-size: 12px; color: var(--ink-mute); text-wrap: pretty; }
+  .pg-obra-sinasignar a { font-weight: 600; color: var(--copper-dark); }
+  .pg-obra-sinasignar a:hover { color: var(--copper); }
   .pg-obra-bz { margin-top: 6px; }
   .pg-obra-bz-item { align-items: flex-start; gap: 12px; padding: 14px 0; }
   .pg-obra-bz-item .list-main { padding-top: 2px; }
@@ -90,6 +93,9 @@
   .pg-obra-play { position: absolute; top: 50%; left: 50%; z-index: 1; width: 38px; height: 38px; border-radius: 50%; transform: translate(-50%, -62%); display: grid; place-items: center; background: rgba(255,255,255,.92); color: var(--ink); }
   .thumb .pg-obra-play .ico { position: static; width: 14px; height: 14px; margin-left: 2px; fill: currentColor; opacity: 1; }
   .pg-obra-draft-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .pg-obra-timeline .tl-date { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 10px; }
+  .pg-obra-demo-tag { display: inline-flex; align-items: center; gap: 5px; padding: 1px 8px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--paper); color: var(--ink-mute); font-size: 10.5px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+  .pg-obra-demo-tag .ico { width: 12px; height: 12px; }
   .pg-obra-timeline .tl-item::before { box-shadow: 0 0 0 4px var(--paper-card); }
   .pg-obra-timeline .tl-item { padding-bottom: 30px; }
   .pg-obra-timeline .tl-item:last-child { padding-bottom: 0; }
@@ -318,7 +324,8 @@
                 <span class="mono pg-obra-mailaddr" id="pg-bandeja-mail"></span>
                 <button class="btn btn-ghost btn-sm" type="button" id="pg-bandeja-copiar"><span data-icon="copy"></span>Copiar</button>
               </div>
-              <p class="hint">Lo que se reenvíe a esta dirección entra en esta obra y espera aquí a que alguien lo revise.</p>
+              <p class="hint">Una sola dirección para todas las obras: lo que se reenvíe ahí entra en el panel y se asigna a una obra.</p>
+              <p class="pg-obra-sinasignar" id="pg-bandeja-sinasignar" hidden></p>
             </div>
           </div>
           <div id="pg-bandeja-lista"></div>
@@ -655,6 +662,7 @@
 </div>
 
 <script src="assets/data.js"></script>
+<script src="assets/demo-store.js"></script>
 <script src="assets/admin.js"></script>
 <script>
 (function () {
@@ -728,6 +736,106 @@
     return ids.map((id) => A.persona(id)).filter(Boolean);
   }
 
+  /* ============================================================
+     Almacén de la demostración (assets/demo-store.js)
+     Lo que se publica aquí queda guardado en el navegador para que el portal
+     del inversor lo muestre. Si el navegador bloquea el almacenamiento, la
+     pantalla sigue funcionando igual: simplemente no se comparte.
+     ============================================================ */
+  const Demo = window.RecoBADemo || null;
+
+  function demoLlamar(metodo, a, b) {
+    if (!Demo || typeof Demo[metodo] !== 'function') return null;
+    try { return Demo[metodo](a, b); } catch (e) { return null; }
+  }
+  function demoDeLaObra() {
+    const g = demoLlamar('deObra', o.id);
+    return g && typeof g === 'object' ? g : null;
+  }
+  const idDemo = (p) => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  // Las fotos viajan al portal con su etiqueta y su marcador de imagen.
+  const fotosDe = (media) => (media || []).map((m) => ({ etiqueta: m.etiqueta, ph: m.ph || 'ph-1', tipo: esVideo(m) ? 'video' : 'foto' }));
+  // Los números viajan como partidas principales.
+  function guardarNumeros() {
+    demoLlamar('setNumeros', o.id, madres().map((p) => ({
+      id: p.id, nombre: p.nombre, presupuesto: p.presupuesto || 0, ejecutado: p.ejecutado || 0
+    })));
+  }
+
+  // Al abrir la pantalla se recupera lo publicado en la demostración, para que
+  // una recarga no pierda lo que se acaba de enseñar.
+  function recuperarDemo() {
+    const g = demoDeLaObra();
+    if (!g) return;
+    (g.avances || []).slice().reverse().forEach((a) => {
+      if (!a || !a.titulo) return;
+      D.avances.unshift({
+        id: a.id || idDemo('demo-av-'),
+        obra: o.id,
+        fecha: a.fecha || HOY,
+        titulo: a.titulo,
+        texto: a.texto || '',
+        estado: 'publicado',
+        autor: D.usuario.id,
+        publicadoPor: D.usuario.id,
+        vistoPor: 0,
+        demo: true,
+        media: (a.fotos || []).map((f, i) => ({
+          tipo: f.tipo === 'video' ? 'video' : 'foto',
+          etiqueta: f.etiqueta || `Foto ${i + 1}`,
+          ph: f.ph || 'ph-' + (1 + (i % 5))
+        }))
+      });
+    });
+    (g.documentos || []).slice().reverse().forEach((d) => {
+      if (!d || !d.nombre) return;
+      D.documentos.unshift({
+        id: d.id || idDemo('demo-doc-'),
+        obra: o.id,
+        nombre: d.nombre,
+        categoria: d.categoria || D.categoriasDocumento[0],
+        tipo: d.tipo || 'PDF',
+        estado: d.estado || 'Firmado',
+        fecha: d.fecha || HOY,
+        visibilidad: d.visibilidad || 'inversores',
+        subidoPor: D.usuario.id,
+        peso: null,
+        demo: true
+      });
+    });
+    (g.personas || []).slice().reverse().forEach((p) => {
+      if (!p || !p.nombre) return;
+      const id = p.id || idDemo('demo-per-');
+      if (!A.persona(id)) {
+        D.inversores.push({ id, nombre: p.nombre, iniciales: iniciales(p.nombre), email: p.email || '', estado: 'invitado', acceso: p.acceso || 'Google', invitado: p.fecha || HOY, demo: true });
+      }
+      if (o.estado === 'En estudio') {
+        D.compromisos.push({ inversor: id, obra: o.id, monto: p.monto || 0, estado: 'Interesado', fecha: p.fecha || HOY });
+      } else {
+        D.participaciones.push({ inversor: id, obra: o.id, monto: p.monto || 0, pct: p.pct || 0, fecha: p.fecha || HOY });
+      }
+    });
+    const nums = g.numeros;
+    if (nums && nums.length) {
+      const actuales = madres();
+      if (!actuales.length) {
+        D.partidas[o.id] = nums.map((n) => {
+          const base = PARTIDAS_BASE.find((x) => x.id === n.id) || {};
+          return Object.assign({}, base, {
+            id: n.id, nombre: n.nombre || base.nombre || n.id,
+            presupuesto: n.presupuesto || 0, ejecutado: n.ejecutado || 0
+          });
+        });
+      } else {
+        nums.forEach((n) => {
+          const p = actuales.find((x) => x.id === n.id);
+          if (p) { p.presupuesto = n.presupuesto || 0; p.ejecutado = n.ejecutado || 0; }
+        });
+      }
+      sincronizarObra();
+    }
+  }
+
   /* ---------- Cabecera ---------- */
   function renderHero() {
     const r = o.responsable ? A.persona(o.responsable) : null;
@@ -749,19 +857,32 @@
   const ICONO_BZ = { foto: 'image', factura: 'receipt', documento: 'file' };
   const TONO_BZ = { foto: 'tone-copper', factura: 'tone-gold', documento: 'tone-ink' };
   const CAT_BZ = { factura: 'Facturas y comprobantes', documento: 'Facturas y comprobantes', foto: 'Rendiciones e informes' };
-  const correoObra = () => o.email || `${o.id}@${D.instalacion.dominioObras}`;
+  // Una sola dirección para toda la instalación: lo reenviado ahí entra en el
+  // panel y se asigna a una obra (las entradas sin asignar se resuelven en la portada).
+  const correoObras = () => D.instalacion.emailObras;
   const pendientes = () => (D.bandeja || []).filter((b) => b.obra === o.id && b.estado === 'pendiente');
+  const sinAsignar = () => (D.bandeja || []).filter((b) => b.estado === 'sin-asignar');
+
+  function pintarSinAsignar() {
+    const el = $('#pg-bandeja-sinasignar');
+    if (!el) return;
+    const n = sinAsignar().length;
+    el.hidden = !n;
+    if (!n) { el.innerHTML = ''; return; }
+    el.innerHTML = `${A.esc(plural(n, 'entrada', 'entradas'))} ${n === 1 ? 'todavía no pertenece' : 'todavía no pertenecen'} a ninguna obra. <a href="index.html">Asignar${n === 1 ? 'la' : 'las'} desde la portada</a>`;
+  }
 
   function renderBandeja() {
     const list = pendientes();
-    $('#pg-bandeja-mail').textContent = correoObra();
+    $('#pg-bandeja-mail').textContent = correoObras();
     $('#pg-bandeja-sub').textContent = list.length
       ? `${plural(list.length, 'entrada pendiente', 'entradas pendientes')} de revisar`
       : 'Todo revisado';
     $('#pg-bandeja-chip').innerHTML = list.length ? A.chip(`${A.group(list.length)} pendiente${list.length === 1 ? '' : 's'}`, 'chip-gold') : A.chip('Al día', 'chip-sage');
+    pintarSinAsignar();
     const caja = $('#pg-bandeja-lista');
     if (!list.length) {
-      caja.innerHTML = `<div class="pg-obra-bz-vacio">${A.icon('check')}<span>No hay nada esperando revisión. Reenvíe a esta dirección las fotos del móvil, las facturas de los proveedores o los documentos de la obra y aparecerán aquí.</span></div>`;
+      caja.innerHTML = `<div class="pg-obra-bz-vacio">${A.icon('check')}<span>No hay nada esperando revisión. Lo que se reenvíe a la dirección de arriba y se asigne a esta obra aparecerá aquí.</span></div>`;
       return;
     }
     caja.innerHTML = `<div class="list pg-obra-bz">${list.map((b) => `
@@ -805,8 +926,8 @@
   }
 
   $('#pg-bandeja-copiar').addEventListener('click', () => {
-    const texto = correoObra();
-    const listo = () => A.toast('Dirección de la obra copiada', 'copy');
+    const texto = correoObras();
+    const listo = () => A.toast('Dirección de correo copiada', 'copy');
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(texto).then(listo, listo);
       return;
@@ -958,8 +1079,9 @@
     return `<p class="pg-obra-sub">${A.icon('check')}Publicados</p>
       <div class="timeline pg-obra-timeline">${list.map((av) => {
         const p = A.persona(av.autor);
+        const marca = av.demo ? `<span class="pg-obra-demo-tag">${A.icon('eye')}Publicado en la demostración</span>` : '';
         return `<article class="tl-item" id="pg-av-${A.esc(av.id)}">
-          <div class="tl-date">${A.esc(A.date(av.fecha, 'long'))}</div>
+          <div class="tl-date">${A.esc(A.date(av.fecha, 'long'))}${marca}</div>
           <h4 class="pg-obra-av-title">${A.esc(av.titulo)}</h4>
           <p class="pg-obra-av-text">${A.esc(av.texto)}</p>
           ${mediaHTML(av.media)}
@@ -990,7 +1112,9 @@
     const n = nInv();
     const todos = A.avances(o.id).slice().sort((a, b) => b.fecha.localeCompare(a.fecha));
     const drafts = todos.filter((a) => a.estado === 'borrador');
-    const pub = todos.filter((a) => a.estado === 'publicado');
+    // Lo publicado en la demostración encabeza la línea de tiempo, sea cual sea su fecha.
+    const pub = todos.filter((a) => a.estado === 'publicado')
+      .sort((a, b) => (b.demo ? 1 : 0) - (a.demo ? 1 : 0) || b.fecha.localeCompare(a.fecha));
     const el = $('#pg-diario');
     if (!todos.length) {
       el.innerHTML = emptyHTML('image', 'Sin avances todavía', 'Los avances con fotos y vídeos se muestran aquí y en el portal del inversor, en orden cronológico.',
@@ -1156,6 +1280,10 @@
     if (vence) doc.vence = vence;
     if (elegidos.length) doc.compartidoCon = elegidos;
     D.documentos.unshift(doc);
+    demoLlamar('addDocumento', {
+      obra: o.id, nombre: doc.nombre, categoria: doc.categoria,
+      estado: doc.estado, fecha: doc.fecha, visibilidad: doc.visibilidad, tipo: doc.tipo
+    });
     const entrada = bandejaDoc;
     fDoc.dataset.demo = entrada ? `«${nombre}» guardado · entrada archivada` : `«${nombre}» guardado en ${o.nombre}`;
     if (entrada) resolverBandeja(entrada.id);
@@ -1774,11 +1902,13 @@
     const pctV = parsePct(iv.pct.value);
     const id = 'i-' + Date.now().toString(36);
     D.inversores.push({ id, nombre, iniciales: iniciales(nombre), email, estado: 'invitado', acceso: iv.acceso.value, invitado: HOY });
+    const pctFinal = pctV !== null ? round1(pctV) : (monto && b ? round1((monto / b.valor) * 100) : 0);
     if (o.estado === 'En estudio') {
       D.compromisos.push({ inversor: id, obra: o.id, monto: monto || 0, estado: 'Interesado', fecha: HOY });
     } else {
-      D.participaciones.push({ inversor: id, obra: o.id, monto: monto || 0, pct: pctV !== null ? round1(pctV) : (monto && b ? round1((monto / b.valor) * 100) : 0), fecha: HOY });
+      D.participaciones.push({ inversor: id, obra: o.id, monto: monto || 0, pct: pctFinal, fecha: HOY });
     }
+    demoLlamar('addPersona', { obra: o.id, nombre, email, monto: monto || 0, pct: pctFinal, acceso: iv.acceso.value });
     fInv.dataset.demo = iv.enviar.checked ? `Invitación enviada a ${email}` : `Se ha añadido a ${nombre} sin enviar la invitación`;
     renderPersonas();
     renderMetricas();
@@ -1902,6 +2032,7 @@
     const inp = e.target.closest('[data-pg-campo]');
     if (!inp) return;
     inp.value = A.money(parseMonto(inp.value));
+    guardarNumeros();
   });
 
   function crearPresupuesto(valores) {
@@ -1911,6 +2042,7 @@
     }));
     renderNumeros();
     renderMetricas();
+    guardarNumeros();
     A.hydrate($('#content'));
   }
 
@@ -1993,6 +2125,7 @@
       });
       renderNumeros();
       renderMetricas();
+      guardarNumeros();
       A.hydrate($('#content'));
     }
     A.closeModal('modal-excel');
@@ -2021,7 +2154,7 @@
       </select></label>
       <label class="field"><span class="label">Inicio de obra</span><input class="input" name="inicio" value="${v(o.inicioObra ? A.date(o.inicioObra) : '')}" placeholder="dd/mm/aaaa"></label>
       <label class="field"><span class="label">Fin estimado</span><input class="input" name="fin" value="${v(o.finObraEstimado ? A.date(o.finObraEstimado) : '')}" placeholder="dd/mm/aaaa"></label>
-      <div class="field span-2 pg-obra-quien">${A.icon('mail')}<span>Dirección de correo de la obra: <b>${A.esc(correoObra())}</b></span></div>`;
+      <div class="field span-2 pg-obra-quien">${A.icon('mail')}<span>Todas las obras reciben el correo en una sola dirección: <b>${A.esc(correoObras())}</b></span></div>`;
     A.hydrate($('#pg-ficha-campos'));
     A.openModal('modal-ficha');
   }
@@ -2113,6 +2246,13 @@
       if (publicar) av.publicadoPor = D.usuario.id;
       D.avances.unshift(av);
     }
+    if (publicar) {
+      av.demo = true;
+      demoLlamar('addAvance', {
+        obra: o.id, titulo: av.titulo, texto: av.texto, fecha: av.fecha,
+        fotos: fotosDe(av.media), avisar: avisar
+      });
+    }
     const entrada = bandejaAvance;
     revisando = null;
     adjuntosNuevos = [];
@@ -2132,8 +2272,8 @@
     if (!r) { e.preventDefault(); e.stopPropagation(); return; }
     const base = r.avisar
       ? `Avance publicado y ${plural(nInv(), 'inversor avisado', 'inversores avisados')}`
-      : 'Avance publicado';
-    formPub.dataset.demo = r.entrada ? `${base} · entrada archivada` : base;
+      : r.entrada ? 'Avance publicado · entrada archivada' : 'Avance publicado';
+    formPub.dataset.demo = `${base} · ya se ve en el portal del inversor`;
   });
 
   $('#pg-pub-borrador').addEventListener('click', () => {
@@ -2325,6 +2465,7 @@
   });
 
   /* ---------- Arranque ---------- */
+  recuperarDemo();
   renderHero();
   renderBandeja();
   renderFases();

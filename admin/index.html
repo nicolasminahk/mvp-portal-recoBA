@@ -15,11 +15,31 @@
   /* ---------- Métricas ---------- */
   .stats-grid.pg-obras-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
+  /* ---------- Bandeja y atención, en dos columnas ---------- */
+  .pg-obras-duo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; margin-top: 18px; }
+  .pg-obras-duo .card-head { padding: 13px 18px; }
+  .pg-obras-duo .card-head h2 { font-size: 16px; }
+
+  /* ---------- Bandeja de entrada ---------- */
+  .pg-obras-dir { margin: 14px 18px; }
+  .pg-obras-dir > .ico { margin-top: 5px; }
+  .pg-obras-dir-main { flex: 1; min-width: 0; }
+  .pg-obras-dir-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .pg-obras-mail { font-size: 14px; letter-spacing: -.01em; overflow-wrap: anywhere; }
+  .pg-obras-dir .btn { flex-shrink: 0; }
+  .pg-obras-dir .alert-text { margin-top: 2px; }
+  .pg-obras-entradas { padding: 0 18px 6px; }
+  .pg-obras-entrada { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 0 12px; padding: 13px 0; border-top: 1px solid var(--line); }
+  .pg-obras-entrada-t { font-size: 13.5px; font-weight: 600; }
+  .pg-obras-entrada-m { margin-top: 1px; font-size: 12px; color: var(--ink-mute); }
+  .pg-obras-entrada-acc { grid-column: 2; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 9px; }
+  .pg-obras-entrada-acc .select { flex: 1 1 150px; min-width: 0; max-width: 220px; padding: 6px 30px 6px 11px; font-size: 13px; background-position: right 10px center; }
+  .pg-obras-vacia { display: flex; align-items: center; gap: 12px; padding: 2px 18px 16px; }
+  .pg-obras-vacia .list-icon { flex-shrink: 0; }
+  .pg-obras-vacia p { font-size: 12.5px; color: var(--ink-mute); }
+
   /* ---------- Requiere atención ---------- */
-  .pg-obras-atencion { margin-top: 18px; }
-  .pg-obras-atencion .card-head { padding: 13px 18px; }
-  .pg-obras-atencion .card-head h2 { font-size: 16px; }
-  .pg-obras-avisos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px 6px; padding: 8px; }
+  .pg-obras-avisos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1px; padding: 8px; }
   .pg-obras-aviso { display: flex; align-items: center; gap: 11px; min-width: 0; padding: 8px 10px; border-radius: 10px; transition: background .15s ease; }
   .pg-obras-aviso:hover { background: var(--sand); }
   .pg-obras-aviso .list-icon { width: 30px; height: 30px; border-radius: 9px; }
@@ -87,8 +107,11 @@
   .pg-obras-files:empty { display: none; }
 
   /* ---------- Adaptación ---------- */
+  @media (max-width: 1180px) {
+    .pg-obras-duo { grid-template-columns: minmax(0, 1fr); }
+  }
   @media (max-width: 960px) and (min-width: 861px) {
-    .pg-obras-avisos, .pg-obras-tarjetas { grid-template-columns: minmax(0, 1fr); }
+    .pg-obras-tarjetas { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 1000px) and (min-width: 861px) {
     .page-head.pg-obras-head { flex-direction: column; align-items: flex-start; }
@@ -107,10 +130,13 @@
     .pg-obras-n { display: none; }
   }
   @media (max-width: 720px) {
-    .pg-obras-avisos, .pg-obras-tarjetas { grid-template-columns: minmax(0, 1fr); }
+    .pg-obras-tarjetas { grid-template-columns: minmax(0, 1fr); }
     .pg-obras-grid3, .pg-obras-grid3.pg-obras-eq { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .pg-obras-grid3 > :first-child { grid-column: 1 / -1; }
     .pg-obras-ultima { margin-left: 0; }
+  }
+  @media (max-width: 520px) {
+    .pg-obras-entrada-acc .select { flex-basis: 100%; max-width: none; }
   }
 </style>
 </head>
@@ -134,16 +160,41 @@
 
       <div class="stats-grid pg-obras-stats" id="pg-obras-stats"></div>
 
-      <section class="card pg-obras-atencion" aria-labelledby="pg-obras-atencion-titulo">
-        <div class="card-head">
-          <div>
-            <h2 id="pg-obras-atencion-titulo">Requiere atención</h2>
-            <p class="card-sub">Lo que espera respuesta dentro de una obra</p>
+      <div class="pg-obras-duo">
+
+        <section class="card pg-obras-bandeja" aria-labelledby="pg-obras-bandeja-titulo">
+          <div class="card-head">
+            <div>
+              <h2 id="pg-obras-bandeja-titulo">Bandeja de entrada</h2>
+              <p class="card-sub">Una sola dirección para todas las obras</p>
+            </div>
+            <span id="pg-obras-bandeja-chip"></span>
           </div>
-          <span id="pg-obras-atencion-chip"></span>
-        </div>
-        <div id="pg-obras-atencion"></div>
-      </section>
+          <div class="alert alert-copper pg-obras-dir">
+            <span data-icon="mail"></span>
+            <div class="pg-obras-dir-main">
+              <div class="pg-obras-dir-top">
+                <p class="alert-title mono pg-obras-mail" id="pg-obras-mail"></p>
+                <button class="btn btn-ghost btn-sm" type="button" id="pg-obras-copiar"><span data-icon="copy"></span>Copiar</button>
+              </div>
+              <p class="alert-text">Lo que se reenvíe ahí (fotos, facturas, contratos) entra al panel y se asigna a su obra.</p>
+            </div>
+          </div>
+          <div id="pg-obras-sinasignar"></div>
+        </section>
+
+        <section class="card pg-obras-atencion" aria-labelledby="pg-obras-atencion-titulo">
+          <div class="card-head">
+            <div>
+              <h2 id="pg-obras-atencion-titulo">Requiere atención</h2>
+              <p class="card-sub">Lo que espera respuesta dentro de una obra</p>
+            </div>
+            <span id="pg-obras-atencion-chip"></span>
+          </div>
+          <div id="pg-obras-atencion"></div>
+        </section>
+
+      </div>
 
       <div class="pg-obras-toolbar">
         <div class="pg-obras-seg-wrap">
@@ -208,6 +259,7 @@
 </div>
 
 <script src="assets/data.js"></script>
+<script src="assets/demo-store.js"></script>
 <script src="assets/admin.js"></script>
 <script>
 (function () {
@@ -232,9 +284,41 @@
   let portadaPendiente = null;
   const portadas = {};
 
+  /* ---------- Lo publicado en la demostración (assets/demo-store.js) ----------
+     Solo se usa para que los números de la portada no se queden atrás:
+     con el almacén vacío la pantalla es idéntica. */
+  const Demo = window.RecoBADemo || null;
+  const VACIO_DEMO = { avances: [], documentos: [], numeros: null, personas: [] };
+  let demoObra = {};
+  function leerDemo() {
+    demoObra = {};
+    D.obras.forEach((o) => {
+      let d = VACIO_DEMO;
+      if (Demo) { try { d = Demo.deObra(o.id) || VACIO_DEMO; } catch (e) { d = VACIO_DEMO; } }
+      demoObra[o.id] = {
+        avances: (d.avances || []).filter((a) => a.estado !== 'borrador'),
+        numeros: (d.numeros && d.numeros.length) ? d.numeros : null,
+        personas: d.personas || []
+      };
+    });
+  }
+  const delDemo = (id) => demoObra[id] || VACIO_DEMO;
+  function iniciales(nombre) {
+    const p = String(nombre || '').trim().split(/\s+/).filter(Boolean);
+    if (!p.length) return '—';
+    return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
+  }
+  const personaDemo = (p, i) => ({ id: `i-demo-${i}`, nombre: p.nombre || 'Sin nombre', iniciales: iniciales(p.nombre) });
+  function personasDemo() {
+    const out = [];
+    D.obras.forEach((o) => delDemo(o.id).personas.forEach((p) => out.push(Object.assign({}, p, { obra: o.id }))));
+    return out;
+  }
+
   const borradores = (id) => A.avances(id).filter((a) => a.estado === 'borrador');
-  const publicados = (id) => A.avances(id).filter((a) => a.estado === 'publicado');
+  const publicados = (id) => A.avances(id).filter((a) => a.estado === 'publicado').concat(delDemo(id).avances);
   const bandeja = (id) => (D.bandeja || []).filter((b) => b.obra === id && b.estado === 'pendiente');
+  const sinAsignar = () => (D.bandeja || []).filter((b) => b.estado === 'sin-asignar');
   const hrefObra = (o, hash) => (o.nueva ? '#' : `obra.html?id=${encodeURIComponent(o.id)}${hash || ''}`);
 
   function textoPlazo(dias) {
@@ -255,8 +339,10 @@
     const enEstudio = D.obras.filter((o) => o.estado === 'En estudio').length;
 
     const parts = D.participaciones.filter((p) => A.obra(p.obra));
-    const nInversores = new Set(parts.map((p) => p.inversor)).size;
-    const nObrasConCapital = new Set(parts.map((p) => p.obra)).size;
+    const extra = personasDemo();
+    const capital = sum(parts, (p) => p.monto) + sum(extra, (p) => p.monto);
+    const nInversores = new Set(parts.map((p) => p.inversor).concat(extra.map((p) => `demo:${p.email || p.nombre}`))).size;
+    const nObrasConCapital = new Set(parts.map((p) => p.obra).concat(extra.map((p) => p.obra))).size;
 
     const nBorradores = D.avances.filter((a) => a.estado === 'borrador' && A.obra(a.obra)).length;
     const nBandeja = (D.bandeja || []).filter((b) => b.estado === 'pendiente' && A.obra(b.obra)).length;
@@ -268,7 +354,7 @@
     const cards = [
       { label: 'Obras en curso', icono: 'building', valor: A.group(enCurso),
         sub: enEstudio ? `${plural(enEstudio, 'obra', 'obras')} más en estudio` : 'Ninguna en estudio' },
-      { label: 'Capital de inversores', icono: 'wallet', valor: A.money(sum(parts, (p) => p.monto)), accent: true,
+      { label: 'Capital de inversores', icono: 'wallet', valor: A.money(capital), accent: true,
         sub: `${plural(nInversores, 'inversor', 'inversores')} en ${plural(nObrasConCapital, 'obra', 'obras')}` },
       { label: 'Pendientes de revisar', icono: 'bell', valor: A.group(pendientes), accent: pendientes > 0,
         sub: detalle.length ? detalle.join(' · ') : 'Todo al día', tono: pendientes ? '' : 'ok' }
@@ -357,6 +443,130 @@
       </a>`).join('')}</div>${resto ? `<p class="pg-obras-mas">${A.esc(`${plural(resto, 'aviso más', 'avisos más')} dentro de las obras.`)}</p>` : ''}`;
   }
 
+  /* ---------- Bandeja de entrada ---------- */
+  const TIPO = {
+    foto: { icono: 'image', tono: 'tone-gold' },
+    factura: { icono: 'receipt', tono: 'tone-copper' },
+    documento: { icono: 'file', tono: 'tone-ink' }
+  };
+
+  function entrada(e) {
+    const t = TIPO[e.tipo] || { icono: 'mail', tono: 'tone-copper' };
+    const meta = [e.remitente, e.via, e.adjuntos ? plural(e.adjuntos, 'adjunto', 'adjuntos') : '', A.ago(e.fecha)]
+      .filter(Boolean).join(' · ');
+    const opciones = ['<option value="">Elegir obra</option>'].concat(D.obras
+      .filter((o) => !o.nueva)
+      .map((o) => `<option value="${A.esc(o.id)}"${o.id === e.obraSugerida ? ' selected' : ''}>${A.esc(o.nombre)}</option>`)).join('');
+    return `<div class="pg-obras-entrada" data-entrada="${A.esc(e.id)}">
+      <span class="list-icon ${t.tono}">${A.icon(t.icono)}</span>
+      <div class="pg-obras-entrada-main">
+        <p class="pg-obras-entrada-t">${A.esc(e.asunto)}</p>
+        <p class="pg-obras-entrada-m">${A.esc(meta)}</p>
+      </div>
+      <div class="pg-obras-entrada-acc">
+        <select class="select" data-sel="${A.esc(e.id)}" aria-label="Obra a la que asignar «${A.esc(e.asunto)}»">${opciones}</select>
+        <button type="button" class="btn btn-copper btn-sm" data-asignar="${A.esc(e.id)}"${e.obraSugerida ? '' : ' disabled'}>Asignar</button>
+        <button type="button" class="btn btn-text btn-sm" data-descartar="${A.esc(e.id)}">Descartar</button>
+      </div>
+    </div>`;
+  }
+
+  function renderBandeja() {
+    const lista = sinAsignar();
+    $('#pg-obras-bandeja-chip').innerHTML = lista.length
+      ? A.chip(plural(lista.length, 'sin asignar', 'sin asignar'), 'chip-copper')
+      : A.chip('Al día', 'chip-sage');
+    $('#pg-obras-sinasignar').innerHTML = lista.length
+      ? `<div class="pg-obras-entradas">${lista.map(entrada).join('')}</div>`
+      : `<div class="pg-obras-vacia">
+          <span class="list-icon tone-sage">${A.icon('check')}</span>
+          <p>No queda nada sin asignar. Lo que llegue a esta dirección aparecerá aquí para darle obra.</p>
+        </div>`;
+  }
+
+  function asignar(id, obraId) {
+    const e = (D.bandeja || []).find((b) => b.id === id);
+    const o = A.obra(obraId);
+    if (!e || !o) return;
+    e.obra = o.id;
+    e.estado = 'pendiente';
+    delete e.obraSugerida;
+    render();
+    A.toast(`Asignada a ${o.nombre} · queda en su bandeja`, 'mail');
+  }
+
+  function descartar(id) {
+    const e = (D.bandeja || []).find((b) => b.id === id);
+    if (!e) return;
+    e.estado = 'descartada';
+    render();
+    A.toast('Entrada descartada', 'trash');
+  }
+
+  /* El contador de la barra lateral lo pinta el shell una sola vez: aquí se mantiene al día. */
+  function syncSidebar() {
+    const link = document.querySelector('#sidebar .sb-link[href="index.html"]');
+    if (!link) return;
+    const n = D.avances.filter((a) => a.estado === 'borrador').length
+      + (D.bandeja || []).filter((b) => b.estado === 'pendiente').length;
+    let el = link.querySelector('.sb-count');
+    if (!n) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('span');
+      el.className = 'sb-count';
+      el.title = 'Entradas pendientes de revisar';
+      link.insertBefore(el, link.querySelector('.sb-ext'));
+    }
+    el.textContent = A.group(n);
+  }
+
+  function copiarManual(texto) {
+    let ok = false;
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = texto;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-60px;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      ok = document.execCommand('copy');
+      ta.remove();
+    } catch (err) { ok = false; }
+    A.toast(ok ? 'Dirección copiada' : `Dirección: ${texto}`, ok ? 'copy' : 'mail');
+  }
+
+  const EMAIL = D.instalacion.emailObras || '';
+  $('#pg-obras-mail').textContent = EMAIL;
+  $('#pg-obras-copiar').addEventListener('click', () => {
+    const texto = EMAIL;
+    if (!texto) return;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(() => A.toast('Dirección copiada', 'copy'), () => copiarManual(texto));
+        return;
+      }
+    } catch (err) { /* sin acceso al portapapeles */ }
+    copiarManual(texto);
+  });
+
+  $('#pg-obras-sinasignar').addEventListener('change', (e) => {
+    const sel = e.target.closest('select[data-sel]');
+    if (!sel) return;
+    const btn = $('#pg-obras-sinasignar').querySelector(`[data-asignar="${CSS.escape(sel.dataset.sel)}"]`);
+    if (btn) btn.disabled = !sel.value;
+  });
+
+  $('#pg-obras-sinasignar').addEventListener('click', (e) => {
+    const quitar = e.target.closest('[data-descartar]');
+    if (quitar) { descartar(quitar.dataset.descartar); return; }
+    const boton = e.target.closest('[data-asignar]');
+    if (!boton) return;
+    const id = boton.dataset.asignar;
+    const sel = $('#pg-obras-sinasignar').querySelector(`select[data-sel="${CSS.escape(id)}"]`);
+    if (!sel || !sel.value) { A.toast('Elija primero la obra', 'info'); return; }
+    asignar(id, sel.value);
+  });
+
   /* ---------- Tarjeta de obra ---------- */
   function progreso(valor, clase) {
     const w = Math.max(0, Math.min(100, Math.round(valor)));
@@ -371,12 +581,20 @@
 
   function metricas(o) {
     const partes = [];
+    // Si en la demostración se guardaron números para esta obra, mandan ellos.
+    const num = delDemo(o.id).numeros;
+    const presupuesto = num ? sum(num, (p) => p.presupuesto) : o.presupuesto;
+    const ejecutado = num ? sum(num, (p) => p.ejecutado) : (o.ejecutado || 0);
+    const bloqueEjecutado = () => bloque('Ejecutado', `<b>${A.money(ejecutado)}</b> de ${A.money(presupuesto)}`,
+      A.bar(ejecutado, presupuesto), `<span>${A.esc(A.pct((ejecutado / presupuesto) * 100, 1))} del presupuesto</span>`);
+
     if (o.oportunidad) {
       const op = o.oportunidad;
       const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
       const dias = A.daysUntil(op.cierre);
       partes.push(bloque('Captación', `<b>${A.money(op.comprometido)}</b> de ${A.money(op.objetivo)}`, progreso(cubierto, 'gold'),
         `<span>${A.esc(A.pct(cubierto))} del objetivo</span><span class="${dias <= DIAS_URGE ? 'pg-obras-urge' : ''}">${A.esc(textoCierre(dias))} · ${A.esc(A.date(op.cierre))}</span>`));
+      if (num && presupuesto) partes.push(bloqueEjecutado());
     } else if (o.estado === 'En renta' && o.ocupacionTrimestre != null) {
       partes.push(bloque('Ocupación del trimestre', `<b>${A.pct(o.ocupacionTrimestre)}</b>`, progreso(o.ocupacionTrimestre, 'sage')));
       const prox = D.distribuciones
@@ -385,15 +603,12 @@
       partes.push(fila('Próxima distribución', prox
         ? `<b>${A.esc(prox.periodo)}</b> · ${A.esc(A.date(prox.fecha))}`
         : '<span class="muted">Sin programar</span>'));
+      if (num && presupuesto) partes.push(bloqueEjecutado());
     } else {
       if (o.estado !== 'En estudio' && o.avanceObra != null) {
         partes.push(bloque('Avance de obra', `<b>${A.pct(o.avanceObra)}</b>`, progreso(o.avanceObra)));
       }
-      if (o.presupuesto) {
-        const ej = o.ejecutado || 0;
-        partes.push(bloque('Ejecutado', `<b>${A.money(ej)}</b> de ${A.money(o.presupuesto)}`, A.bar(ej, o.presupuesto),
-          `<span>${A.esc(A.pct((ej / o.presupuesto) * 100, 1))} del presupuesto</span>`));
-      }
+      if (presupuesto) partes.push(bloqueEjecutado());
     }
     if (!partes.length) partes.push('<p class="muted pg-obras-sin">Sin datos de seguimiento todavía.</p>');
     return `<div class="pg-obras-metricas">${partes.join('')}</div>`;
@@ -406,9 +621,10 @@
       return `<span class="pg-obras-avatares">${vistos}${extra}</span>`;
     };
     const parts = A.participaciones({ obra: o.id });
-    if (parts.length) {
-      const gente = parts.map((p) => A.persona(p.inversor)).filter(Boolean);
-      return `<span class="pg-obras-personas" title="Inversores con participación en esta obra">${caras(gente)}<span>${A.esc(plural(parts.length, 'inversor', 'inversores'))}</span></span>`;
+    const nuevos = delDemo(o.id).personas;
+    if (parts.length + nuevos.length) {
+      const gente = parts.map((p) => A.persona(p.inversor)).filter(Boolean).concat(nuevos.map(personaDemo));
+      return `<span class="pg-obras-personas" title="Inversores con participación en esta obra">${caras(gente)}<span>${A.esc(plural(parts.length + nuevos.length, 'inversor', 'inversores'))}</span></span>`;
     }
     const comp = (D.compromisos || []).filter((c) => c.obra === o.id);
     if (comp.length) {
@@ -434,10 +650,12 @@
     if (nBorr) chips.push(A.chip(plural(nBorr, 'avance por publicar', 'avances por publicar'), 'chip-gold'));
     if (nBand) chips.push(A.chip(plural(nBand, 'sin revisar', 'sin revisar'), 'chip-copper'));
 
-    const ult = masReciente(publicados(o.id));
+    const pub = publicados(o.id);
+    const ult = masReciente(pub);
     const ultima = ult
       ? `<span>Último avance</span><b>${A.esc(A.ago(ult.fecha))}</b>`
       : '<span>Sin avances publicados</span>';
+    const tituloUltima = ult ? ` title="${A.esc(plural(pub.length, 'avance publicado', 'avances publicados'))}"` : '';
 
     return `<a class="card pg-obras-tarjeta${recienCreada === o.id ? ' pg-obras-recien' : ''}" href="${A.esc(href)}"${o.nueva ? ' data-nueva="1"' : ''}>
       <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-obras-foto"${foto}>${ficha ? `<span>${A.esc(ficha)}</span>` : ''}</div>
@@ -453,7 +671,7 @@
         ${metricas(o)}
         <div class="pg-obras-pie">
           ${personas(o)}
-          <span class="pg-obras-ultima">${ultima}${A.icon('chevron-right', 'pg-obras-flecha')}</span>
+          <span class="pg-obras-ultima"${tituloUltima}>${ultima}${A.icon('chevron-right', 'pg-obras-flecha')}</span>
         </div>
       </div>
     </a>`;
@@ -474,6 +692,7 @@
   }
 
   function render() {
+    leerDemo();
     const lista = visibles();
     $('#pg-obras-lista').innerHTML = lista.length ? lista.map(tarjeta).join('') : `
       <div class="card pg-obras-vacio"><div class="empty">${A.icon('search')}
@@ -486,6 +705,8 @@
     renderCuentas();
     renderStats();
     renderAtencion();
+    renderBandeja();
+    syncSidebar();
     recienCreada = null;
   }
 
@@ -563,8 +784,24 @@
     portadaPendiente = null;
   });
 
+  /* Segunda entrada sin asignar, creada en esta página: la de data.js trae obra sugerida
+     y esta no, para que se vean los dos casos del selector. */
+  if (D.bandeja && !D.bandeja.some((b) => b.id === 'bz4')) {
+    D.bandeja.push({
+      id: 'bz4', obra: null, tipo: 'factura', remitente: 'Pinturería Centro', via: 'Email del proveedor',
+      asunto: 'Factura 0003-00218 · pintura y materiales', fecha: '2026-09-11T08:20', adjuntos: 2, estado: 'sin-asignar'
+    });
+  }
+
   $('#pg-obras-fecha').textContent = `Actualizado el ${A.date(D.instalacion.hoy)}`;
   render();
+
+  /* La barra lateral la pinta el shell al cargar el documento: se sincroniza después. */
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncSidebar);
+  else syncSidebar();
+
+  /* Si se publica algo desde otra pantalla de la demostración, la portada se pone al día. */
+  if (Demo) Demo.onCambio(() => render());
 })();
 </script>
 </body>
