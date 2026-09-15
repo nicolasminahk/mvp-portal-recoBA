@@ -1,20 +1,20 @@
 /* ============================================================
-   recoBA · Panel de administración (maqueta navegable)
-   Shell compartido por todas las pantallas: barra lateral, barra
-   superior, iconos, modales, pestañas, zonas de subida, avisos y
-   formateadores. Sin backend: los datos salen de assets/data.js
-   y las acciones son de demostración (no se guarda nada).
+   recoBA · Admin panel (interactive prototype)
+   Shell shared by every screen: sidebar, top bar, icons, modals,
+   tabs, upload zones, toasts and formatters. No backend: the data
+   comes from assets/data.js and the actions are for demonstration
+   only (nothing is saved).
    ============================================================ */
 (function () {
   'use strict';
 
   const D = window.RECOBA_DATA;
   if (!D) {
-    console.error('Falta assets/data.js antes de assets/admin.js');
+    console.error('assets/data.js must be loaded before assets/admin.js');
     return;
   }
 
-  /* ---------- Iconos (trazo 24×24) ---------- */
+  /* ---------- Icons (24×24 stroke) ---------- */
   const ICONS = {
     home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
     building: '<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1"/><path d="M10 21v-3h4v3"/>',
@@ -81,38 +81,38 @@
     return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
-  /* ---------- Formateadores (es-ES, con punto de miles siempre) ---------- */
+  /* ---------- Formatters (en, always a thousands separator) ---------- */
   function group(n, decimals = 0) {
     if (n === null || n === undefined || Number.isNaN(Number(n))) return '—';
     const neg = n < 0;
     const [int, dec] = Math.abs(Number(n)).toFixed(decimals).split('.');
-    return (neg ? '−' : '') + int.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (dec ? ',' + dec : '');
+    return (neg ? '−' : '') + int.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (dec ? '.' + dec : '');
   }
   function money(n, currency) {
     if (n === null || n === undefined) return '—';
     const cur = currency || D.instalacion.moneda;
     const sign = n < 0 ? '−' : '';
     const abs = group(Math.abs(n));
-    return cur === 'EUR' ? `${sign}${abs} €` : `${sign}US$${abs}`;
+    return cur === 'EUR' ? `${sign}€${abs}` : `${sign}US$${abs}`;
   }
   function pct(n, decimals = 0) { return group(n, decimals) + '%'; }
 
-  const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-  const MESES_C = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  const MESES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const MESES_C = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const pad = (n) => String(n).padStart(2, '0');
   function parts(iso) {
     const [d, t] = String(iso).split('T');
     const [y, m, day] = d.split('-').map(Number);
     return { y, m, d: day || null, t: t || null };
   }
-  /* style: 'short' 22/08/2026 · 'medium' 22 ago 2026 · 'long' 22 de agosto de 2026
-            'month' Ago 2026 · 'day' 22/08 · 'time' 08:12 · 'datetime' 22/08/2026 08:12 */
+  /* style: 'short' 22/08/2026 · 'medium' 22 Aug 2026 · 'long' 22 August 2026
+            'month' Aug 2026 · 'day' 22/08 · 'time' 08:12 · 'datetime' 22/08/2026 08:12 */
   function date(iso, style = 'short') {
     if (!iso) return '—';
     const p = parts(iso);
     if (!p.d || style === 'month') { const m = MESES_C[p.m - 1]; return `${m.charAt(0).toUpperCase()}${m.slice(1)} ${p.y}`; }
     if (style === 'medium') return `${p.d} ${MESES_C[p.m - 1]} ${p.y}`;
-    if (style === 'long') return `${p.d} de ${MESES[p.m - 1]} de ${p.y}`;
+    if (style === 'long') return `${p.d} ${MESES[p.m - 1]} ${p.y}`;
     if (style === 'day') return `${pad(p.d)}/${pad(p.m)}`;
     if (style === 'time') return p.t || '';
     if (style === 'datetime') return `${pad(p.d)}/${pad(p.m)}/${p.y}${p.t ? ' ' + p.t : ''}`;
@@ -125,13 +125,13 @@
     const p = parts(iso);
     const diff = -daysUntil(iso);
     const hora = p.t ? ` ${p.t}` : '';
-    if (diff <= 0) return `hoy${hora}`;
-    if (diff === 1) return `ayer${hora}`;
-    if (diff < 7) return `hace ${diff} días`;
+    if (diff <= 0) return `today${hora}`;
+    if (diff === 1) return `yesterday${hora}`;
+    if (diff < 7) return `${diff} days ago`;
     return date(iso, 'short');
   }
 
-  /* ---------- Consultas sobre los datos ---------- */
+  /* ---------- Queries over the data ---------- */
   const obra = (id) => D.obras.find((o) => o.id === id);
   const persona = (id) => D.equipo.find((p) => p.id === id) || D.inversores.find((p) => p.id === id);
   const perfil = (id) => D.perfiles.find((p) => p.id === id);
@@ -158,21 +158,21 @@
   }
   const capitalDe = (inversorId) => participaciones({ inversor: inversorId }).reduce((s, p) => s + p.monto, 0);
   function distribucionesDe(inversorId) {
-    return D.distribuciones.filter((d) => d.estado === 'Pagada' && d.total).reduce((s, d) => {
+    return D.distribuciones.filter((d) => d.estado === 'Paid' && d.total).reduce((s, d) => {
       const part = D.participaciones.find((p) => p.obra === d.obra && p.inversor === inversorId);
       return s + (part ? Math.round((d.total * part.pct) / 100) : 0);
     }, 0);
   }
   const visibilidad = (id) => (D.visibilidades.find((v) => v.id === id) || { nombre: id }).nombre;
-  /* Trabajo pendiente dentro de las obras: borradores por publicar + entradas ya asignadas.
-     Lo que llega sin asignar se cuenta aparte, en la bandeja de la portada. */
+  /* Work still pending inside the projects: drafts to publish + entries already assigned.
+     Whatever arrives unassigned is counted separately, in the inbox on the home screen. */
   const pendientes = () => D.avances.filter((a) => a.estado === 'borrador').length
     + (D.bandeja || []).filter((b) => b.estado === 'pendiente').length;
 
-  /* ---------- Piezas de interfaz reutilizables ---------- */
+  /* ---------- Reusable interface pieces ---------- */
   const ESTADO_CHIP = {
-    'En estudio': 'chip-gold', Comprado: 'chip-ink', Escriturado: 'chip-ink', 'En obra': 'chip-copper',
-    Equipamiento: 'chip-copper', 'En renta': 'chip-sage', 'En venta': 'chip-gold', Vendido: 'chip-ink'
+    'Under review': 'chip-gold', 'Purchased': 'chip-ink', 'Deed signed': 'chip-ink', 'Under construction': 'chip-copper',
+    'Furnishing': 'chip-copper', 'Rented': 'chip-sage', 'For sale': 'chip-gold', 'Sold': 'chip-ink'
   };
   const chip = (text, cls) => `<span class="chip ${cls || 'chip-ink'}">${esc(text)}</span>`;
   const estadoChip = (estado) => chip(estado, ESTADO_CHIP[estado]);
@@ -197,19 +197,19 @@
     }).join('')}</div>`;
   }
 
-  /* ---------- Shell: barra lateral y barra superior ---------- */
+  /* ---------- Shell: sidebar and top bar ---------- */
   const NAV = [
-    { group: 'Obras', items: [
-      { id: 'obras', label: 'Todas las obras', href: 'index.html', icon: 'building' },
-      { id: 'movil', label: 'Carga desde el móvil', href: 'movil.html', icon: 'phone' }
+    { group: 'Projects', items: [
+      { id: 'obras', label: 'All projects', href: 'index.html', icon: 'building' },
+      { id: 'movil', label: 'Mobile upload', href: 'movil.html', icon: 'phone' }
     ] },
-    { group: 'Configuración', items: [
-      { id: 'ajustes', label: 'Ajustes', href: 'ajustes.html', icon: 'settings' },
-      { id: 'portal', label: 'Ver portal del inversor', href: '../index.html', icon: 'eye', external: true }
+    { group: 'Configuration', items: [
+      { id: 'ajustes', label: 'Settings', href: 'ajustes.html', icon: 'settings' },
+      { id: 'portal', label: 'View investor portal', href: '../index.html', icon: 'eye', external: true }
     ] }
   ];
   const TITLES = {
-    obras: 'Obras', obra: 'Obra', movil: 'Carga desde el móvil', ajustes: 'Ajustes'
+    obras: 'Projects', obra: 'Project', movil: 'Mobile upload', ajustes: 'Settings'
   };
 
   function renderSidebar(page) {
@@ -220,21 +220,21 @@
     const inst = D.instalacion;
     const nav = NAV.map((g) => `<div class="sb-group">${esc(g.group)}</div>` + g.items.map((it) => {
       const on = it.id === active;
-      const count = it.id === 'obras' && pendientes ? `<span class="sb-count" title="Entradas pendientes de revisar">${pendientes}</span>` : '';
+      const count = it.id === 'obras' && pendientes ? `<span class="sb-count" title="Entries pending review">${pendientes}</span>` : '';
       const ext = it.external ? icon('external', 'sb-ext') : '';
       return `<a class="sb-link${on ? ' active' : ''}" href="${it.href}"${on ? ' aria-current="page"' : ''}>${icon(it.icon)}<span>${esc(it.label)}</span>${count}${ext}</a>`;
     }).join('')).join('');
     const u = D.usuario;
     el.innerHTML = `
-      <a class="sb-brand" href="index.html" aria-label="Inicio del panel"><span class="wordmark">reco<span class="ba">BA</span></span><span class="sb-badge">Administración</span></a>
+      <a class="sb-brand" href="index.html" aria-label="Panel home"><span class="wordmark">reco<span class="ba">BA</span></span><span class="sb-badge">Administration</span></a>
       <div class="sb-install"><b>${esc(inst.cliente)}</b>${esc(inst.dominio)}</div>
-      <nav aria-label="Secciones del panel">${nav}</nav>
+      <nav aria-label="Panel sections">${nav}</nav>
       <div class="sb-foot">${avatar(u)}<div><div class="sb-foot-name">${esc(u.nombre)}</div><div class="sb-foot-role">${esc((perfil(u.perfil) || {}).nombre || '')}</div></div></div>
-      <p class="sb-demo">Maqueta navegable · datos ilustrativos<button class="sb-reset" type="button" id="sb-reset" title="Borra lo publicado en la demostración">Reiniciar</button></p>`;
+      <p class="sb-demo">Interactive prototype · illustrative data<button class="sb-reset" type="button" id="sb-reset" title="Clears what has been published in the demo">Reset</button></p>`;
     const reset = el.querySelector('#sb-reset');
     if (reset) reset.addEventListener('click', () => {
       if (window.RecoBADemo) window.RecoBADemo.reset();
-      toast('Demostración reiniciada', 'refresh');
+      toast('Demo reset', 'refresh');
       setTimeout(() => window.location.reload(), 600);
     });
   }
@@ -242,26 +242,26 @@
   function renderTopbar(page) {
     const el = document.getElementById('topbar');
     if (!el) return;
-    let crumbs = '<a href="index.html">Administración</a><span class="sep">/</span>';
+    let crumbs = '<a href="index.html">Administration</a><span class="sep">/</span>';
     if (page === 'obra') {
       const o = obra(qs('id')) || D.obras[0];
-      crumbs += `<a href="index.html">Obras</a><span class="sep">/</span><span class="current">${esc(o.nombre)}</span>`;
+      crumbs += `<a href="index.html">Projects</a><span class="sep">/</span><span class="current">${esc(o.nombre)}</span>`;
     } else {
       crumbs += `<span class="current">${esc(TITLES[page] || '')}</span>`;
     }
     const alertas = D.alertas.slice(0, 5);
     el.innerHTML = `
-      <nav class="crumbs" aria-label="Ruta">${crumbs}</nav>
-      <label class="top-search">${icon('search')}<input type="search" placeholder="Buscar en el panel" aria-label="Buscar"><span class="kbd">⌘K</span></label>
-      <div class="lang-switch" id="lang-switch" role="group" aria-label="Idioma"></div>
+      <nav class="crumbs" aria-label="Breadcrumb">${crumbs}</nav>
+      <label class="top-search">${icon('search')}<input type="search" placeholder="Search the panel" aria-label="Search"><span class="kbd">⌘K</span></label>
+      <div class="lang-switch" id="lang-switch" role="group" aria-label="Language"></div>
       <div class="top-menu">
-        <button class="icon-btn" type="button" id="bell-btn" aria-haspopup="true" aria-expanded="false" aria-label="Avisos">${icon('bell')}<span class="dot"></span></button>
+        <button class="icon-btn" type="button" id="bell-btn" aria-haspopup="true" aria-expanded="false" aria-label="Notifications">${icon('bell')}<span class="dot"></span></button>
         <div class="top-dropdown" id="bell-dd" role="menu">
-          <div class="top-dd-head"><span>Avisos</span><span>${alertas.length}</span></div>
+          <div class="top-dd-head"><span>Notifications</span><span>${alertas.length}</span></div>
           ${alertas.map((a) => `<a class="top-dd-item" role="menuitem" href="${esc(a.accion ? a.accion.href : '#')}"><span class="list-icon tone-${esc(a.tono)}">${icon(a.icono)}</span><span><b>${esc(a.titulo)}</b><small>${esc(a.texto)}</small></span></a>`).join('')}
         </div>
       </div>
-      <a class="btn btn-copper btn-sm" href="obra.html?id=${esc(page === 'obra' ? (obra(qs('id')) || D.obras[0]).id : D.obras[0].id)}#publicar" aria-label="Publicar avance">${icon('plus')}<span class="btn-label">Publicar avance</span></a>`;
+      <a class="btn btn-copper btn-sm" href="obra.html?id=${esc(page === 'obra' ? (obra(qs('id')) || D.obras[0]).id : D.obras[0].id)}#publicar" aria-label="Publish update">${icon('plus')}<span class="btn-label">Publish update</span></a>`;
 
     if (window.Lang) window.Lang.render(el.querySelector('#lang-switch'));
     const btn = el.querySelector('#bell-btn');
@@ -276,7 +276,7 @@
     });
     const search = el.querySelector('.top-search input');
     search.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); toast('La búsqueda global estará en la versión real', 'search'); }
+      if (e.key === 'Enter') { e.preventDefault(); toast('Global search will be available in the production version', 'search'); }
     });
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); search.focus(); }
@@ -284,7 +284,7 @@
     });
   }
 
-  /* ---------- Avisos flotantes ---------- */
+  /* ---------- Floating toasts ---------- */
   function toast(msg, iconName = 'check') {
     let host = document.querySelector('.toast-host');
     if (!host) {
@@ -306,7 +306,7 @@
     }, 3200);
   }
 
-  /* ---------- Modales ---------- */
+  /* ---------- Modals ---------- */
   function openModal(id) {
     const el = typeof id === 'string' ? document.getElementById(id) : id;
     if (!el) return;
@@ -337,20 +337,20 @@
     if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach((m) => closeModal(m));
   });
 
-  /* Formularios de demostración: <form data-demo="Mensaje del aviso">.
-     Los listeners propios de la página sobre 'submit' corren antes que este. */
+  /* Demonstration forms: <form data-demo="Toast message">.
+     The page's own 'submit' listeners run before this one. */
   document.addEventListener('submit', (e) => {
     const f = e.target.closest('form[data-demo]');
     if (!f) return;
     e.preventDefault();
     const overlay = f.closest('.modal-overlay');
     if (overlay) closeModal(overlay);
-    toast(f.dataset.demo || 'Guardado');
+    toast(f.dataset.demo || 'Saved');
     f.dispatchEvent(new CustomEvent('demo:submit', { bubbles: true }));
     if (f.dataset.reset !== 'false') f.reset();
   });
 
-  /* ---------- Pestañas: [data-tabs] > .tab[data-tab] + [data-panel] ---------- */
+  /* ---------- Tabs: [data-tabs] > .tab[data-tab] + [data-panel] ---------- */
   function activateTab(box, name) {
     box.querySelectorAll('.tab[data-tab]').forEach((t) => {
       const on = t.dataset.tab === name;
@@ -375,7 +375,7 @@
     });
   }
 
-  /* ---------- Selector segmentado: [data-segmented] > button[data-value] ---------- */
+  /* ---------- Segmented control: [data-segmented] > button[data-value] ---------- */
   function initSegmented(root = document) {
     root.querySelectorAll('[data-segmented]').forEach((s) => {
       if (s.dataset.ready) return;
@@ -389,7 +389,7 @@
     });
   }
 
-  /* ---------- Zonas de subida: .dropzone (+ .file-list opcional en el mismo contenedor) ---------- */
+  /* ---------- Upload zones: .dropzone (+ optional .file-list in the same container) ---------- */
   function initDropzones(root = document) {
     root.querySelectorAll('.dropzone').forEach((z) => {
       if (z.dataset.ready) return;
@@ -427,7 +427,7 @@
     });
   }
 
-  /* ---------- Iconos declarativos: <span data-icon="upload"></span> ---------- */
+  /* ---------- Declarative icons: <span data-icon="upload"></span> ---------- */
   function hydrateIcons(root = document) {
     root.querySelectorAll('[data-icon]').forEach((el) => {
       if (el.dataset.iconReady) return;

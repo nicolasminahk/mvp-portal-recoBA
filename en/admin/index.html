@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Obras · Administración recoBA</title>
+<title>Projects · recoBA admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
@@ -149,12 +149,12 @@
 
       <div class="page-head pg-obras-head">
         <div>
-          <p class="eyebrow">Gestión</p>
-          <h1>Obras</h1>
-          <p class="page-sub">Cada obra, con su seguimiento, sus documentos y sus inversores.</p>
+          <p class="eyebrow">Management</p>
+          <h1>Projects</h1>
+          <p class="page-sub">Every project, with its progress, its documents and its investors.</p>
         </div>
         <div class="page-actions">
-          <button class="btn btn-copper" type="button" id="pg-obras-nueva" data-open-modal="modal-nueva-obra"><span data-icon="plus"></span>Nueva obra</button>
+          <button class="btn btn-copper" type="button" id="pg-obras-nueva" data-open-modal="modal-nueva-obra"><span data-icon="plus"></span>New project</button>
         </div>
       </div>
 
@@ -165,8 +165,8 @@
         <section class="card pg-obras-bandeja" aria-labelledby="pg-obras-bandeja-titulo">
           <div class="card-head">
             <div>
-              <h2 id="pg-obras-bandeja-titulo">Bandeja de entrada</h2>
-              <p class="card-sub">Una sola dirección para todas las obras</p>
+              <h2 id="pg-obras-bandeja-titulo">Inbox</h2>
+              <p class="card-sub">One address for every project</p>
             </div>
             <span id="pg-obras-bandeja-chip"></span>
           </div>
@@ -175,9 +175,9 @@
             <div class="pg-obras-dir-main">
               <div class="pg-obras-dir-top">
                 <p class="alert-title mono pg-obras-mail" id="pg-obras-mail"></p>
-                <button class="btn btn-ghost btn-sm" type="button" id="pg-obras-copiar"><span data-icon="copy"></span>Copiar</button>
+                <button class="btn btn-ghost btn-sm" type="button" id="pg-obras-copiar"><span data-icon="copy"></span>Copy</button>
               </div>
-              <p class="alert-text">Lo que se reenvíe ahí (fotos, facturas, contratos) entra al panel y se asigna a su obra.</p>
+              <p class="alert-text">Anything forwarded there (photos, invoices, contracts) reaches the panel and is assigned to its project.</p>
             </div>
           </div>
           <div id="pg-obras-sinasignar"></div>
@@ -186,8 +186,8 @@
         <section class="card pg-obras-atencion" aria-labelledby="pg-obras-atencion-titulo">
           <div class="card-head">
             <div>
-              <h2 id="pg-obras-atencion-titulo">Requiere atención</h2>
-              <p class="card-sub">Lo que espera respuesta dentro de una obra</p>
+              <h2 id="pg-obras-atencion-titulo">Needs attention</h2>
+              <p class="card-sub">Items awaiting action inside a project</p>
             </div>
             <span id="pg-obras-atencion-chip"></span>
           </div>
@@ -198,14 +198,14 @@
 
       <div class="pg-obras-toolbar">
         <div class="pg-obras-seg-wrap">
-          <div class="segmented pg-obras-seg" id="pg-obras-seg" data-segmented role="group" aria-label="Filtrar por estado">
-            <button type="button" class="active" aria-pressed="true" data-value="todas">Todas <span class="pg-obras-n" data-n="todas"></span></button>
-            <button type="button" aria-pressed="false" data-value="En obra">En obra <span class="pg-obras-n" data-n="En obra"></span></button>
-            <button type="button" aria-pressed="false" data-value="En renta">En renta <span class="pg-obras-n" data-n="En renta"></span></button>
-            <button type="button" aria-pressed="false" data-value="En estudio">En estudio <span class="pg-obras-n" data-n="En estudio"></span></button>
+          <div class="segmented pg-obras-seg" id="pg-obras-seg" data-segmented role="group" aria-label="Filter by status">
+            <button type="button" class="active" aria-pressed="true" data-value="todas">All <span class="pg-obras-n" data-n="todas"></span></button>
+            <button type="button" aria-pressed="false" data-value="Under construction">Under construction <span class="pg-obras-n" data-n="Under construction"></span></button>
+            <button type="button" aria-pressed="false" data-value="Rented">Rented <span class="pg-obras-n" data-n="Rented"></span></button>
+            <button type="button" aria-pressed="false" data-value="Under review">Under review <span class="pg-obras-n" data-n="Under review"></span></button>
           </div>
         </div>
-        <label class="pg-obras-search"><span data-icon="search"></span><input type="search" id="pg-obras-search" placeholder="Buscar por nombre o barrio" aria-label="Buscar obra por nombre o barrio" autocomplete="off"></label>
+        <label class="pg-obras-search"><span data-icon="search"></span><input type="search" id="pg-obras-search" placeholder="Search by name or neighbourhood" aria-label="Search projects by name or neighbourhood" autocomplete="off"></label>
       </div>
 
       <div class="pg-obras-tarjetas" id="pg-obras-lista"></div>
@@ -218,41 +218,41 @@
 <!-- Modal: nueva obra -->
 <div class="modal-overlay" id="modal-nueva-obra" aria-hidden="true">
   <div class="modal modal-lg" role="dialog" aria-modal="true" aria-labelledby="modal-nueva-obra-titulo">
-    <form data-demo="Obra creada" id="pg-form-nueva" autocomplete="off">
+    <form data-demo="Project created" id="pg-form-nueva" autocomplete="off">
       <div class="modal-head">
         <div>
-          <h3 id="modal-nueva-obra-titulo">Nueva obra</h3>
-          <p class="modal-desc">Dar de alta la obra para cargar avances, gastos, documentos e inversores.</p>
+          <h3 id="modal-nueva-obra-titulo">New project</h3>
+          <p class="modal-desc">Register the project to start adding updates, costs, documents and investors.</p>
         </div>
-        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+        <button type="button" class="modal-close" data-close-modal aria-label="Close"><span data-icon="x"></span></button>
       </div>
       <div class="modal-body">
         <div class="form-grid">
-          <label class="field"><span class="label">Nombre</span><input class="input" name="nombre" required placeholder="Ej.: Charcas 2900"></label>
-          <label class="field"><span class="label">Barrio o dirección</span><input class="input" name="barrio" placeholder="Ej.: Palermo"></label>
+          <label class="field"><span class="label">Name</span><input class="input" name="nombre" required placeholder="e.g. Charcas 2900"></label>
+          <label class="field"><span class="label">Neighbourhood or address</span><input class="input" name="barrio" placeholder="e.g. Palermo"></label>
           <div class="span-2 pg-obras-grid3">
-            <label class="field"><span class="label">Ciudad</span><input class="input" name="ciudad" value="Buenos Aires"></label>
+            <label class="field"><span class="label">City</span><input class="input" name="ciudad" value="Buenos Aires"></label>
             <label class="field"><span class="label">m²</span><input class="input" name="m2" inputmode="numeric" placeholder="50"></label>
-            <label class="field"><span class="label">Ambientes</span>
+            <label class="field"><span class="label">Rooms</span>
               <select class="select" name="ambientes"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select>
             </label>
           </div>
           <div class="span-2 pg-obras-grid3 pg-obras-eq">
-            <label class="field"><span class="label">Fase inicial</span><select class="select" name="fase" id="pg-nueva-fase"></select></label>
-            <label class="field"><span class="label">Responsable de obra</span><select class="select" name="responsable" id="pg-nueva-resp"></select></label>
-            <label class="field"><span class="label">Presupuesto inicial</span><span class="input-affix"><span>US$</span><input name="presupuesto" inputmode="numeric" placeholder="120.000"></span></label>
+            <label class="field"><span class="label">Initial phase</span><select class="select" name="fase" id="pg-nueva-fase"></select></label>
+            <label class="field"><span class="label">Site manager</span><select class="select" name="responsable" id="pg-nueva-resp"></select></label>
+            <label class="field"><span class="label">Initial budget</span><span class="input-affix"><span>US$</span><input name="presupuesto" inputmode="numeric" placeholder="120,000"></span></label>
           </div>
           <div class="field span-2">
-            <span class="label">Portada</span>
-            <div class="dropzone" id="pg-nueva-drop" data-accept="image/*" data-multiple="false"><span data-icon="image"></span><b>Arrastrar una foto aquí</b> o hacer clic para seleccionarla</div>
+            <span class="label">Cover photo</span>
+            <div class="dropzone" id="pg-nueva-drop" data-accept="image/*" data-multiple="false"><span data-icon="image"></span><b>Drag a photo here</b> or click to choose one</div>
             <div class="file-list pg-obras-files" id="pg-nueva-files"></div>
-            <span class="hint">Identifica la obra en esta lista y en el portal del inversor.</span>
+            <span class="hint">Identifies the project in this list and in the investor portal.</span>
           </div>
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
-        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Crear obra</button>
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="check"></span>Create project</button>
       </div>
     </form>
   </div>
@@ -309,7 +309,7 @@
     if (!p.length) return '—';
     return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
   }
-  const personaDemo = (p, i) => ({ id: `i-demo-${i}`, nombre: p.nombre || 'Sin nombre', iniciales: iniciales(p.nombre) });
+  const personaDemo = (p, i) => ({ id: `i-demo-${i}`, nombre: p.nombre || 'Unnamed', iniciales: iniciales(p.nombre) });
   function personasDemo() {
     const out = [];
     D.obras.forEach((o) => delDemo(o.id).personas.forEach((p) => out.push(Object.assign({}, p, { obra: o.id }))));
@@ -323,21 +323,21 @@
   const hrefObra = (o, hash) => (o.nueva ? '#' : `obra.html?id=${encodeURIComponent(o.id)}${hash || ''}`);
 
   function textoPlazo(dias) {
-    if (dias <= 0) return 'Hoy';
-    if (dias === 1) return 'Mañana';
-    return `${A.group(dias)} días`;
+    if (dias <= 0) return 'Today';
+    if (dias === 1) return 'Tomorrow';
+    return `${A.group(dias)} days`;
   }
   function textoCierre(dias) {
-    if (dias < 0) return 'Plazo vencido';
-    if (dias === 0) return 'Cierra hoy';
-    if (dias === 1) return 'Cierra mañana';
-    return `Cierra en ${A.group(dias)} días`;
+    if (dias < 0) return 'Deadline passed';
+    if (dias === 0) return 'Closes today';
+    if (dias === 1) return 'Closes tomorrow';
+    return `Closes in ${A.group(dias)} days`;
   }
 
   /* ---------- Cabecera de métricas ---------- */
   function renderStats() {
-    const enCurso = D.obras.filter((o) => o.estado === 'En obra' || o.estado === 'En renta').length;
-    const enEstudio = D.obras.filter((o) => o.estado === 'En estudio').length;
+    const enCurso = D.obras.filter((o) => o.estado === 'Under construction' || o.estado === 'Rented').length;
+    const enEstudio = D.obras.filter((o) => o.estado === 'Under review').length;
 
     const parts = D.participaciones.filter((p) => A.obra(p.obra));
     const extra = personasDemo();
@@ -349,16 +349,16 @@
     const nBandeja = (D.bandeja || []).filter((b) => b.estado === 'pendiente' && A.obra(b.obra)).length;
     const pendientes = nBorradores + nBandeja;
     const detalle = [];
-    if (nBorradores) detalle.push(plural(nBorradores, 'avance por publicar', 'avances por publicar'));
-    if (nBandeja) detalle.push(plural(nBandeja, 'entrada sin revisar', 'entradas sin revisar'));
+    if (nBorradores) detalle.push(plural(nBorradores, 'update to publish', 'updates to publish'));
+    if (nBandeja) detalle.push(plural(nBandeja, 'entry to review', 'entries to review'));
 
     const cards = [
-      { label: 'Obras en curso', icono: 'building', valor: A.group(enCurso),
-        sub: enEstudio ? `${plural(enEstudio, 'obra', 'obras')} más en estudio` : 'Ninguna en estudio' },
-      { label: 'Capital de inversores', icono: 'wallet', valor: A.money(capital), accent: true,
-        sub: `${plural(nInversores, 'inversor', 'inversores')} en ${plural(nObrasConCapital, 'obra', 'obras')}` },
-      { label: 'Pendientes de revisar', icono: 'bell', valor: A.group(pendientes), accent: pendientes > 0,
-        sub: detalle.length ? detalle.join(' · ') : 'Todo al día', tono: pendientes ? '' : 'ok' }
+      { label: 'Active projects', icono: 'building', valor: A.group(enCurso),
+        sub: enEstudio ? `${plural(enEstudio, 'more project', 'more projects')} under review` : 'None under review' },
+      { label: 'Investor capital', icono: 'wallet', valor: A.money(capital), accent: true,
+        sub: `${plural(nInversores, 'investor', 'investors')} in ${plural(nObrasConCapital, 'project', 'projects')}` },
+      { label: 'Pending review', icono: 'bell', valor: A.group(pendientes), accent: pendientes > 0,
+        sub: detalle.length ? detalle.join(' · ') : 'All up to date', tono: pendientes ? '' : 'ok' }
     ];
     $('#pg-obras-stats').innerHTML = cards.map((c) => `<div class="stat-card">
       <div class="stat-label"><span>${A.esc(c.label)}</span>${A.icon(c.icono)}</div>
@@ -376,14 +376,14 @@
       if (pend.length) {
         const ult = masReciente(pend);
         out.push({ orden: 0, fecha: ult.fecha, dias: 0, tono: 'tone-gold', icono: 'image', urge: true,
-          titulo: plural(pend.length, 'avance por publicar', 'avances por publicar'),
+          titulo: plural(pend.length, 'update to publish', 'updates to publish'),
           meta: `${o.nombre} · ${ult.titulo}`, plazo: A.ago(ult.fecha), href: hrefObra(o, '#diario') });
       }
       const sinRevisar = bandeja(o.id);
       if (sinRevisar.length) {
         const ult = masReciente(sinRevisar);
         out.push({ orden: 1, fecha: ult.fecha, dias: 0, tono: 'tone-copper', icono: 'mail', urge: false,
-          titulo: plural(sinRevisar.length, 'entrada sin revisar', 'entradas sin revisar'),
+          titulo: plural(sinRevisar.length, 'entry to review', 'entries to review'),
           meta: `${o.nombre} · ${ult.asunto}`, plazo: A.ago(ult.fecha), href: hrefObra(o, '#bandeja') });
       }
     });
@@ -395,7 +395,7 @@
       const o = A.obra(d.obra);
       if (!o) return;
       out.push({ orden: 2, fecha: d.vence, dias, tono: 'tone-ink', icono: 'file', urge: dias <= DIAS_URGE,
-        titulo: d.nombre, meta: `${o.nombre} · vence el ${A.date(d.vence)}`,
+        titulo: d.nombre, meta: `${o.nombre} · expires on ${A.date(d.vence)}`,
         plazo: textoPlazo(dias), href: hrefObra(o, '#documentos') });
     });
 
@@ -406,7 +406,7 @@
       if (dias < 0 || dias > DIAS_AVISO) return;
       const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
       out.push({ orden: 2, fecha: op.cierre, dias, tono: 'tone-gold', icono: 'trend', urge: dias <= DIAS_URGE,
-        titulo: 'Cierre de la captación', meta: `${o.nombre} · ${A.pct(cubierto)} del objetivo cubierto`,
+        titulo: 'Fundraising deadline', meta: `${o.nombre} · ${A.pct(cubierto)} of the target covered`,
         plazo: textoPlazo(dias), href: hrefObra(o) });
     });
 
@@ -419,18 +419,18 @@
     const marca = $('#pg-obras-atencion-chip');
 
     if (!lista.length) {
-      marca.innerHTML = A.chip('Al día', 'chip-sage');
+      marca.innerHTML = A.chip('Up to date', 'chip-sage');
       box.innerHTML = `<div class="pg-obras-aldia">
         <span class="list-icon tone-sage">${A.icon('check')}</span>
         <span class="pg-obras-aviso-main">
-          <span class="pg-obras-aviso-t">Todo al día</span>
-          <span class="pg-obras-aviso-m">No quedan avances por publicar ni entradas sin revisar.</span>
+          <span class="pg-obras-aviso-t">All up to date</span>
+          <span class="pg-obras-aviso-m">No updates left to publish and no entries left to review.</span>
         </span>
       </div>`;
       return;
     }
 
-    marca.innerHTML = A.chip(plural(lista.length, 'aviso', 'avisos'), 'chip-copper');
+    marca.innerHTML = A.chip(plural(lista.length, 'alert', 'alerts'), 'chip-copper');
     const visibles = lista.slice(0, MAX_AVISOS);
     const resto = lista.length - visibles.length;
     box.innerHTML = `<div class="pg-obras-avisos">${visibles.map((a) => `
@@ -441,7 +441,7 @@
           <span class="pg-obras-aviso-m">${A.esc(a.meta)}</span>
         </span>
         <span class="pg-obras-plazo${a.urge ? ' pg-obras-urge' : ''}">${A.esc(a.plazo)}</span>
-      </a>`).join('')}</div>${resto ? `<p class="pg-obras-mas">${A.esc(`${plural(resto, 'aviso más', 'avisos más')} dentro de las obras.`)}</p>` : ''}`;
+      </a>`).join('')}</div>${resto ? `<p class="pg-obras-mas">${A.esc(`${plural(resto, 'more alert', 'more alerts')} inside the project pages.`)}</p>` : ''}`;
   }
 
   /* ---------- Bandeja de entrada ---------- */
@@ -453,9 +453,9 @@
 
   function entrada(e) {
     const t = TIPO[e.tipo] || { icono: 'mail', tono: 'tone-copper' };
-    const meta = [e.remitente, e.via, e.adjuntos ? plural(e.adjuntos, 'adjunto', 'adjuntos') : '', A.ago(e.fecha)]
+    const meta = [e.remitente, e.via, e.adjuntos ? plural(e.adjuntos, 'attachment', 'attachments') : '', A.ago(e.fecha)]
       .filter(Boolean).join(' · ');
-    const opciones = ['<option value="">Elegir obra</option>'].concat(D.obras
+    const opciones = ['<option value="">Choose project</option>'].concat(D.obras
       .filter((o) => !o.nueva)
       .map((o) => `<option value="${A.esc(o.id)}"${o.id === e.obraSugerida ? ' selected' : ''}>${A.esc(o.nombre)}</option>`)).join('');
     return `<div class="pg-obras-entrada" data-entrada="${A.esc(e.id)}">
@@ -465,9 +465,9 @@
         <p class="pg-obras-entrada-m">${A.esc(meta)}</p>
       </div>
       <div class="pg-obras-entrada-acc">
-        <select class="select" data-sel="${A.esc(e.id)}" aria-label="Obra a la que asignar «${A.esc(e.asunto)}»">${opciones}</select>
-        <button type="button" class="btn btn-copper btn-sm" data-asignar="${A.esc(e.id)}"${e.obraSugerida ? '' : ' disabled'}>Asignar</button>
-        <button type="button" class="btn btn-text btn-sm" data-descartar="${A.esc(e.id)}">Descartar</button>
+        <select class="select" data-sel="${A.esc(e.id)}" aria-label="Project to assign “${A.esc(e.asunto)}” to">${opciones}</select>
+        <button type="button" class="btn btn-copper btn-sm" data-asignar="${A.esc(e.id)}"${e.obraSugerida ? '' : ' disabled'}>Assign</button>
+        <button type="button" class="btn btn-text btn-sm" data-descartar="${A.esc(e.id)}">Dismiss</button>
       </div>
     </div>`;
   }
@@ -475,13 +475,13 @@
   function renderBandeja() {
     const lista = sinAsignar();
     $('#pg-obras-bandeja-chip').innerHTML = lista.length
-      ? A.chip(plural(lista.length, 'sin asignar', 'sin asignar'), 'chip-copper')
-      : A.chip('Al día', 'chip-sage');
+      ? A.chip(plural(lista.length, 'unassigned', 'unassigned'), 'chip-copper')
+      : A.chip('Up to date', 'chip-sage');
     $('#pg-obras-sinasignar').innerHTML = lista.length
       ? `<div class="pg-obras-entradas">${lista.map(entrada).join('')}</div>`
       : `<div class="pg-obras-vacia">
           <span class="list-icon tone-sage">${A.icon('check')}</span>
-          <p>No queda nada sin asignar. Lo que llegue a esta dirección aparecerá aquí para darle obra.</p>
+          <p>Nothing is left unassigned. Anything sent to this address will appear here to be assigned to a project.</p>
         </div>`;
   }
 
@@ -493,7 +493,7 @@
     e.estado = 'pendiente';
     delete e.obraSugerida;
     render();
-    A.toast(`Asignada a ${o.nombre} · queda en su bandeja`, 'mail');
+    A.toast(`Assigned to ${o.nombre} · now in its inbox`, 'mail');
   }
 
   function descartar(id) {
@@ -501,7 +501,7 @@
     if (!e) return;
     e.estado = 'descartada';
     render();
-    A.toast('Entrada descartada', 'trash');
+    A.toast('Entry dismissed', 'trash');
   }
 
   /* El contador de la barra lateral lo pinta el shell una sola vez: aquí se mantiene al día. */
@@ -515,7 +515,7 @@
     if (!el) {
       el = document.createElement('span');
       el.className = 'sb-count';
-      el.title = 'Entradas pendientes de revisar';
+      el.title = 'Entries pending review';
       link.insertBefore(el, link.querySelector('.sb-ext'));
     }
     el.textContent = A.group(n);
@@ -533,7 +533,7 @@
       ok = document.execCommand('copy');
       ta.remove();
     } catch (err) { ok = false; }
-    A.toast(ok ? 'Dirección copiada' : `Dirección: ${texto}`, ok ? 'copy' : 'mail');
+    A.toast(ok ? 'Address copied' : `Address: ${texto}`, ok ? 'copy' : 'mail');
   }
 
   const EMAIL = D.instalacion.emailObras || '';
@@ -543,7 +543,7 @@
     if (!texto) return;
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(texto).then(() => A.toast('Dirección copiada', 'copy'), () => copiarManual(texto));
+        navigator.clipboard.writeText(texto).then(() => A.toast('Address copied', 'copy'), () => copiarManual(texto));
         return;
       }
     } catch (err) { /* sin acceso al portapapeles */ }
@@ -564,7 +564,7 @@
     if (!boton) return;
     const id = boton.dataset.asignar;
     const sel = $('#pg-obras-sinasignar').querySelector(`select[data-sel="${CSS.escape(id)}"]`);
-    if (!sel || !sel.value) { A.toast('Elija primero la obra', 'info'); return; }
+    if (!sel || !sel.value) { A.toast('Choose the project first', 'info'); return; }
     asignar(id, sel.value);
   });
 
@@ -586,32 +586,32 @@
     const num = delDemo(o.id).numeros;
     const presupuesto = num ? sum(num, (p) => p.presupuesto) : o.presupuesto;
     const ejecutado = num ? sum(num, (p) => p.ejecutado) : (o.ejecutado || 0);
-    const bloqueEjecutado = () => bloque('Ejecutado', `<b>${A.money(ejecutado)}</b> de ${A.money(presupuesto)}`,
-      A.bar(ejecutado, presupuesto), `<span>${A.esc(A.pct((ejecutado / presupuesto) * 100, 1))} del presupuesto</span>`);
+    const bloqueEjecutado = () => bloque('Spent', `<b>${A.money(ejecutado)}</b> of ${A.money(presupuesto)}`,
+      A.bar(ejecutado, presupuesto), `<span>${A.esc(A.pct((ejecutado / presupuesto) * 100, 1))} of the budget</span>`);
 
     if (o.oportunidad) {
       const op = o.oportunidad;
       const cubierto = op.objetivo ? (op.comprometido / op.objetivo) * 100 : 0;
       const dias = A.daysUntil(op.cierre);
-      partes.push(bloque('Captación', `<b>${A.money(op.comprometido)}</b> de ${A.money(op.objetivo)}`, progreso(cubierto, 'gold'),
-        `<span>${A.esc(A.pct(cubierto))} del objetivo</span><span class="${dias <= DIAS_URGE ? 'pg-obras-urge' : ''}">${A.esc(textoCierre(dias))} · ${A.esc(A.date(op.cierre))}</span>`));
+      partes.push(bloque('Fundraising', `<b>${A.money(op.comprometido)}</b> of ${A.money(op.objetivo)}`, progreso(cubierto, 'gold'),
+        `<span>${A.esc(A.pct(cubierto))} of the target</span><span class="${dias <= DIAS_URGE ? 'pg-obras-urge' : ''}">${A.esc(textoCierre(dias))} · ${A.esc(A.date(op.cierre))}</span>`));
       if (num && presupuesto) partes.push(bloqueEjecutado());
-    } else if (o.estado === 'En renta' && o.ocupacionTrimestre != null) {
-      partes.push(bloque('Ocupación del trimestre', `<b>${A.pct(o.ocupacionTrimestre)}</b>`, progreso(o.ocupacionTrimestre, 'sage')));
+    } else if (o.estado === 'Rented' && o.ocupacionTrimestre != null) {
+      partes.push(bloque('Quarterly occupancy', `<b>${A.pct(o.ocupacionTrimestre)}</b>`, progreso(o.ocupacionTrimestre, 'sage')));
       const prox = D.distribuciones
-        .filter((d) => d.obra === o.id && d.estado !== 'Pagada' && A.daysUntil(d.fecha) >= 0)
+        .filter((d) => d.obra === o.id && d.estado !== 'Paid' && A.daysUntil(d.fecha) >= 0)
         .sort((a, b) => A.daysUntil(a.fecha) - A.daysUntil(b.fecha))[0];
-      partes.push(fila('Próxima distribución', prox
+      partes.push(fila('Next distribution', prox
         ? `<b>${A.esc(prox.periodo)}</b> · ${A.esc(A.date(prox.fecha))}`
-        : '<span class="muted">Sin programar</span>'));
+        : '<span class="muted">Not scheduled</span>'));
       if (num && presupuesto) partes.push(bloqueEjecutado());
     } else {
-      if (o.estado !== 'En estudio' && o.avanceObra != null) {
-        partes.push(bloque('Avance de obra', `<b>${A.pct(o.avanceObra)}</b>`, progreso(o.avanceObra)));
+      if (o.estado !== 'Under review' && o.avanceObra != null) {
+        partes.push(bloque('Site progress', `<b>${A.pct(o.avanceObra)}</b>`, progreso(o.avanceObra)));
       }
       if (presupuesto) partes.push(bloqueEjecutado());
     }
-    if (!partes.length) partes.push('<p class="muted pg-obras-sin">Sin datos de seguimiento todavía.</p>');
+    if (!partes.length) partes.push('<p class="muted pg-obras-sin">No tracking data yet.</p>');
     return `<div class="pg-obras-metricas">${partes.join('')}</div>`;
   }
 
@@ -625,14 +625,14 @@
     const nuevos = delDemo(o.id).personas;
     if (parts.length + nuevos.length) {
       const gente = parts.map((p) => A.persona(p.inversor)).filter(Boolean).concat(nuevos.map(personaDemo));
-      return `<span class="pg-obras-personas" title="Inversores con participación en esta obra">${caras(gente)}<span>${A.esc(plural(parts.length + nuevos.length, 'inversor', 'inversores'))}</span></span>`;
+      return `<span class="pg-obras-personas" title="Investors with a stake in this project">${caras(gente)}<span>${A.esc(plural(parts.length + nuevos.length, 'investor', 'investors'))}</span></span>`;
     }
     const comp = (D.compromisos || []).filter((c) => c.obra === o.id);
     if (comp.length) {
       const gente = comp.map((c) => A.persona(c.inversor)).filter(Boolean);
-      return `<span class="pg-obras-personas" title="Inversores con compromiso registrado en esta oportunidad">${caras(gente)}<span>${A.esc(plural(comp.length, 'interesado', 'interesados'))}</span></span>`;
+      return `<span class="pg-obras-personas" title="Investors with a commitment recorded in this opportunity">${caras(gente)}<span>${A.esc(plural(comp.length, 'interested investor', 'interested investors'))}</span></span>`;
     }
-    return `<span class="pg-obras-personas"><span class="pg-obras-noavatar" title="Sin inversores">${A.icon('user')}</span><span class="muted">Sin inversores</span></span>`;
+    return `<span class="pg-obras-personas"><span class="pg-obras-noavatar" title="No investors">${A.icon('user')}</span><span class="muted">No investors</span></span>`;
   }
 
   function tarjeta(o) {
@@ -640,23 +640,23 @@
     const foto = portadas[o.id] ? ` style="background-image:url('${A.esc(portadas[o.id])}')"` : '';
     const ficha = [
       o.m2 ? `${A.group(o.m2)} m²` : '',
-      o.ambientes ? plural(o.ambientes, 'ambiente', 'ambientes') : '',
-      o.piso ? `${o.piso} piso` : ''
+      o.ambientes ? plural(o.ambientes, 'room', 'rooms') : '',
+      o.piso ? `${o.piso} floor` : ''
     ].filter(Boolean).join(' · ');
     const lugar = [o.barrio, o.ciudad].filter(Boolean).join(' · ');
 
     const nBorr = borradores(o.id).length;
     const nBand = bandeja(o.id).length;
     const chips = [];
-    if (nBorr) chips.push(A.chip(plural(nBorr, 'avance por publicar', 'avances por publicar'), 'chip-gold'));
-    if (nBand) chips.push(A.chip(plural(nBand, 'sin revisar', 'sin revisar'), 'chip-copper'));
+    if (nBorr) chips.push(A.chip(plural(nBorr, 'update to publish', 'updates to publish'), 'chip-gold'));
+    if (nBand) chips.push(A.chip(plural(nBand, 'unreviewed', 'unreviewed'), 'chip-copper'));
 
     const pub = publicados(o.id);
     const ult = masReciente(pub);
     const ultima = ult
-      ? `<span>Último avance</span><b>${A.esc(A.ago(ult.fecha))}</b>`
-      : '<span>Sin avances publicados</span>';
-    const tituloUltima = ult ? ` title="${A.esc(plural(pub.length, 'avance publicado', 'avances publicados'))}"` : '';
+      ? `<span>Last update</span><b>${A.esc(A.ago(ult.fecha))}</b>`
+      : '<span>No updates published</span>';
+    const tituloUltima = ult ? ` title="${A.esc(plural(pub.length, 'update published', 'updates published'))}"` : '';
 
     return `<a class="card pg-obras-tarjeta${recienCreada === o.id ? ' pg-obras-recien' : ''}" href="${A.esc(href)}"${o.nueva ? ' data-nueva="1"' : ''}>
       <div class="thumb ${A.esc(o.portada || 'ph-1')} pg-obras-foto"${foto}>${ficha ? `<span>${A.esc(ficha)}</span>` : ''}</div>
@@ -697,12 +697,12 @@
     const lista = visibles();
     $('#pg-obras-lista').innerHTML = lista.length ? lista.map(tarjeta).join('') : `
       <div class="card pg-obras-vacio"><div class="empty">${A.icon('search')}
-        <div class="strong">Ninguna obra coincide con el filtro</div>
-        <div class="muted mt-4">Pruebe con otro nombre o con otro estado.</div>
-        <button type="button" class="btn btn-ghost btn-sm mt-12" data-pg-limpiar>Quitar filtros</button>
+        <div class="strong">No project matches the filter</div>
+        <div class="muted mt-4">Try another name or another status.</div>
+        <button type="button" class="btn btn-ghost btn-sm mt-12" data-pg-limpiar>Clear filters</button>
       </div></div>`;
-    const total = plural(D.obras.length, 'obra', 'obras');
-    $('#pg-obras-total').textContent = lista.length === D.obras.length ? total : `Mostrando ${lista.length} de ${total}`;
+    const total = plural(D.obras.length, 'project', 'projects');
+    $('#pg-obras-total').textContent = lista.length === D.obras.length ? total : `Showing ${lista.length} of ${total}`;
     renderCuentas();
     renderStats();
     renderAtencion();
@@ -734,7 +734,7 @@
     const nueva = e.target.closest('a[data-nueva]');
     if (nueva) {
       e.preventDefault();
-      A.toast('La ficha de una obra nueva no se conserva en esta demostración', 'info');
+      A.toast('The page of a new project is not kept in this demo', 'info');
     }
   });
 
@@ -742,7 +742,7 @@
   const form = $('#pg-form-nueva');
   const files = $('#pg-nueva-files');
   $('#pg-nueva-fase').innerHTML = D.fases.map((f, i) => `<option value="${i}">${A.esc(f)}</option>`).join('');
-  $('#pg-nueva-resp').innerHTML = '<option value="">Sin asignar</option>' +
+  $('#pg-nueva-resp').innerHTML = '<option value="">Unassigned</option>' +
     D.equipo.filter((p) => p.perfil === 'obra').map((p) => `<option value="${A.esc(p.id)}">${A.esc(p.nombre)}</option>`).join('');
 
   $('#pg-nueva-drop').addEventListener('dropzone:files', (e) => {
@@ -757,7 +757,7 @@
     const fd = new FormData(form);
     const txt = (k) => String(fd.get(k) || '').trim();
     const num = (k) => { const n = parseInt(txt(k).replace(/\D/g, ''), 10); return Number.isFinite(n) && n > 0 ? n : null; };
-    const nombre = txt('nombre') || 'Obra sin nombre';
+    const nombre = txt('nombre') || 'Unnamed project';
     const fase = Math.max(0, Math.min(D.fases.length - 1, parseInt(txt('fase'), 10) || 0));
     const mes = D.instalacion.hoy.slice(0, 7);
     const presupuesto = num('presupuesto');
@@ -771,7 +771,7 @@
     });
     if (portadaPendiente) portadas[id] = portadaPendiente;
     portadaPendiente = null;
-    form.dataset.demo = `Obra «${nombre}» creada`;
+    form.dataset.demo = `Project “${nombre}” created`;
     setFiltro('todas');
     busqueda = '';
     $('#pg-obras-search').value = '';
@@ -789,12 +789,12 @@
      y esta no, para que se vean los dos casos del selector. */
   if (D.bandeja && !D.bandeja.some((b) => b.id === 'bz4')) {
     D.bandeja.push({
-      id: 'bz4', obra: null, tipo: 'factura', remitente: 'Pinturería Centro', via: 'Email del proveedor',
-      asunto: 'Factura 0003-00218 · pintura y materiales', fecha: '2026-09-11T08:20', adjuntos: 2, estado: 'sin-asignar'
+      id: 'bz4', obra: null, tipo: 'factura', remitente: 'Pinturería Centro', via: 'Supplier email',
+      asunto: 'Invoice 0003-00218 · paint and materials', fecha: '2026-09-11T08:20', adjuntos: 2, estado: 'sin-asignar'
     });
   }
 
-  $('#pg-obras-fecha').textContent = `Actualizado el ${A.date(D.instalacion.hoy)}`;
+  $('#pg-obras-fecha').textContent = `Updated ${A.date(D.instalacion.hoy)}`;
   render();
 
   /* La barra lateral la pinta el shell al cargar el documento: se sincroniza después. */

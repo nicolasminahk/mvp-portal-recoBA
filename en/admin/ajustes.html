@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Ajustes · Administración recoBA</title>
+<title>Settings · recoBA Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap">
@@ -258,79 +258,79 @@
 
       <div class="page-head">
         <div>
-          <p class="eyebrow">Configuración</p>
-          <h1>Ajustes</h1>
-          <p class="page-sub">Marca, equipo interno, formas de entrar, avisos y datos de la instalación.</p>
+          <p class="eyebrow">Configuration</p>
+          <h1>Settings</h1>
+          <p class="page-sub">Brand, internal team, sign-in methods, notifications and installation details.</p>
         </div>
       </div>
 
       <div class="pg-ajustes" id="pg-ajustes-tabs" data-tabs>
-        <div class="tabs" role="tablist" aria-label="Secciones de ajustes">
-          <button class="tab active" type="button" role="tab" data-tab="marca">Marca</button>
-          <button class="tab" type="button" role="tab" data-tab="usuarios">Usuarios y perfiles<span class="count" id="pg-ajustes-count-equipo">3</span></button>
-          <button class="tab" type="button" role="tab" data-tab="acceso">Acceso</button>
-          <button class="tab" type="button" role="tab" data-tab="avisos">Avisos por email</button>
-          <button class="tab" type="button" role="tab" data-tab="instalacion">Instalación</button>
+        <div class="tabs" role="tablist" aria-label="Settings sections">
+          <button class="tab active" type="button" role="tab" data-tab="marca">Brand</button>
+          <button class="tab" type="button" role="tab" data-tab="usuarios">Users and roles<span class="count" id="pg-ajustes-count-equipo">3</span></button>
+          <button class="tab" type="button" role="tab" data-tab="acceso">Sign-in</button>
+          <button class="tab" type="button" role="tab" data-tab="avisos">Email notifications</button>
+          <button class="tab" type="button" role="tab" data-tab="instalacion">Installation</button>
         </div>
 
         <!-- ============ Marca ============ -->
-        <section data-panel="marca" aria-label="Marca">
+        <section data-panel="marca" aria-label="Brand">
           <div class="pg-ajustes-brand" id="pg-ajustes-brand">
-            <form class="card" id="pg-ajustes-brand-form" data-demo="Cambios de marca guardados" data-reset="false" novalidate>
+            <form class="card" id="pg-ajustes-brand-form" data-demo="Brand changes saved" data-reset="false" novalidate>
               <div class="card-head">
                 <div>
-                  <h3>Marca del portal</h3>
-                  <div class="card-sub">Se aplica al portal del inversor y a los avisos por email.</div>
+                  <h3>Portal branding</h3>
+                  <div class="card-sub">Applied to the investor portal and to the email notifications.</div>
                 </div>
               </div>
               <div class="card-body">
                 <div class="stack pg-ajustes-form">
                   <label class="field">
-                    <span class="label">Nombre visible</span>
+                    <span class="label">Display name</span>
                     <input class="input" id="pg-ajustes-nombre" maxlength="40" autocomplete="off" spellcheck="false">
-                    <span class="hint">Aparece en el portal, en los avisos y en los documentos compartidos.</span>
+                    <span class="hint">Appears in the portal, in the notifications and in shared documents.</span>
                   </label>
 
                   <div class="field">
-                    <span class="label">Logotipo</span>
+                    <span class="label">Logo</span>
                     <div class="pg-ajustes-logo">
-                      <div class="pg-ajustes-logo-tile" id="pg-ajustes-logo-tile" aria-label="Logotipo actual"></div>
-                      <div class="dropzone" id="pg-ajustes-logo-drop" data-accept="image/svg+xml,image/png,image/jpeg,image/webp" data-multiple="false" aria-label="Subir logotipo">
-                        <span data-icon="upload"></span><span><b>Subir logotipo</b><br>o arrastrarlo aquí</span>
+                      <div class="pg-ajustes-logo-tile" id="pg-ajustes-logo-tile" aria-label="Current logo"></div>
+                      <div class="dropzone" id="pg-ajustes-logo-drop" data-accept="image/svg+xml,image/png,image/jpeg,image/webp" data-multiple="false" aria-label="Upload logo">
+                        <span data-icon="upload"></span><span><b>Upload logo</b><br>or drag it here</span>
                       </div>
                     </div>
                     <div class="pg-ajustes-logo-file" id="pg-ajustes-logo-file" hidden>
                       <span data-icon="image"></span><span id="pg-ajustes-logo-name"></span>
-                      <button class="btn btn-text btn-sm" type="button" id="pg-ajustes-logo-remove">Quitar</button>
+                      <button class="btn btn-text btn-sm" type="button" id="pg-ajustes-logo-remove">Remove</button>
                     </div>
-                    <span class="hint">SVG o PNG con fondo transparente. Sin logotipo, se muestra el nombre.</span>
+                    <span class="hint">SVG or PNG with a transparent background. With no logo, the name is shown.</span>
                   </div>
 
                   <div class="field">
-                    <span class="label" id="pg-ajustes-color-label">Color principal</span>
+                    <span class="label" id="pg-ajustes-color-label">Main colour</span>
                     <div class="pg-ajustes-color" role="group" aria-labelledby="pg-ajustes-color-label">
-                      <input class="pg-ajustes-picker" type="color" id="pg-ajustes-color" value="#c46a4a" aria-label="Elegir color principal">
-                      <span class="input-affix pg-ajustes-hex"><span>#</span><input id="pg-ajustes-hex" maxlength="7" autocomplete="off" spellcheck="false" aria-label="Código hexadecimal del color"></span>
+                      <input class="pg-ajustes-picker" type="color" id="pg-ajustes-color" value="#c46a4a" aria-label="Choose the main colour">
+                      <span class="input-affix pg-ajustes-hex"><span>#</span><input id="pg-ajustes-hex" maxlength="7" autocomplete="off" spellcheck="false" aria-label="Colour hex code"></span>
                       <div class="pg-ajustes-swatches" id="pg-ajustes-swatches"></div>
                     </div>
-                    <span class="hint">Botones, enlaces y detalles del portal.</span>
+                    <span class="hint">Buttons, links and portal accents.</span>
                   </div>
 
                   <div class="field">
-                    <span class="label" id="pg-ajustes-domain-label">Dominio</span>
+                    <span class="label" id="pg-ajustes-domain-label">Domain</span>
                     <div class="pg-ajustes-domain">
                       <span class="input-affix"><span><span data-icon="lock"></span></span><input id="pg-ajustes-domain" readonly aria-labelledby="pg-ajustes-domain-label"></span>
-                      <button class="btn btn-ghost" type="button" data-toast="Solicitud de cambio de dominio enviada" data-toast-icon="globe"><span data-icon="globe"></span>Cambiar dominio</button>
+                      <button class="btn btn-ghost" type="button" data-toast="Domain change request sent" data-toast-icon="globe"><span data-icon="globe"></span>Change domain</button>
                     </div>
-                    <span class="hint">Dirección del portal del inversor y del panel.</span>
+                    <span class="hint">Address of the investor portal and the admin panel.</span>
                   </div>
                 </div>
               </div>
               <div class="card-foot">
-                <span class="pg-ajustes-dirty" id="pg-ajustes-brand-state" hidden>Cambios sin guardar</span>
+                <span class="pg-ajustes-dirty" id="pg-ajustes-brand-state" hidden>Unsaved changes</span>
                 <div class="pg-ajustes-foot-actions">
-                  <button class="btn btn-ghost" type="button" id="pg-ajustes-brand-reset">Descartar</button>
-                  <button class="btn btn-copper" type="submit"><span data-icon="check"></span>Guardar cambios</button>
+                  <button class="btn btn-ghost" type="button" id="pg-ajustes-brand-reset">Discard</button>
+                  <button class="btn btn-copper" type="submit"><span data-icon="check"></span>Save changes</button>
                 </div>
               </div>
             </form>
@@ -338,10 +338,10 @@
             <div class="card">
               <div class="card-head">
                 <div>
-                  <h3>Vista previa</h3>
-                  <div class="card-sub">Así se verá el portal del inversor.</div>
+                  <h3>Preview</h3>
+                  <div class="card-sub">This is how the investor portal will look.</div>
                 </div>
-                <span class="chip chip-sage">En vivo</span>
+                <span class="chip chip-sage">Live</span>
               </div>
               <div class="card-body">
                 <div class="pg-ajustes-browser" aria-hidden="true">
@@ -352,7 +352,7 @@
                   </div>
                   <div class="pg-ajustes-portal-head">
                     <span class="pg-ajustes-portal-brand" id="pg-ajustes-preview-brand"></span>
-                    <span class="pg-ajustes-portal-nav"><span class="is-on">Mis inversiones</span><span>Oportunidades</span></span>
+                    <span class="pg-ajustes-portal-nav"><span class="is-on">My investments</span><span>Opportunities</span></span>
                     <span class="pg-ajustes-portal-avatar" id="pg-ajustes-preview-avatar"></span>
                   </div>
                   <div class="pg-ajustes-portal-body" id="pg-ajustes-preview-body"></div>
@@ -363,25 +363,25 @@
         </section>
 
         <!-- ============ Usuarios y perfiles ============ -->
-        <section data-panel="usuarios" aria-label="Usuarios y perfiles">
+        <section data-panel="usuarios" aria-label="Users and roles">
           <div class="card">
             <div class="card-head pg-ajustes-head-wrap">
               <div>
-                <h3>Equipo interno</h3>
+                <h3>Internal team</h3>
                 <div class="card-sub" id="pg-ajustes-team-sub"></div>
               </div>
-              <button class="btn btn-copper" type="button" id="pg-ajustes-invitar" data-open-modal="pg-ajustes-modal-invitar"><span data-icon="plus"></span>Invitar persona del equipo</button>
+              <button class="btn btn-copper" type="button" id="pg-ajustes-invitar" data-open-modal="pg-ajustes-modal-invitar"><span data-icon="plus"></span>Invite a team member</button>
             </div>
             <div class="table-wrap">
               <table class="table pg-ajustes-team">
                 <thead>
                   <tr>
-                    <th>Persona</th>
-                    <th>Perfil</th>
-                    <th>Obras</th>
-                    <th>Estado</th>
-                    <th>Último acceso</th>
-                    <th><span class="pg-ajustes-sr">Acciones</span></th>
+                    <th>Person</th>
+                    <th>Role</th>
+                    <th>Projects</th>
+                    <th>Status</th>
+                    <th>Last sign-in</th>
+                    <th><span class="pg-ajustes-sr">Actions</span></th>
                   </tr>
                 </thead>
                 <tbody id="pg-ajustes-team-body"></tbody>
@@ -392,20 +392,20 @@
           <div class="alert alert-ink pg-ajustes-note mt-16">
             <span data-icon="users"></span>
             <div>
-              <div class="alert-title">Aquí solo se gestiona el equipo interno</div>
-              <div class="alert-text">Los inversores se invitan dentro de cada obra y en el portal ven solo lo suyo.</div>
+              <div class="alert-title">Only the internal team is managed here</div>
+              <div class="alert-text">Investors are invited from inside each project and see only their own in the portal.</div>
             </div>
-            <a class="btn btn-ghost btn-sm" href="index.html">Ir a Obras<span data-icon="arrow-right"></span></a>
+            <a class="btn btn-ghost btn-sm" href="index.html">Go to Projects<span data-icon="arrow-right"></span></a>
           </div>
 
-          <h2 class="section-title">Perfiles</h2>
+          <h2 class="section-title">Roles</h2>
           <div class="grid-3" id="pg-ajustes-perfiles"></div>
 
           <div class="card mt-16">
             <div class="card-head">
               <div>
-                <h3>Qué puede hacer cada perfil</h3>
-                <div class="card-sub">Los permisos van con el perfil: basta con elegirlo al invitar.</div>
+                <h3>What each role can do</h3>
+                <div class="card-sub">Permissions come with the role: simply pick it when inviting.</div>
               </div>
             </div>
             <div class="table-wrap">
@@ -416,23 +416,23 @@
             </div>
             <div class="card-foot">
               <div class="pg-ajustes-legend">
-                <span><span class="pg-ajustes-yes" aria-hidden="true"><span data-icon="check"></span></span>Incluido</span>
-                <span><span class="chip chip-outline no-dot">Límite</span>Incluido con límite</span>
-                <span><span class="pg-ajustes-no" aria-hidden="true"></span>No incluido</span>
+                <span><span class="pg-ajustes-yes" aria-hidden="true"><span data-icon="check"></span></span>Included</span>
+                <span><span class="chip chip-outline no-dot">Limit</span>Included with a limit</span>
+                <span><span class="pg-ajustes-no" aria-hidden="true"></span>Not included</span>
               </div>
             </div>
           </div>
         </section>
 
         <!-- ============ Acceso ============ -->
-        <section data-panel="acceso" aria-label="Acceso">
+        <section data-panel="acceso" aria-label="Sign-in">
           <div class="grid-main-side">
             <div class="stack">
               <div class="card">
                 <div class="card-head">
                   <div>
-                    <h3>Formas de entrar</h3>
-                    <div class="card-sub">Para el panel y para el portal del inversor. Sin contraseñas que recordar.</div>
+                    <h3>Sign-in methods</h3>
+                    <div class="card-sub">For the admin panel and for the investor portal. No passwords to remember.</div>
                   </div>
                 </div>
                 <div>
@@ -442,7 +442,7 @@
                     </span>
                     <span class="list-main">
                       <span class="list-title">Google</span>
-                      <span class="list-meta">Cuentas de Google y de Google Workspace.</span>
+                      <span class="list-meta">Google and Google Workspace accounts.</span>
                     </span>
                     <input type="checkbox" data-metodo="Google" checked>
                     <span class="track"></span>
@@ -450,19 +450,19 @@
                   <label class="switch pg-ajustes-setting">
                     <span class="pg-ajustes-brandicon"><span data-icon="mail"></span></span>
                     <span class="list-main">
-                      <span class="list-title">Enlace por correo</span>
-                      <span class="list-meta">Un enlace de un solo uso al email de la persona invitada.</span>
+                      <span class="list-title">Email link</span>
+                      <span class="list-meta">A single-use link sent to the invited person's email.</span>
                     </span>
                     <input type="checkbox" data-metodo="Enlace por correo" checked>
                     <span class="track"></span>
                   </label>
-                  <label class="switch pg-ajustes-setting is-disabled" title="Se configura en la instalación">
+                  <label class="switch pg-ajustes-setting is-disabled" title="Set up during installation">
                     <span class="pg-ajustes-brandicon">
                       <svg viewBox="0 0 23 23" aria-hidden="true"><path fill="#F35325" d="M1 1h10v10H1z"/><path fill="#81BC06" d="M12 1h10v10H12z"/><path fill="#05A6F0" d="M1 12h10v10H1z"/><path fill="#FFBA08" d="M12 12h10v10H12z"/></svg>
                     </span>
                     <span class="list-main">
                       <span class="list-title">Microsoft</span>
-                      <span class="list-meta">Se configura en la instalación.</span>
+                      <span class="list-meta">Set up during installation.</span>
                     </span>
                     <input type="checkbox" data-metodo="Microsoft" disabled>
                     <span class="track"></span>
@@ -470,10 +470,10 @@
                   <div class="pg-ajustes-setting">
                     <span class="list-icon tone-sage"><span data-icon="lock"></span></span>
                     <div class="list-main">
-                      <div class="list-title">Solo pueden entrar personas invitadas</div>
-                      <div class="list-meta">Nadie puede registrarse por su cuenta.</div>
+                      <div class="list-title">Only invited people can sign in</div>
+                      <div class="list-meta">Nobody can sign up on their own.</div>
                     </div>
-                    <span class="pg-ajustes-fixed"><span data-icon="lock"></span>Siempre activo</span>
+                    <span class="pg-ajustes-fixed"><span data-icon="lock"></span>Always on</span>
                   </div>
                 </div>
               </div>
@@ -482,17 +482,17 @@
                 <div class="pg-ajustes-setting">
                   <span class="list-icon tone-ink"><span data-icon="clock"></span></span>
                   <div class="list-main">
-                    <label class="pg-ajustes-inline">Cerrar sesión tras
-                      <select class="select" id="pg-ajustes-sesion" aria-label="Días sin uso">
+                    <label class="pg-ajustes-inline">Sign out after
+                      <select class="select" id="pg-ajustes-sesion" aria-label="Days of inactivity">
                         <option value="7">7</option>
                         <option value="15">15</option>
                         <option value="30" selected>30</option>
                         <option value="60">60</option>
                         <option value="90">90</option>
                       </select>
-                      días sin uso
+                      days of inactivity
                     </label>
-                    <div class="list-meta mt-4">Protege las cuentas si alguien deja la sesión abierta en un equipo compartido.</div>
+                    <div class="list-meta mt-4">Protects accounts if someone leaves a session open on a shared computer.</div>
                   </div>
                 </div>
               </div>
@@ -501,8 +501,8 @@
             <div class="card">
               <div class="card-head">
                 <div>
-                  <h3>Accesos recientes</h3>
-                  <div class="card-sub">Equipo e inversores</div>
+                  <h3>Recent sign-ins</h3>
+                  <div class="card-sub">Team and investors</div>
                 </div>
               </div>
               <div class="card-body" style="padding-top:6px;padding-bottom:6px">
@@ -514,18 +514,18 @@
         </section>
 
         <!-- ============ Avisos por email ============ -->
-        <section data-panel="avisos" aria-label="Avisos por email">
+        <section data-panel="avisos" aria-label="Email notifications">
           <div class="card">
             <div class="card-head pg-ajustes-head-wrap">
               <div>
-                <h3>Avisos por email</h3>
-                <div class="card-sub">Se envían solos cuando ocurre algo en el panel, con la marca de la instalación.</div>
+                <h3>Email notifications</h3>
+                <div class="card-sub">Sent automatically when something happens in the panel, with the branding of the installation.</div>
               </div>
-              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Remitente <b>avisos@recoba.casa</b></span>
+              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Sender <b>avisos@recoba.casa</b></span>
             </div>
             <div id="pg-ajustes-avisos"></div>
             <div class="card-foot">
-              <span class="hint">Entre llaves, los datos que se completan en cada envío: {obra}, {persona}, {periodo}…</span>
+              <span class="hint">The text in braces is filled in with each send: the project, the person, the period…</span>
               <span class="cell-meta tnum" id="pg-ajustes-avisos-count"></span>
             </div>
           </div>
@@ -533,20 +533,20 @@
           <div class="card mt-20">
             <div class="card-head pg-ajustes-head-wrap">
               <div>
-                <h3>Dirección de correo del panel</h3>
-                <div class="card-sub">Lo que se reenvía aquí entra en el panel y se asigna a su obra antes de revisarlo.</div>
+                <h3>Panel email address</h3>
+                <div class="card-sub">Anything forwarded here lands in the panel and is assigned to its project before review.</div>
               </div>
-              <span class="pg-ajustes-sender"><span data-icon="mail"></span>Una para todas las obras</span>
+              <span class="pg-ajustes-sender"><span data-icon="mail"></span>One for every project</span>
             </div>
             <div id="pg-ajustes-correos"></div>
             <div class="card-foot">
-              <span class="hint">Facturas de proveedores, presupuestos y fotos del equipo. Nada se publica sin revisar.</span>
+              <span class="hint">Supplier invoices, quotes and photos from the team. Nothing is published without review.</span>
             </div>
           </div>
         </section>
 
         <!-- ============ Instalación ============ -->
-        <section data-panel="instalacion" aria-label="Instalación">
+        <section data-panel="instalacion" aria-label="Installation">
           <div class="grid-main-side">
             <div class="stack">
               <div class="card">
@@ -555,7 +555,7 @@
                     <span class="list-icon tone-sage"><span data-icon="key"></span></span>
                     <div>
                       <h3 id="pg-ajustes-owner-title"></h3>
-                      <div class="card-sub">Instalada en sus propias cuentas, con licencia de uso.</div>
+                      <div class="card-sub">Installed in your own accounts, with a licence to use it.</div>
                     </div>
                   </div>
                 </div>
@@ -564,8 +564,8 @@
               <div class="alert alert-sage">
                 <span data-icon="shield"></span>
                 <div>
-                  <div class="alert-title">Sus datos viven en sus cuentas</div>
-                  <div class="alert-text">Si deja el mantenimiento, la plataforma sigue siendo suya: la instalación, los datos y el dominio no cambian de manos.</div>
+                  <div class="alert-title">Your data lives in your own accounts</div>
+                  <div class="alert-text">If you end the maintenance agreement, the platform is still yours: the installation, the data and the domain do not change hands.</div>
                 </div>
               </div>
             </div>
@@ -574,23 +574,23 @@
               <div class="card">
                 <div class="card-head">
                   <div>
-                    <h3>Mantenimiento</h3>
-                    <div class="card-sub">Soporte y mejoras a cargo de recoBA.</div>
+                    <h3>Maintenance</h3>
+                    <div class="card-sub">Support and improvements handled by recoBA.</div>
                   </div>
                 </div>
                 <div class="card-body" id="pg-ajustes-mant"></div>
                 <div class="card-foot">
-                  <button class="btn btn-ghost btn-block" type="button" data-toast="Solicitud de mejora enviada a recoBA" data-toast-icon="send"><span data-icon="edit"></span>Solicitar una mejora</button>
+                  <button class="btn btn-ghost btn-block" type="button" data-toast="Improvement request sent to recoBA" data-toast-icon="send"><span data-icon="edit"></span>Request an improvement</button>
                 </div>
               </div>
 
               <div class="card">
                 <div class="card-head">
-                  <div><h3>Acceso de soporte de recoBA</h3></div>
+                  <div><h3>recoBA support access</h3></div>
                 </div>
                 <div class="card-body">
                   <label class="switch pg-ajustes-switch-row">
-                    <span><b>Permitir acceso para mantenimiento</b><small>Puede revocarse en cualquier momento.</small></span>
+                    <span><b>Allow access for maintenance</b><small>It can be revoked at any time.</small></span>
                     <input type="checkbox" id="pg-ajustes-support" checked>
                     <span class="track"></span>
                   </label>
@@ -599,11 +599,11 @@
 
               <div class="card">
                 <div class="card-head">
-                  <div><h3>Sus datos</h3></div>
+                  <div><h3>Your data</h3></div>
                 </div>
                 <div class="card-body">
-                  <p class="pg-ajustes-data-text">Una copia completa de obras, gastos, contratos, inversores y archivos.</p>
-                  <button class="btn btn-ghost btn-block mt-12" type="button" data-toast="Se prepara un archivo con todos los datos de la instalación" data-toast-icon="download"><span data-icon="download"></span>Exportar todos los datos</button>
+                  <p class="pg-ajustes-data-text">A complete copy of projects, costs, contracts, investors and files.</p>
+                  <button class="btn btn-ghost btn-block mt-12" type="button" data-toast="A file with all the installation data is being prepared" data-toast-icon="download"><span data-icon="download"></span>Export all the data</button>
                 </div>
               </div>
             </div>
@@ -618,33 +618,33 @@
 <!-- Modal: invitar persona del equipo -->
 <div class="modal-overlay" id="pg-ajustes-modal-invitar" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pg-ajustes-invitar-titulo">
-    <form id="pg-ajustes-form-invitar" data-demo="Invitación enviada">
+    <form id="pg-ajustes-form-invitar" data-demo="Invitation sent">
       <div class="modal-head">
         <div>
-          <h3 id="pg-ajustes-invitar-titulo">Invitar persona del equipo</h3>
-          <p class="modal-desc">Le llegará un email con el acceso. No necesita contraseña.</p>
+          <h3 id="pg-ajustes-invitar-titulo">Invite a team member</h3>
+          <p class="modal-desc">They will get an email with their sign-in link. No password needed.</p>
         </div>
-        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+        <button type="button" class="modal-close" data-close-modal aria-label="Close"><span data-icon="x"></span></button>
       </div>
       <div class="modal-body">
         <div class="form-grid">
-          <label class="field"><span class="label">Nombre</span><input class="input" name="nombre" required maxlength="60" autocomplete="off" placeholder="Nombre y apellido"></label>
-          <label class="field"><span class="label">Email</span><input class="input" type="email" name="email" required maxlength="120" autocomplete="off" placeholder="nombre@empresa.es"></label>
+          <label class="field"><span class="label">Name</span><input class="input" name="nombre" required maxlength="60" autocomplete="off" placeholder="First name and surname"></label>
+          <label class="field"><span class="label">Email</span><input class="input" type="email" name="email" required maxlength="120" autocomplete="off" placeholder="name@company.com"></label>
           <div class="field span-2">
-            <span class="label">Perfil</span>
+            <span class="label">Role</span>
             <div class="option-cards" id="pg-ajustes-invitar-perfiles"></div>
           </div>
           <div class="field span-2" id="pg-ajustes-invitar-obras" hidden>
-            <span class="label">Obras que puede cargar</span>
+            <span class="label">Projects they can upload to</span>
             <div class="pg-ajustes-checks" id="pg-ajustes-invitar-lista"></div>
-            <span class="hint">Solo verá y cargará datos de las obras marcadas.</span>
-            <span class="pg-ajustes-error" id="pg-ajustes-invitar-error" hidden>Marque al menos una obra.</span>
+            <span class="hint">They will only see and upload data for the ticked projects.</span>
+            <span class="pg-ajustes-error" id="pg-ajustes-invitar-error" hidden>Tick at least one project.</span>
           </div>
         </div>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
-        <button type="submit" class="btn btn-copper"><span data-icon="send"></span>Enviar invitación</button>
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button type="submit" class="btn btn-copper"><span data-icon="send"></span>Send invitation</button>
       </div>
     </form>
   </div>
@@ -653,21 +653,21 @@
 <!-- Modal: obras de una persona con perfil Obra -->
 <div class="modal-overlay" id="pg-ajustes-modal-obras" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pg-ajustes-obras-titulo">
-    <form id="pg-ajustes-form-obras" data-demo="Obras actualizadas" data-reset="false">
+    <form id="pg-ajustes-form-obras" data-demo="Projects updated" data-reset="false">
       <div class="modal-head">
         <div>
-          <h3 id="pg-ajustes-obras-titulo">Obras</h3>
-          <p class="modal-desc">Solo verá y cargará datos de las obras marcadas.</p>
+          <h3 id="pg-ajustes-obras-titulo">Projects</h3>
+          <p class="modal-desc">They will only see and upload data for the ticked projects.</p>
         </div>
-        <button type="button" class="modal-close" data-close-modal aria-label="Cerrar"><span data-icon="x"></span></button>
+        <button type="button" class="modal-close" data-close-modal aria-label="Close"><span data-icon="x"></span></button>
       </div>
       <div class="modal-body">
         <div class="pg-ajustes-checks" id="pg-ajustes-obras-lista"></div>
-        <p class="pg-ajustes-error mt-12" id="pg-ajustes-obras-error" hidden>Marque al menos una obra.</p>
+        <p class="pg-ajustes-error mt-12" id="pg-ajustes-obras-error" hidden>Tick at least one project.</p>
       </div>
       <div class="modal-foot">
-        <button type="button" class="btn btn-ghost" data-close-modal>Cancelar</button>
-        <button type="submit" class="btn btn-copper">Guardar</button>
+        <button type="button" class="btn btn-ghost" data-close-modal>Cancel</button>
+        <button type="submit" class="btn btn-copper">Save</button>
       </div>
     </form>
   </div>
@@ -719,11 +719,11 @@
        Marca
        ============================================================ */
     const SWATCHES = [
-      { hex: '#C46A4A', nombre: 'Cobre' },
-      { hex: '#1C2331', nombre: 'Tinta' },
-      { hex: '#5F7161', nombre: 'Salvia' },
-      { hex: '#96793E', nombre: 'Oro viejo' },
-      { hex: '#3D5A73', nombre: 'Pizarra' }
+      { hex: '#C46A4A', nombre: 'Copper' },
+      { hex: '#1C2331', nombre: 'Ink' },
+      { hex: '#5F7161', nombre: 'Sage' },
+      { hex: '#96793E', nombre: 'Old gold' },
+      { hex: '#3D5A73', nombre: 'Slate' }
     ];
     const brandBox = $('#pg-ajustes-brand');
     const brandForm = $('#pg-ajustes-brand-form');
@@ -735,7 +735,7 @@
     let saved = Object.assign({}, brand);
 
     $('#pg-ajustes-swatches').innerHTML = SWATCHES.map((s) =>
-      `<button class="pg-ajustes-swatch" type="button" data-color="${s.hex}" style="background:${s.hex}" title="${A.esc(s.nombre)}" aria-label="Color ${A.esc(s.nombre.toLowerCase())}"></button>`).join('');
+      `<button class="pg-ajustes-swatch" type="button" data-color="${s.hex}" style="background:${s.hex}" title="${A.esc(s.nombre)}" aria-label="${A.esc(s.nombre)} colour"></button>`).join('');
     $('#pg-ajustes-domain').value = inst.dominio;
     $('#pg-ajustes-preview-url').textContent = inst.dominio;
 
@@ -751,16 +751,16 @@
     const ayacucho = A.obra('ayacucho');
     $('#pg-ajustes-preview-avatar').textContent = martin.iniciales;
     $('#pg-ajustes-preview-body').innerHTML = `
-      <div class="pg-ajustes-portal-hello">Hola, ${A.esc(martin.nombre.split(' ')[0])}</div>
-      <div class="pg-ajustes-portal-sub">Estado de su cartera al ${A.date(inst.hoy)}</div>
+      <div class="pg-ajustes-portal-hello">Hello, ${A.esc(martin.nombre.split(' ')[0])}</div>
+      <div class="pg-ajustes-portal-sub">Your portfolio as at ${A.date(inst.hoy)}</div>
       <div class="pg-ajustes-portal-stats">
-        <div class="pg-ajustes-portal-box"><small>Capital invertido</small><b>${A.money(A.capitalDe(martin.id))}</b></div>
-        <div class="pg-ajustes-portal-box"><small>Distribuciones cobradas</small><b class="is-accent">${A.money(A.distribucionesDe(martin.id))}</b></div>
+        <div class="pg-ajustes-portal-box"><small>Capital invested</small><b>${A.money(A.capitalDe(martin.id))}</b></div>
+        <div class="pg-ajustes-portal-box"><small>Distributions received</small><b class="is-accent">${A.money(A.distribucionesDe(martin.id))}</b></div>
       </div>
       <div class="pg-ajustes-portal-box pg-ajustes-portal-project">
         <div class="pg-ajustes-portal-top"><span>${A.esc(ayacucho.nombre)} · ${A.esc(ayacucho.barrio)}</span><span class="pg-ajustes-portal-chip">${A.esc(ayacucho.estado)}</span></div>
-        <div class="pg-ajustes-portal-progress"><span>Avance de obra</span><span class="pg-ajustes-portal-track"><span class="pg-ajustes-portal-fill" style="width:${ayacucho.avanceObra}%"></span></span><b class="tnum">${A.pct(ayacucho.avanceObra)}</b></div>
-        <div class="pg-ajustes-portal-actions"><span class="pg-ajustes-portal-btn">Ver avance de obra</span><span class="pg-ajustes-portal-link">Documentos</span></div>
+        <div class="pg-ajustes-portal-progress"><span>Site progress</span><span class="pg-ajustes-portal-track"><span class="pg-ajustes-portal-fill" style="width:${ayacucho.avanceObra}%"></span></span><b class="tnum">${A.pct(ayacucho.avanceObra)}</b></div>
+        <div class="pg-ajustes-portal-actions"><span class="pg-ajustes-portal-btn">View site progress</span><span class="pg-ajustes-portal-link">Documents</span></div>
       </div>`;
 
     function applyBrand() {
@@ -825,7 +825,7 @@
     $('#pg-ajustes-logo-drop').addEventListener('dropzone:files', (e) => {
       const file = (e.detail.files || [])[0];
       if (!file) return;
-      if (!/^image\//.test(file.type || '')) { A.toast('El logotipo tiene que ser una imagen SVG, PNG o JPG', 'alert'); return; }
+      if (!/^image\//.test(file.type || '')) { A.toast('The logo has to be an SVG, PNG or JPG image', 'alert'); return; }
       brand.logo = URL.createObjectURL(file);
       brand.logoNombre = file.name;
       applyBrand();
@@ -839,7 +839,7 @@
     $('#pg-ajustes-brand-reset').addEventListener('click', () => {
       brand = Object.assign({}, saved);
       fillBrandForm();
-      A.toast('Cambios descartados', 'refresh');
+      A.toast('Changes discarded', 'refresh');
     });
     brandForm.addEventListener('submit', () => {
       brand.nombre = brand.nombre.trim() || saved.nombre;
@@ -857,13 +857,13 @@
     const PERFILES_EQUIPO = ['admin', 'obra'];
     const PERFIL_UI = {
       admin: { icon: 'shield', tone: 'tone-copper', donde: 'Panel' },
-      obra: { icon: 'building', tone: 'tone-sage', donde: 'Panel y móvil' },
+      obra: { icon: 'building', tone: 'tone-sage', donde: 'Panel and mobile' },
       inversor: { icon: 'wallet', tone: 'tone-ink', donde: 'Portal' }
     };
-    const ACCESO_CON = { Google: 'con Google', 'Enlace por correo': 'con enlace por correo', Microsoft: 'con Microsoft' };
+    const ACCESO_CON = { Google: 'with Google', 'Enlace por correo': 'with an email link', 'Email link': 'with an email link', Microsoft: 'with Microsoft' };
     const perfilNombre = (id) => (A.perfil(id) || {}).nombre || id;
     const findPersona = (id) => D.equipo.find((p) => p.id === id);
-    const unir = (items) => (items.length > 1 ? `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}` : items[0] || '');
+    const unir = (items) => (items.length > 1 ? `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}` : items[0] || '');
     const plural = (n, uno, varios) => `${n} ${n === 1 ? uno : varios}`;
 
     function obraChecks(seleccion) {
@@ -875,25 +875,25 @@
     }
 
     function obrasCell(p) {
-      if (p.perfil !== 'obra') return '<span class="soft">Todas</span>';
+      if (p.perfil !== 'obra') return '<span class="soft">All</span>';
       const nombres = (Array.isArray(p.obras) ? p.obras : []).map((id) => (A.obra(id) || {}).nombre).filter(Boolean);
-      const label = nombres.length ? A.esc(unir(nombres)) : '<span class="muted">Sin obras asignadas</span>';
-      return `<button class="pg-ajustes-obras-btn" type="button" data-edit-obras="${A.esc(p.id)}" title="Elegir obras">${label}${A.icon('edit')}</button>`;
+      const label = nombres.length ? A.esc(unir(nombres)) : '<span class="muted">No projects assigned</span>';
+      return `<button class="pg-ajustes-obras-btn" type="button" data-edit-obras="${A.esc(p.id)}" title="Choose projects">${label}${A.icon('edit')}</button>`;
     }
 
     function teamRow(p) {
       const propia = p.id === D.usuario.id;
       const perfil = propia
-        ? `<span class="pg-ajustes-role-fixed" title="Su propio perfil no se puede cambiar">${A.esc(perfilNombre(p.perfil))}${A.icon('lock')}</span>`
-        : `<select class="select pg-ajustes-role" data-role="${A.esc(p.id)}" aria-label="Perfil de ${A.esc(p.nombre)}">${PERFILES_EQUIPO.map((id) =>
+        ? `<span class="pg-ajustes-role-fixed" title="You cannot change your own role">${A.esc(perfilNombre(p.perfil))}${A.icon('lock')}</span>`
+        : `<select class="select pg-ajustes-role" data-role="${A.esc(p.id)}" aria-label="Role for ${A.esc(p.nombre)}">${PERFILES_EQUIPO.map((id) =>
             `<option value="${id}"${p.perfil === id ? ' selected' : ''}>${A.esc(perfilNombre(id))}</option>`).join('')}</select>`;
-      const estado = p.estado === 'activo' ? A.chip('Activo', 'chip-sage') : A.chip('Pendiente', 'chip-gold');
+      const estado = p.estado === 'activo' ? A.chip('Active', 'chip-sage') : A.chip('Pending', 'chip-gold');
       const acceso = p.estado === 'activo'
         ? `<div class="tnum">${A.esc(A.ago(p.ultimoAcceso))}</div><div class="cell-meta">${A.esc(ACCESO_CON[p.acceso] || '')}</div>`
-        : `<div class="soft">Sin acceso aún</div><div class="cell-meta tnum">Invitación del ${A.esc(A.date(p.invitado, 'day'))}</div>`;
+        : `<div class="soft">Not signed in yet</div><div class="cell-meta tnum">Invited on ${A.esc(A.date(p.invitado, 'day'))}</div>`;
       const acciones = propia
-        ? '<span class="cell-meta">Su cuenta</span>'
-        : `<div class="pg-ajustes-actions">${p.estado === 'invitado' ? `<button class="btn btn-ghost btn-sm" type="button" data-resend="${A.esc(p.id)}">Reenviar invitación</button>` : ''}<button class="btn btn-danger btn-sm" type="button" data-remove="${A.esc(p.id)}">Quitar acceso</button></div>`;
+        ? '<span class="cell-meta">Your account</span>'
+        : `<div class="pg-ajustes-actions">${p.estado === 'invitado' ? `<button class="btn btn-ghost btn-sm" type="button" data-resend="${A.esc(p.id)}">Resend invitation</button>` : ''}<button class="btn btn-danger btn-sm" type="button" data-remove="${A.esc(p.id)}">Remove access</button></div>`;
       return `<tr data-person="${A.esc(p.id)}">
         <td><div class="pg-ajustes-person">${A.avatar(p)}<div><div class="cell-title">${A.esc(p.nombre)}</div><div class="cell-meta">${A.esc(p.email)}</div></div></div></td>
         <td>${perfil}</td>
@@ -908,8 +908,8 @@
       $('#pg-ajustes-team-body').innerHTML = D.equipo.map(teamRow).join('');
       const pendientes = D.equipo.filter((p) => p.estado === 'invitado').length;
       $('#pg-ajustes-count-equipo').textContent = D.equipo.length;
-      $('#pg-ajustes-team-sub').textContent = 'Administración y Obra · ' + plural(D.equipo.length, 'persona', 'personas') +
-        (pendientes ? ` · ${plural(pendientes, 'invitación pendiente', 'invitaciones pendientes')}` : '');
+      $('#pg-ajustes-team-sub').textContent = 'Administration and Site · ' + plural(D.equipo.length, 'person', 'people') +
+        (pendientes ? ` · ${plural(pendientes, 'pending invitation', 'pending invitations')}` : '');
       if (flashId) {
         const tr = $(`tr[data-person="${CSS.escape(flashId)}"]`);
         if (tr) tr.classList.add('pg-ajustes-flash');
@@ -923,8 +923,8 @@
         const ui = PERFIL_UI[pf.id] || { icon: 'user', tone: 'tone-ink', donde: '' };
         const n = pf.id === 'inversor' ? D.inversores.length : D.equipo.filter((p) => p.perfil === pf.id).length;
         const quien = pf.id === 'inversor'
-          ? `<span>${plural(n, 'inversor', 'inversores')} · se invitan en cada obra</span>`
-          : `<span>${plural(n, 'persona', 'personas')}</span>`;
+          ? `<span>${plural(n, 'investor', 'investors')} · invited in each project</span>`
+          : `<span>${plural(n, 'person', 'people')}</span>`;
         return `<div class="card card-pad pg-ajustes-profile">
           <div class="pg-ajustes-profile-top"><span class="list-icon ${ui.tone}">${A.icon(ui.icon)}</span><h3>${A.esc(pf.nombre)}</h3></div>
           <p class="pg-ajustes-profile-desc">${A.esc(pf.descripcion)}</p>
@@ -934,11 +934,11 @@
     }
 
     const permisoCell = (v) => (v === true
-      ? `<span class="pg-ajustes-yes" role="img" aria-label="Sí">${A.icon('check')}</span>`
+      ? `<span class="pg-ajustes-yes" role="img" aria-label="Yes">${A.icon('check')}</span>`
       : v === false
         ? '<span class="pg-ajustes-no" role="img" aria-label="No"></span>'
         : `<span class="chip chip-outline no-dot">${A.esc(v)}</span>`);
-    $('#pg-ajustes-permisos-head').innerHTML = `<th>Acción</th>${D.perfiles.map((p) => `<th>${A.esc(p.nombre)}</th>`).join('')}`;
+    $('#pg-ajustes-permisos-head').innerHTML = `<th>Action</th>${D.perfiles.map((p) => `<th>${A.esc(p.nombre)}</th>`).join('')}`;
     $('#pg-ajustes-permisos').innerHTML = D.permisos.map((r) =>
       `<tr><td>${A.esc(r.accion)}</td>${D.perfiles.map((p) => `<td>${permisoCell(r[p.id])}</td>`).join('')}</tr>`).join('');
 
@@ -949,7 +949,7 @@
       const p = findPersona(id);
       if (!p) return;
       obrasDe = p.id;
-      $('#pg-ajustes-obras-titulo').textContent = `Obras de ${p.nombre}`;
+      $('#pg-ajustes-obras-titulo').textContent = `Projects for ${p.nombre}`;
       $('#pg-ajustes-obras-lista').innerHTML = obraChecks(Array.isArray(p.obras) ? p.obras : []);
       $('#pg-ajustes-obras-error').hidden = true;
       A.openModal('pg-ajustes-modal-obras');
@@ -965,7 +965,7 @@
         return;
       }
       p.obras = ids;
-      formObras.dataset.demo = `Obras de ${p.nombre} actualizadas`;
+      formObras.dataset.demo = `Projects for ${p.nombre} updated`;
       renderTeam(p.id);
     });
 
@@ -983,7 +983,7 @@
         p.obras = 'todas';
       }
       renderTeam(p.id);
-      A.toast(`${p.nombre} tiene ahora el perfil ${perfilNombre(p.perfil)}`, 'users');
+      A.toast(`${p.nombre} now has the ${perfilNombre(p.perfil)} role`, 'users');
       if (p.perfil === 'obra' && !p.obras.length) openObras(p.id);
     });
     teamBody.addEventListener('click', (e) => {
@@ -993,7 +993,7 @@
         if (!p) return;
         p.invitado = inst.hoy;
         renderTeam();
-        A.toast(`Invitación reenviada a ${p.email}`, 'send');
+        A.toast(`Invitation resent to ${p.email}`, 'send');
         return;
       }
       const quitar = e.target.closest('[data-remove]');
@@ -1002,7 +1002,7 @@
         if (i < 0) return;
         const [p] = D.equipo.splice(i, 1);
         renderTeam();
-        A.toast(`${p.nombre} ya no tiene acceso a la instalación`, 'lock');
+        A.toast(`${p.nombre} no longer has access to the installation`, 'lock');
         return;
       }
       const editar = e.target.closest('[data-edit-obras]');
@@ -1041,7 +1041,7 @@
       if (!nombre) { cancelar(); formInv.elements.nombre.focus(); return; }
       if (D.equipo.concat(D.inversores).some((p) => p.email.toLowerCase() === email)) {
         cancelar();
-        formInv.elements.email.setCustomValidity('Esta dirección ya tiene acceso a la instalación.');
+        formInv.elements.email.setCustomValidity('That address already has access to the installation.');
         formInv.elements.email.reportValidity();
         return;
       }
@@ -1057,7 +1057,7 @@
         invitado: inst.hoy
       };
       D.equipo.push(nueva);
-      formInv.dataset.demo = `Invitación enviada a ${email}`;
+      formInv.dataset.demo = `Invitation sent to ${email}`;
       renderTeam(nueva.id);
     });
 
@@ -1068,28 +1068,28 @@
       const personas = D.equipo.concat(D.inversores);
       const recientes = personas.filter((p) => p.ultimoAcceso).sort((a, b) => b.ultimoAcceso.localeCompare(a.ultimoAcceso));
       $('#pg-ajustes-accesos').innerHTML = recientes.map((p) => {
-        const perfil = p.id.startsWith('i-') ? 'Inversor' : perfilNombre(p.perfil);
+        const perfil = p.id.startsWith('i-') ? 'Investor' : perfilNombre(p.perfil);
         return `<div class="list-item">${A.avatar(p, 'sm')}<div class="list-main"><div class="list-title">${A.esc(p.nombre)}</div><div class="list-meta">${A.esc(perfil)} · ${A.esc(p.acceso)}</div></div><span class="pg-ajustes-when tnum">${A.esc(A.ago(p.ultimoAcceso))}</span></div>`;
-      }).join('') || '<div class="empty">Todavía no ha entrado nadie.</div>';
+      }).join('') || '<div class="empty">Nobody has signed in yet.</div>';
       const pendientes = personas.filter((p) => p.estado === 'invitado').map((p) => p.nombre);
       const foot = $('#pg-ajustes-accesos-foot');
       foot.hidden = !pendientes.length;
-      foot.innerHTML = pendientes.length ? `${A.icon('mail')}<span>Sin aceptar la invitación: ${A.esc(unir(pendientes))}</span>` : '';
+      foot.innerHTML = pendientes.length ? `${A.icon('mail')}<span>Invitation not yet accepted: ${A.esc(unir(pendientes))}</span>` : '';
     }
 
     const metodos = $$('input[data-metodo]');
     metodos.forEach((input) => input.addEventListener('change', () => {
       if (!metodos.some((i) => i.checked && !i.disabled)) {
         input.checked = true;
-        A.toast('Debe quedar al menos una forma de entrar activa', 'alert');
+        A.toast('At least one sign-in method has to stay on', 'alert');
         return;
       }
       inst.acceso = metodos.filter((i) => i.checked).map((i) => i.dataset.metodo);
-      A.toast(`Acceso ${ACCESO_CON[input.dataset.metodo]} ${input.checked ? 'activado' : 'desactivado'}`, input.checked ? 'check' : 'lock');
+      A.toast(`Sign-in ${ACCESO_CON[input.dataset.metodo]} ${input.checked ? 'turned on' : 'turned off'}`, input.checked ? 'check' : 'lock');
       renderInstalacion();
     }));
     $('#pg-ajustes-sesion').addEventListener('change', (e) => {
-      A.toast(`Las sesiones se cerrarán tras ${e.target.value} días sin uso`, 'clock');
+      A.toast(`Sessions will close after ${e.target.value} days of inactivity`, 'clock');
     });
 
     /* ============================================================
@@ -1097,18 +1097,18 @@
        ============================================================ */
     const avisosBox = $('#pg-ajustes-avisos');
     function contarAvisos() {
-      $('#pg-ajustes-avisos-count').textContent = `${D.avisos.filter((n) => n.activo).length} de ${D.avisos.length} activos`;
+      $('#pg-ajustes-avisos-count').textContent = `${D.avisos.filter((n) => n.activo).length} of ${D.avisos.length} active`;
     }
     function renderAvisos() {
       avisosBox.innerHTML = D.avisos.map((n) => `
         <div class="pg-ajustes-aviso${n.activo ? '' : ' is-off'}" data-aviso="${A.esc(n.id)}">
-          <label class="switch"><input type="checkbox" data-aviso-on${n.activo ? ' checked' : ''} aria-label="Enviar el aviso «${A.esc(n.nombre)}»"><span class="track"></span></label>
+          <label class="switch"><input type="checkbox" data-aviso-on${n.activo ? ' checked' : ''} aria-label="Send the “${A.esc(n.nombre)}” notification"><span class="track"></span></label>
           <div class="pg-ajustes-aviso-main">
             <div class="list-title">${A.esc(n.nombre)}</div>
             <div class="list-meta">${A.icon('users')}<span>${A.esc(n.destinatarios)}</span></div>
           </div>
-          <label class="pg-ajustes-aviso-subject"><span>Asunto</span><input class="input" data-aviso-subject value="${A.esc(n.asunto)}" maxlength="120" spellcheck="false"></label>
-          <button class="btn btn-ghost btn-sm" type="button" data-aviso-test>${A.icon('send')}Enviar prueba</button>
+          <label class="pg-ajustes-aviso-subject"><span>Subject</span><input class="input" data-aviso-subject value="${A.esc(n.asunto)}" maxlength="120" spellcheck="false"></label>
+          <button class="btn btn-ghost btn-sm" type="button" data-aviso-test>${A.icon('send')}Send a test</button>
         </div>`).join('');
       contarAvisos();
     }
@@ -1123,14 +1123,14 @@
         n.activo = e.target.checked;
         row.classList.toggle('is-off', !n.activo);
         contarAvisos();
-        A.toast(`Aviso «${n.nombre}» ${n.activo ? 'activado' : 'desactivado'}`, n.activo ? 'bell' : 'minus');
+        A.toast(`“${n.nombre}” notification ${n.activo ? 'turned on' : 'turned off'}`, n.activo ? 'bell' : 'minus');
       } else if (e.target.matches('[data-aviso-subject]')) {
         const v = e.target.value.trim();
-        if (!v) { e.target.value = n.asunto; A.toast('El asunto no puede quedar vacío', 'alert'); return; }
+        if (!v) { e.target.value = n.asunto; A.toast('The subject cannot be left empty', 'alert'); return; }
         e.target.value = v;
         if (v === n.asunto) return;
         n.asunto = v;
-        A.toast(`Asunto de «${n.nombre}» actualizado`, 'edit');
+        A.toast(`Subject of “${n.nombre}” updated`, 'edit');
       }
     });
     avisosBox.addEventListener('keydown', (e) => {
@@ -1139,7 +1139,7 @@
     avisosBox.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-aviso-test]');
       const { n } = btn ? avisoDe(btn) : {};
-      if (n) A.toast(`Prueba de «${n.nombre}» enviada a ${D.usuario.email}`, 'send');
+      if (n) A.toast(`Test of “${n.nombre}” sent to ${D.usuario.email}`, 'send');
     });
 
     /* Dirección de correo de cada obra: lo reenviado ahí entra en su bandeja */
@@ -1149,52 +1149,52 @@
       const sinAsignar = (D.bandeja || []).filter((b) => b.estado === 'sin-asignar').length;
       const enObras = (D.bandeja || []).filter((b) => b.estado === 'pendiente').length;
       const estado = sinAsignar
-        ? A.chip(`${A.group(sinAsignar)} sin asignar`, 'chip-gold')
-        : '<span class="soft">Todo asignado</span>';
+        ? A.chip(`${A.group(sinAsignar)} unassigned`, 'chip-gold')
+        : '<span class="soft">All assigned</span>';
       correosBox.innerHTML = `<div class="pg-ajustes-mailrow">
           <div class="pg-ajustes-mail-obra">
             <span class="list-icon tone-copper">${A.icon('mail')}</span>
             <div>
-              <div class="list-title">Dirección del panel</div>
-              <div class="list-meta">Vale para todas las obras</div>
+              <div class="list-title">Panel address</div>
+              <div class="list-meta">Works for every project</div>
             </div>
           </div>
           <span class="pg-ajustes-mail-dir mono">${A.esc(dir)}</span>
           <span class="pg-ajustes-mail-state">${estado}</span>
-          <button class="btn btn-ghost btn-sm" type="button" data-copiar="${A.esc(dir)}" aria-label="Copiar la dirección del panel">${A.icon('copy')}Copiar</button>
+          <button class="btn btn-ghost btn-sm" type="button" data-copiar="${A.esc(dir)}" aria-label="Copy the panel address">${A.icon('copy')}Copy</button>
         </div>
-        <p class="hint" style="padding:0 22px 14px">Cada entrada se asigna a su obra desde Obras. Ahora mismo hay ${A.group(enObras)} esperando revisión dentro de las obras.</p>`;
+        <p class="hint" style="padding:0 22px 14px">Each entry is assigned to its project from Projects. Right now ${A.group(enObras)} are waiting for review inside the projects.</p>`;
     }
     correosBox.addEventListener('click', (e) => {
       const b = e.target.closest('[data-copiar]');
       if (!b) return;
       const dir = b.dataset.copiar;
       try { if (navigator.clipboard) navigator.clipboard.writeText(dir).catch(() => {}); } catch (err) { /* sin portapapeles */ }
-      A.toast(`Dirección copiada: ${dir}`, 'copy');
+      A.toast(`Address copied: ${dir}`, 'copy');
     });
 
     /* ============================================================
        Instalación
        ============================================================ */
-    const ACCESO_TXT = { Google: 'Google', 'Enlace por correo': 'enlace por correo', Microsoft: 'Microsoft' };
+    const ACCESO_TXT = { Google: 'Google', 'Enlace por correo': 'email link', 'Email link': 'email link', Microsoft: 'Microsoft' };
     const horas = (n) => A.group(n, Number.isInteger(n) ? 0 : 1);
     function renderInstalacion() {
-      $('#pg-ajustes-owner-title').textContent = `Esta instalación es de ${inst.cliente}`;
+      $('#pg-ajustes-owner-title').textContent = `This installation belongs to ${inst.cliente}`;
       const metodosTxt = unir(inst.acceso.map((m) => ACCESO_TXT[m] || m));
       const filas = [
-        { icon: 'user', label: 'Propietario', value: inst.cliente },
-        { icon: 'key', label: 'Licencia', value: inst.licencia },
-        { icon: 'database', label: 'Datos y archivos', value: inst.datos, suya: true },
+        { icon: 'user', label: 'Owner', value: inst.cliente },
+        { icon: 'key', label: 'Licence', value: inst.licencia },
+        { icon: 'database', label: 'Data and files', value: inst.datos, suya: true },
         { icon: 'globe', label: 'Web', value: inst.web, suya: true },
-        { icon: 'link', label: 'Dominio', value: inst.dominio, suya: true },
-        { icon: 'refresh', label: 'Copias de seguridad', value: inst.copias },
-        { icon: 'lock', label: 'Acceso', value: `${metodosTxt.charAt(0).toUpperCase()}${metodosTxt.slice(1)} · solo personas invitadas` }
+        { icon: 'link', label: 'Domain', value: inst.dominio, suya: true },
+        { icon: 'refresh', label: 'Backups', value: inst.copias },
+        { icon: 'lock', label: 'Sign-in', value: `${metodosTxt.charAt(0).toUpperCase()}${metodosTxt.slice(1)} · invited people only` }
       ];
       $('#pg-ajustes-install').innerHTML = filas.map((f) => `
         <div class="pg-ajustes-dl-row">
           <span class="list-icon">${A.icon(f.icon)}</span>
           <div class="pg-ajustes-dl-text"><span class="pg-ajustes-dl-label">${A.esc(f.label)}</span><span class="pg-ajustes-dl-value">${A.esc(f.value)}</span></div>
-          ${f.suya ? '<span class="chip chip-sage no-dot">En su cuenta</span>' : ''}
+          ${f.suya ? '<span class="chip chip-sage no-dot">In your account</span>' : ''}
         </div>`).join('');
     }
 
@@ -1202,16 +1202,16 @@
     const usado = Math.min(100, Math.round((mant.horasUsadas / mant.horasMes) * 100));
     $('#pg-ajustes-mant').innerHTML = `
       <div class="pg-ajustes-kv"><span>Plan</span><b>${A.esc(mant.plan)}</b></div>
-      <div class="pg-ajustes-kv"><span>Horas incluidas</span><b class="tnum">${horas(mant.horasMes)} h al mes</b></div>
+      <div class="pg-ajustes-kv"><span>Hours included</span><b class="tnum">${horas(mant.horasMes)} h per month</b></div>
       <div class="pg-ajustes-hours">
-        <div class="pg-ajustes-hours-top"><span>Horas usadas este mes</span><b>${horas(mant.horasUsadas)} <small>de ${horas(mant.horasMes)} h</small></b></div>
-        <div class="progress-track mt-8" role="progressbar" aria-label="Horas usadas este mes" aria-valuemin="0" aria-valuemax="${mant.horasMes}" aria-valuenow="${mant.horasUsadas}"><div class="progress-fill" style="width:${usado}%"></div></div>
-        <div class="cell-meta mt-8">Quedan ${horas(Math.max(0, mant.horasMes - mant.horasUsadas))} h · ${A.pct(usado)} usado</div>
+        <div class="pg-ajustes-hours-top"><span>Hours used this month</span><b>${horas(mant.horasUsadas)} <small>of ${horas(mant.horasMes)} h</small></b></div>
+        <div class="progress-track mt-8" role="progressbar" aria-label="Hours used this month" aria-valuemin="0" aria-valuemax="${mant.horasMes}" aria-valuenow="${mant.horasUsadas}"><div class="progress-fill" style="width:${usado}%"></div></div>
+        <div class="cell-meta mt-8">${horas(Math.max(0, mant.horasMes - mant.horasUsadas))} h left · ${A.pct(usado)} used</div>
       </div>
-      <div class="pg-ajustes-kv"><span>Renovación</span><b>${A.date(mant.renovacion, 'long')}</b></div>`;
+      <div class="pg-ajustes-kv"><span>Renewal</span><b>${A.date(mant.renovacion, 'long')}</b></div>`;
 
     $('#pg-ajustes-support').addEventListener('change', (e) => {
-      A.toast(e.target.checked ? 'recoBA puede acceder para mantenimiento' : 'Acceso de soporte revocado', e.target.checked ? 'shield' : 'lock');
+      A.toast(e.target.checked ? 'recoBA can now access it for maintenance' : 'Support access revoked', e.target.checked ? 'shield' : 'lock');
     });
 
     renderTeam();

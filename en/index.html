@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal de Inversores · recoBA</title>
-<meta name="description" content="Portal privado de inversores de recoBA: avances de obra en tiempo real, gastos, documentos y oportunidades de cada flip en Buenos Aires.">
+<title>Investor Portal · recoBA</title>
+<meta name="description" content="recoBA's private investor portal: real-time site updates, costs, documents and opportunities for every flip in Buenos Aires.">
 <meta name="robots" content="noindex, nofollow">
-<meta property="og:title" content="Portal de Inversores · recoBA">
+<meta property="og:title" content="Investor Portal · recoBA">
 <meta property="og:site_name" content="recoBA">
-<meta property="og:description" content="Acceso privado · solo inversores invitados.">
+<meta property="og:description" content="Private access · invited investors only.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231C2331'/%3E%3Cpath d='M14 50 V34 a18 18 0 0 1 36 0 V50' fill='none' stroke='%23C46A4A' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1319,7 +1319,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .oppx-card-radar:hover { color: var(--copper-dark); text-decoration: underline; }
 
-/* --- Aviso "Avisarme cuando abra" (cards próximamente) --- */
+/* --- Aviso "Notify me when it opens" (cards próximamente) --- */
 .oppx-notify-wrap {
   display: flex;
   align-items: center;
@@ -1363,7 +1363,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .oppx-link-btn:hover { color: var(--copper-dark); }
 
-/* --- Banda "¿Cómo se originan estas oportunidades?" --- */
+/* --- Banda "Where do these opportunities come from?" --- */
 .oppx-origin {
   background: var(--paper);
   border: 1px solid var(--line);
@@ -1570,7 +1570,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .ntf-ext-link { display: inline-flex; align-items: center; gap: 5px; }
 .ntf-ext-link svg { flex-shrink: 0; opacity: .7; }
 
-/* --- Banda "Últimas novedades" (lista editorial fina) --- */
+/* --- Banda "Latest news" (lista editorial fina) --- */
 .adv-news { border-top: 1px solid var(--line); }
 .adv-news-item {
   display: flex;
@@ -1592,7 +1592,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 .adv-news-link { font-size: 13px; font-weight: 700; color: var(--copper); white-space: nowrap; }
 .adv-news-link:hover { color: var(--copper-dark); }
 
-/* --- Card "Tu asesor" --- */
+/* --- Card "Your advisor" --- */
 .adv-card {
   display: flex;
   align-items: center;
@@ -1643,8 +1643,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   <div class="login-decor-arc" aria-hidden="true"></div>
   <div class="login-card">
     <div class="wordmark">reco<span class="ba">BA</span></div>
-    <div class="login-tagline">Portal de inversores</div>
-    <p class="login-sub">Seguí tus inversiones en tiempo real: avances de obra, gastos y documentos de cada flip.</p>
+    <div class="login-tagline">Investor portal</div>
+    <p class="login-sub">Track your investments in real time: site updates, costs and documents for every flip.</p>
 
     <button class="btn-google" id="btn-google-login" type="button">
       <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
@@ -1653,10 +1653,10 @@ ul { margin: 0; padding: 0; list-style: none; }
         <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
         <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
       </svg>
-      Continuar con Google
+      Continue with Google
     </button>
-    <a href="#" class="login-secondary" id="btn-email-login">Ingresar con email</a>
-    <p class="login-note">Acceso privado · solo inversores invitados</p>
+    <a href="#" class="login-secondary" id="btn-email-login">Sign in with email</a>
+    <p class="login-note">Private access · invited investors only</p>
   </div>
 </section>
 
@@ -1669,9 +1669,9 @@ ul { margin: 0; padding: 0; list-style: none; }
     <div class="header-inner">
       <div class="header-left">
         <div class="wordmark">reco<span class="ba">BA</span></div>
-        <nav class="main-nav" aria-label="Navegación principal">
-          <a href="#" data-nav="dashboard" class="active">Mis inversiones</a>
-          <a href="#" data-nav="opportunities">Oportunidades</a>
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="#" data-nav="dashboard" class="active">My investments</a>
+          <a href="#" data-nav="opportunities">Opportunities</a>
           <a href="https://buscador.recoba.casa" target="_blank" rel="noopener" class="ntf-ext-link">
             Radar
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1679,9 +1679,9 @@ ul { margin: 0; padding: 0; list-style: none; }
         </nav>
       </div>
       <div class="ntf-header-actions">
-      <div class="lang-switch" id="lang-switch" role="group" aria-label="Idioma"></div>
+      <div class="lang-switch" id="lang-switch" role="group" aria-label="Language"></div>
       <div class="ntf-wrap" id="ntf-wrap">
-        <button class="ntf-bell-btn" id="ntf-bell-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Notificaciones (3 sin leer)">
+        <button class="ntf-bell-btn" id="ntf-bell-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Notifications (3 unread)">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M12 4a5.5 5.5 0 0 0-5.5 5.5c0 3.6-1.1 5.1-1.9 6-.34.38-.07 1 .45 1h13.9c.52 0 .79-.62.45-1-.8-.9-1.9-2.4-1.9-6A5.5 5.5 0 0 0 12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M10.2 19.5a1.9 1.9 0 0 0 3.6 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -1689,16 +1689,16 @@ ul { margin: 0; padding: 0; list-style: none; }
           <span class="ntf-badge" id="ntf-badge">3</span>
         </button>
 
-        <div class="ntf-dropdown" id="ntf-dropdown" aria-label="Notificaciones">
-          <div class="ntf-head">Notificaciones</div>
+        <div class="ntf-dropdown" id="ntf-dropdown" aria-label="Notifications">
+          <div class="ntf-head">Notifications</div>
           <ul class="ntf-list">
             <li class="ntf-unread">
               <button class="ntf-item" type="button" data-ntf-nav="ayacucho">
                 <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11 12 4l9 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9.6V20h12V9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 <span class="ntf-item-body">
-                  <span class="ntf-item-title">Nuevo avance de obra</span>
-                  <span class="ntf-item-text">Ayacucho 1400: baño principal terminado</span>
-                  <span class="ntf-item-time">hace 2 h</span>
+                  <span class="ntf-item-title">New site update</span>
+                  <span class="ntf-item-text">Ayacucho 1400: main bathroom finished</span>
+                  <span class="ntf-item-time">2 h ago</span>
                 </span>
               </button>
             </li>
@@ -1706,9 +1706,9 @@ ul { margin: 0; padding: 0; list-style: none; }
               <button class="ntf-item" type="button" data-ntf-nav="ayacucho-camara">
                 <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="7" width="13" height="10" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="m15.5 10.5 6-3.5v10l-6-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 <span class="ntf-item-body">
-                  <span class="ntf-item-title">Cámara en vivo disponible</span>
-                  <span class="ntf-item-text">Ya podés ver la obra de Ayacucho 1400 en directo</span>
-                  <span class="ntf-item-time">hace 5 h</span>
+                  <span class="ntf-item-title">Live camera available</span>
+                  <span class="ntf-item-text">You can now watch the Ayacucho 1400 site live</span>
+                  <span class="ntf-item-time">5 h ago</span>
                 </span>
               </button>
             </li>
@@ -1716,9 +1716,9 @@ ul { margin: 0; padding: 0; list-style: none; }
               <button class="ntf-item" type="button" data-ntf-nav="opportunities">
                 <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.8-4.5 4.3 1.1 6-5.4-2.9-5.4 2.9 1.1-6L3.2 9.4l6.1-.8L12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                 <span class="ntf-item-body">
-                  <span class="ntf-item-title">Nueva oportunidad abierta</span>
-                  <span class="ntf-item-text">Aguirre 1300 · Villa Crespo ya acepta compromisos</span>
-                  <span class="ntf-item-time">hace 1 día</span>
+                  <span class="ntf-item-title">New opportunity open</span>
+                  <span class="ntf-item-text">Aguirre 1300 · Villa Crespo is now accepting commitments</span>
+                  <span class="ntf-item-time">1 day ago</span>
                 </span>
               </button>
             </li>
@@ -1726,14 +1726,14 @@ ul { margin: 0; padding: 0; list-style: none; }
               <button class="ntf-item" type="button" data-ntf-nav="guemes">
                 <span class="ntf-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.6"/><path d="M14.2 9.8c-.4-.7-1.2-1.1-2.2-1.1-1.3 0-2.3.7-2.3 1.7 0 2.3 4.6 1.3 4.6 3.6 0 1-1 1.7-2.3 1.7-1 0-1.8-.4-2.2-1.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M12 7.2v9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                 <span class="ntf-item-body">
-                  <span class="ntf-item-title">Distribución pagada</span>
-                  <span class="ntf-item-text">Güemes 3800: US$956 acreditados (Q2 2026)</span>
-                  <span class="ntf-item-time">hace 6 semanas</span>
+                  <span class="ntf-item-title">Distribution paid</span>
+                  <span class="ntf-item-text">Güemes 3800: US$956 credited (Q2 2026)</span>
+                  <span class="ntf-item-time">6 weeks ago</span>
                 </span>
               </button>
             </li>
           </ul>
-          <button class="ntf-mark-read" id="ntf-mark-read" type="button">Marcar todas como leídas</button>
+          <button class="ntf-mark-read" id="ntf-mark-read" type="button">Mark all as read</button>
         </div>
       </div>
       <div class="user-menu">
@@ -1745,14 +1745,14 @@ ul { margin: 0; padding: 0; list-style: none; }
         <div class="dropdown" id="avatar-dropdown">
           <div class="dropdown-hint">martin.g@investor.recoba.casa</div>
           <span class="tooltip-wrap ntf-dd-wrap">
-            <button class="dropdown-item ntf-dd-disabled" type="button" disabled title="Disponible en la versión final">Mi perfil y preferencias</button>
-            <span class="tooltip-bubble">Disponible en la versión final</span>
+            <button class="dropdown-item ntf-dd-disabled" type="button" disabled title="Available in the final version">Profile and preferences</button>
+            <span class="tooltip-bubble">Available in the final version</span>
           </span>
           <span class="tooltip-wrap ntf-dd-wrap">
-            <button class="dropdown-item ntf-dd-disabled" type="button" disabled title="Disponible en la versión final">Resumen fiscal 2026 (PDF)</button>
-            <span class="tooltip-bubble">Disponible en la versión final</span>
+            <button class="dropdown-item ntf-dd-disabled" type="button" disabled title="Available in the final version">2026 tax summary (PDF)</button>
+            <span class="tooltip-bubble">Available in the final version</span>
           </span>
-          <button class="dropdown-item" id="btn-logout" type="button">Cerrar sesión</button>
+          <button class="dropdown-item" id="btn-logout" type="button">Log out</button>
         </div>
       </div><!-- /.user-menu -->
       </div><!-- /.ntf-header-actions -->
@@ -1760,61 +1760,61 @@ ul { margin: 0; padding: 0; list-style: none; }
   </header>
 
   <!-- ============================================================
-       VISTA 2 — DASHBOARD "Mis inversiones"
+       VISTA 2 — DASHBOARD "My investments"
        ============================================================ -->
   <section id="view-dashboard" class="view page">
     <div class="wrap">
       <div class="greeting-block">
-        <h1>Hola, Martín</h1>
-        <p class="greeting-sub">Tenés capital comprometido en dos flips activos. Este es el estado consolidado de tu cartera al 25/08/2026.</p>
+        <h1>Hello, Martín</h1>
+        <p class="greeting-sub">You have capital committed to two active flips. This is the consolidated view of your portfolio as of 25 August 2026.</p>
       </div>
 
-      <div class="section-title">Resumen de cartera</div>
+      <div class="section-title">Portfolio summary</div>
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Capital invertido</div>
+          <div class="stat-label">Capital invested</div>
           <div class="stat-value numeral" data-counter data-prefix="US$" data-value="60000">US$0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Valor estimado actual</div>
+          <div class="stat-label">Current estimated value</div>
           <div class="stat-value numeral accent" data-counter data-prefix="US$" data-value="66400">US$0</div>
-          <div class="stat-sub">+10,7% sobre capital invertido</div>
+          <div class="stat-sub">+10.7% over capital invested</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Distribuciones recibidas</div>
+          <div class="stat-label">Distributions received</div>
           <div class="stat-value numeral" data-counter data-prefix="US$" data-value="1912">US$0</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">TIR proyectada (media)</div>
+          <div class="stat-label">Projected IRR (average)</div>
           <div class="stat-value numeral" data-counter data-suffix="%" data-decimal="1" data-value="9.1">0%</div>
         </div>
       </div>
 
-      <div class="section-title">Últimas novedades</div>
+      <div class="section-title">Latest news</div>
       <ul class="adv-news">
         <li class="adv-news-item">
-          <span class="adv-news-date numeral">22/08</span>
-          <span class="adv-news-text">Nuevo avance de obra en Ayacucho 1400: baño principal terminado y vanitory instalado.</span>
-          <a href="#" class="adv-news-link" data-adv-nav="ayacucho">Ver →</a>
+          <span class="adv-news-date numeral">22 Aug</span>
+          <span class="adv-news-text">New site update at Ayacucho 1400: main bathroom finished and vanity unit installed.</span>
+          <a href="#" class="adv-news-link" data-adv-nav="ayacucho">View →</a>
         </li>
         <li class="adv-news-item">
-          <span class="adv-news-date numeral">20/08</span>
-          <span class="adv-news-text">Nueva oportunidad abierta a inversión: Aguirre 1300 · Villa Crespo.</span>
-          <a href="#" class="adv-news-link" data-adv-nav="opportunities">Ver →</a>
+          <span class="adv-news-date numeral">20 Aug</span>
+          <span class="adv-news-text">New opportunity open for investment: Aguirre 1300 · Villa Crespo.</span>
+          <a href="#" class="adv-news-link" data-adv-nav="opportunities">View →</a>
         </li>
         <li class="adv-news-item">
-          <span class="adv-news-date numeral">15/07</span>
-          <span class="adv-news-text">Distribución trimestral de Güemes 3800 pagada: US$956 correspondientes a Q2 2026.</span>
-          <a href="#" class="adv-news-link" data-adv-nav="guemes">Ver →</a>
+          <span class="adv-news-date numeral">15 Jul</span>
+          <span class="adv-news-text">Quarterly distribution for Güemes 3800 paid: US$956 for Q2 2026.</span>
+          <a href="#" class="adv-news-link" data-adv-nav="guemes">View →</a>
         </li>
       </ul>
 
-      <div class="section-title">Tus proyectos</div>
+      <div class="section-title">Your projects</div>
       <div class="projects-grid">
         <!-- Ayacucho card -->
-        <article class="project-card" data-open-project="ayacucho" tabindex="0" role="button" aria-label="Ver proyecto Ayacucho 1400">
+        <article class="project-card" data-open-project="ayacucho" tabindex="0" role="button" aria-label="View project Ayacucho 1400">
           <div class="photo-ph ph-1">
-            <span class="photo-tag">Foto · Fachada — 22/08</span>
+            <span class="photo-tag">Photo · Facade — 22 Aug</span>
             <span class="photo-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg>
             </span>
@@ -1825,33 +1825,33 @@ ul { margin: 0; padding: 0; list-style: none; }
                 <div class="project-name">Ayacucho 1400</div>
                 <div class="project-loc">Recoleta</div>
               </div>
-              <span class="chip chip-copper">En obra</span>
+              <span class="chip chip-copper">Under construction</span>
             </div>
             <div class="project-meta-row">
               <div class="meta-item">
-                <div class="meta-label">Tu participación</div>
-                <div class="meta-value">25,2%</div>
+                <div class="meta-label">Your share</div>
+                <div class="meta-value">25.2%</div>
               </div>
               <div class="meta-item">
                 <div class="meta-label">Ticket</div>
-                <div class="meta-value">US$35.000</div>
+                <div class="meta-value">US$35,000</div>
               </div>
             </div>
-            <div class="progress-label"><span>Avance de obra</span><span>45%</span></div>
+            <div class="progress-label"><span>Construction progress</span><span>45%</span></div>
             <div class="progress-track"><div class="progress-fill" data-progress="45"></div></div>
             <div class="project-next">
-              <span>Próximo hito: <strong>Fin instalaciones — sep 2026</strong></span>
+              <span>Next milestone: <strong>Services completed — Sep 2026</strong></span>
             </div>
             <div style="margin-top:14px; text-align:right;">
-              <span class="project-cta-link">Ver proyecto →</span>
+              <span class="project-cta-link">View project →</span>
             </div>
           </div>
         </article>
 
         <!-- Güemes card -->
-        <article class="project-card" data-open-project="guemes" tabindex="0" role="button" aria-label="Ver proyecto Güemes 3800">
+        <article class="project-card" data-open-project="guemes" tabindex="0" role="button" aria-label="View project Güemes 3800">
           <div class="photo-ph ph-2">
-            <span class="photo-tag">Foto · Living terminado — 01/08</span>
+            <span class="photo-tag">Photo · Finished living room — 1 Aug</span>
             <span class="photo-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg>
             </span>
@@ -1862,40 +1862,40 @@ ul { margin: 0; padding: 0; list-style: none; }
                 <div class="project-name">Güemes 3800</div>
                 <div class="project-loc">Palermo</div>
               </div>
-              <span class="chip chip-sage">En renta</span>
+              <span class="chip chip-sage">Rented</span>
             </div>
             <div class="project-meta-row">
               <div class="meta-item">
-                <div class="meta-label">Tu participación</div>
+                <div class="meta-label">Your share</div>
                 <div class="meta-value">20%</div>
               </div>
               <div class="meta-item">
                 <div class="meta-label">Ticket</div>
-                <div class="meta-value">US$25.000</div>
+                <div class="meta-value">US$25,000</div>
               </div>
             </div>
-            <div class="progress-label"><span>Ocupación del trimestre</span><span>71%</span></div>
+            <div class="progress-label"><span>Occupancy this quarter</span><span>71%</span></div>
             <div class="progress-track"><div class="progress-fill sage" data-progress="71"></div></div>
             <div class="project-next">
-              <span>ADR US$74 · última distribución: <strong>US$956 (15/07)</strong></span>
+              <span>ADR US$74 · latest distribution: <strong>US$956 (15 Jul)</strong></span>
             </div>
             <div style="margin-top:14px; text-align:right;">
-              <span class="project-cta-link">Ver proyecto →</span>
+              <span class="project-cta-link">View project →</span>
             </div>
           </div>
         </article>
       </div><!-- /.projects-grid -->
 
-      <div class="section-title">Tu asesor</div>
+      <div class="section-title">Your advisor</div>
       <div class="adv-card">
         <span class="avatar adv-avatar" aria-hidden="true">NM</span>
         <div class="adv-info">
-          <div class="adv-name">Nicolás Minahk <span class="adv-role">· Socio gestor recoBA</span></div>
-          <p class="adv-text">Cualquier duda sobre tu inversión o las oportunidades abiertas, escribile directo.</p>
+          <div class="adv-name">Nicolás Minahk <span class="adv-role">· Managing partner, recoBA</span></div>
+          <p class="adv-text">Any questions about your investment or the open opportunities, write to him directly.</p>
         </div>
         <div class="adv-actions">
-          <span class="tooltip-wrap"><button class="btn btn-ghost" type="button" disabled>Agendar llamada</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
-          <a class="btn btn-copper" href="mailto:nicolasminahk@gmail.com?subject=Consulta%20de%20inversor%20recoBA">Escribir por email</a>
+          <span class="tooltip-wrap"><button class="btn btn-ghost" type="button" disabled>Schedule a call</button><span class="tooltip-bubble">Available in the final version</span></span>
+          <a class="btn btn-copper" href="mailto:nicolasminahk@gmail.com?subject=recoBA%20investor%20enquiry">Send an email</a>
         </div>
       </div>
     </div>
@@ -1908,19 +1908,19 @@ ul { margin: 0; padding: 0; list-style: none; }
     <div class="wrap">
       <a href="#" class="back-link" data-nav="dashboard">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Mis inversiones
+        My investments
       </a>
 
       <div class="detail-hero">
         <div class="detail-hero-photo ph-1">
-          <span class="photo-tag">Foto · Fachada — 22/08/2026</span>
+          <span class="photo-tag">Photo · Facade — 22 Aug 2026</span>
         </div>
         <div class="detail-hero-info">
           <div class="top-row">
             <h1>Ayacucho 1400</h1>
-            <span class="chip chip-copper">En obra</span>
+            <span class="chip chip-copper">Under construction</span>
           </div>
-          <p class="desc">Recoleta · 50 m² · 2 ambientes · piso 3º</p>
+          <p class="desc">Recoleta · 50 m² · 1 bedroom · 3rd floor</p>
         </div>
       </div>
 
@@ -1928,12 +1928,12 @@ ul { margin: 0; padding: 0; list-style: none; }
         <div class="stepper" id="stepper-ayacucho"></div>
       </div>
 
-      <div class="tabs-nav" role="tablist" aria-label="Secciones del proyecto Ayacucho 1400">
-        <button class="tab-btn active" data-tab="avances" role="tab" aria-selected="true">Avances</button>
-        <button class="tab-btn" data-tab="gastos" role="tab" aria-selected="false">Gastos</button>
-        <button class="tab-btn" data-tab="inversion" role="tab" aria-selected="false">Mi inversión</button>
-        <button class="tab-btn" data-tab="documentos" role="tab" aria-selected="false">Documentos</button>
-        <button class="tab-btn" data-tab="camara" role="tab" aria-selected="false">Cámara en vivo</button>
+      <div class="tabs-nav" role="tablist" aria-label="Ayacucho 1400 project sections">
+        <button class="tab-btn active" data-tab="avances" role="tab" aria-selected="true">Updates</button>
+        <button class="tab-btn" data-tab="gastos" role="tab" aria-selected="false">Costs</button>
+        <button class="tab-btn" data-tab="inversion" role="tab" aria-selected="false">My investment</button>
+        <button class="tab-btn" data-tab="documentos" role="tab" aria-selected="false">Documents</button>
+        <button class="tab-btn" data-tab="camara" role="tab" aria-selected="false">Live camera</button>
       </div>
 
       <!-- TAB AVANCES -->
@@ -1941,68 +1941,68 @@ ul { margin: 0; padding: 0; list-style: none; }
         <div class="timeline">
 
           <div class="timeline-item">
-            <div class="timeline-date">22 de agosto, 2026</div>
-            <p class="timeline-text">Baño principal terminado: vanitory instalado y detalles de silicona listos. Arranca la colocación de la cocina la semana próxima.</p>
+            <div class="timeline-date">22 August 2026</div>
+            <p class="timeline-text">Main bathroom finished: vanity unit installed and silicone sealing done. Kitchen fitting starts next week.</p>
             <div class="media-row">
-              <div class="media-ph ph-5"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Baño terminado</span></div>
-              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Vanitory</span></div>
+              <div class="media-ph ph-5"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Bathroom done</span></div>
+              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Vanity unit</span></div>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-date">08 de agosto, 2026</div>
-            <p class="timeline-text">Avance de baño principal: colocación de revestimientos cerámicos y grifería instalada. Queda pendiente el mueble vanitory.</p>
+            <div class="timeline-date">8 August 2026</div>
+            <p class="timeline-text">Main bathroom progress: ceramic tiling laid and taps installed. The vanity unit is still pending.</p>
             <div class="media-row">
-              <div class="media-ph ph-3"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Baño, revestimiento</span></div>
-              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Grifería instalada</span></div>
+              <div class="media-ph ph-3"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Bathroom tiling</span></div>
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Taps installed</span></div>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-date">29 de julio, 2026</div>
-            <p class="timeline-text">Colocación de porcelanato símil madera en living y dormitorio principal. Recorrida completa en video.</p>
+            <div class="timeline-date">29 July 2026</div>
+            <p class="timeline-text">Wood-effect porcelain tiles laid in the living room and main bedroom. Full walkthrough on video.</p>
             <div class="media-row">
               <div class="media-ph video ph-5">
                 <span class="play-circle"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M8 5v14l11-7L8 5Z" fill="var(--ink)"/></svg></span>
-                <span class="media-label">Video · Recorrida de obra · 2:14</span>
+                <span class="media-label">Video · Site walkthrough · 2:14</span>
               </div>
-              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Piso living</span></div>
+              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Living room floor</span></div>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-date">15 de julio, 2026</div>
-            <p class="timeline-text">Instalación eléctrica completa: tablero nuevo certificado, cableado y bocas de luz en todos los ambientes.</p>
+            <div class="timeline-date">15 July 2026</div>
+            <p class="timeline-text">Electrics complete: new certified consumer unit, wiring and light points in every room.</p>
             <div class="media-row">
-              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Tablero eléctrico</span></div>
-              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Cableado</span></div>
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Consumer unit</span></div>
+              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Wiring</span></div>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-date">02 de julio, 2026</div>
-            <p class="timeline-text">Cañerías nuevas de agua fría/caliente y gas terminadas y probadas. Sin observaciones del gasista matriculado.</p>
+            <div class="timeline-date">2 July 2026</div>
+            <p class="timeline-text">New hot/cold water and gas pipework finished and tested. No issues raised by the registered gas fitter.</p>
             <div class="media-row">
-              <div class="media-ph ph-3"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Cañerías agua</span></div>
-              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Cañería gas</span></div>
-              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Prueba hidráulica</span></div>
+              <div class="media-ph ph-3"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Water pipework</span></div>
+              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Gas pipework</span></div>
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Pressure test</span></div>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-date">18 de junio, 2026</div>
-            <p class="timeline-text">Demolición completa de cocina y baño. Retiro de escombros y liberación de espacios para la nueva distribución.</p>
+            <div class="timeline-date">18 June 2026</div>
+            <p class="timeline-text">Kitchen and bathroom fully stripped out. Rubble removed and the space cleared for the new layout.</p>
             <div class="media-row">
-              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Demolición cocina</span></div>
-              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Demolición baño</span></div>
+              <div class="media-ph ph-4"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Kitchen strip-out</span></div>
+              <div class="media-ph ph-2"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Bath strip-out</span></div>
             </div>
           </div>
 
           <div class="timeline-item">
-            <div class="timeline-date">05 de junio, 2026</div>
-            <p class="timeline-text">Inicio de obra: montaje de protecciones, obrador y relevamiento final de instalaciones existentes.</p>
+            <div class="timeline-date">5 June 2026</div>
+            <p class="timeline-text">Works started: protections and site compound set up, plus a final survey of the existing services.</p>
             <div class="media-row">
-              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Foto · Obrador</span></div>
+              <div class="media-ph ph-1"><span class="media-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h1.2l.9-1.5A2 2 0 0 1 9.8 3.5h4.4a2 2 0 0 1 1.7 1L16.8 6H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z" stroke="white" stroke-width="1.6"/><circle cx="12" cy="13" r="3.4" stroke="white" stroke-width="1.6"/></svg></span><span class="media-label">Photo · Site compound</span></div>
             </div>
           </div>
 
@@ -2013,68 +2013,68 @@ ul { margin: 0; padding: 0; list-style: none; }
       <div class="tab-panel" data-tab-panel="gastos" role="tabpanel">
         <div class="budget-summary">
           <div class="stat-card">
-            <div class="stat-label">Presupuesto total</div>
-            <div class="stat-value numeral">US$138.850</div>
+            <div class="stat-label">Total budget</div>
+            <div class="stat-value numeral">US$138,850</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Ejecutado</div>
-            <div class="stat-value numeral accent">US$110.410</div>
-            <div class="stat-sub">79,5% del presupuesto</div>
+            <div class="stat-label">Spent</div>
+            <div class="stat-value numeral accent">US$110,410</div>
+            <div class="stat-sub">79.5% of the budget</div>
           </div>
           <div class="stat-card">
-            <div class="stat-label">Disponible</div>
-            <div class="stat-value numeral">US$28.440</div>
+            <div class="stat-label">Available</div>
+            <div class="stat-value numeral">US$28,440</div>
           </div>
         </div>
-        <p class="budget-note">Actualizado al 25/08/2026 · respaldado con comprobantes en Documentos.</p>
+        <p class="budget-note">Updated 25 August 2026 · backed by receipts in Documents.</p>
 
         <table class="budget-table">
           <thead>
             <tr>
-              <th>Partida</th>
-              <th>Presupuesto / Ejecutado</th>
-              <th class="budget-bar-cell">Avance</th>
+              <th>Cost line</th>
+              <th>Budget / Spent</th>
+              <th class="budget-bar-cell">Progress</th>
             </tr>
           </thead>
           <tbody>
             <tr class="row-main">
-              <td>Compra del inmueble</td>
-              <td class="budget-amt">US$85.000 / US$85.000</td>
+              <td>Property purchase</td>
+              <td class="budget-amt">US$85,000 / US$85,000</td>
               <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div><div class="budget-pct">100%</div></td>
             </tr>
             <tr class="row-main">
-              <td>Costos de compra <span style="color:var(--ink-mute); font-weight:400;">(escritura, comisiones)</span></td>
-              <td class="budget-amt">US$5.950 / US$5.950</td>
+              <td>Purchase costs <span style="color:var(--ink-mute); font-weight:400;">(deed, agency fees)</span></td>
+              <td class="budget-amt">US$5,950 / US$5,950</td>
               <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div><div class="budget-pct">100%</div></td>
             </tr>
 
             <tr class="row-main">
-              <td>Reforma</td>
-              <td class="budget-amt">US$35.000 / US$17.850</td>
+              <td>Renovation</td>
+              <td class="budget-amt">US$35,000 / US$17,850</td>
               <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:51%"></div></div><div class="budget-pct">51%</div></td>
             </tr>
-            <tr class="row-sub"><td>Demolición</td><td class="budget-amt">US$2.400 / US$2.400</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div></td></tr>
-            <tr class="row-sub"><td>Instalaciones</td><td class="budget-amt">US$6.800 / US$6.100</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:90%"></div></div></td></tr>
-            <tr class="row-sub"><td>Baño</td><td class="budget-amt">US$4.500 / US$2.900</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:64%"></div></div></td></tr>
-            <tr class="row-sub"><td>Cocina</td><td class="budget-amt">US$5.200 / US$1.750</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:34%"></div></div></td></tr>
-            <tr class="row-sub"><td>Pisos</td><td class="budget-amt">US$4.900 / US$2.700</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:55%"></div></div></td></tr>
-            <tr class="row-sub"><td>Pintura y terminaciones</td><td class="budget-amt">US$3.400 / US$0</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div></td></tr>
-            <tr class="row-sub"><td>Carpintería</td><td class="budget-amt">US$4.300 / US$0</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div></td></tr>
-            <tr class="row-sub"><td>Dirección de obra</td><td class="budget-amt">US$3.500 / US$2.000</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:57%"></div></div></td></tr>
+            <tr class="row-sub"><td>Strip-out</td><td class="budget-amt">US$2,400 / US$2,400</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill full" style="width:100%"></div></div></td></tr>
+            <tr class="row-sub"><td>Services</td><td class="budget-amt">US$6,800 / US$6,100</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:90%"></div></div></td></tr>
+            <tr class="row-sub"><td>Bathroom</td><td class="budget-amt">US$4,500 / US$2,900</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:64%"></div></div></td></tr>
+            <tr class="row-sub"><td>Kitchen</td><td class="budget-amt">US$5,200 / US$1,750</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:34%"></div></div></td></tr>
+            <tr class="row-sub"><td>Flooring</td><td class="budget-amt">US$4,900 / US$2,700</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:55%"></div></div></td></tr>
+            <tr class="row-sub"><td>Painting and finishes</td><td class="budget-amt">US$3,400 / US$0</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div></td></tr>
+            <tr class="row-sub"><td>Joinery</td><td class="budget-amt">US$4,300 / US$0</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div></td></tr>
+            <tr class="row-sub"><td>Site management</td><td class="budget-amt">US$3,500 / US$2,000</td><td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:57%"></div></div></td></tr>
 
             <tr class="row-main">
-              <td>Contingencia</td>
-              <td class="budget-amt">US$3.500 / US$610</td>
+              <td>Contingency</td>
+              <td class="budget-amt">US$3,500 / US$610</td>
               <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:17%"></div></div><div class="budget-pct">17%</div></td>
             </tr>
             <tr class="row-main">
-              <td>Equipamiento</td>
-              <td class="budget-amt">US$7.000 / US$0</td>
+              <td>Furnishing</td>
+              <td class="budget-amt">US$7,000 / US$0</td>
               <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill zero" style="width:0%"></div></div><div class="budget-pct">0%</div></td>
             </tr>
             <tr class="row-main">
-              <td>Costos de tenencia</td>
-              <td class="budget-amt">US$2.400 / US$1.000</td>
+              <td>Holding costs</td>
+              <td class="budget-amt">US$2,400 / US$1,000</td>
               <td class="budget-bar-cell"><div class="mini-bar"><div class="mini-bar-fill" style="width:42%"></div></div><div class="budget-pct">42%</div></td>
             </tr>
           </tbody>
@@ -2085,64 +2085,64 @@ ul { margin: 0; padding: 0; list-style: none; }
       <div class="tab-panel" data-tab-panel="inversion" role="tabpanel">
         <div class="invest-summary">
           <div>
-            <div class="stat-label">Tu ticket</div>
-            <div class="big-num numeral">US$35.000</div>
+            <div class="stat-label">Your ticket</div>
+            <div class="big-num numeral">US$35,000</div>
           </div>
           <div class="divider"></div>
           <div>
-            <div class="stat-label">Participación en el fideicomiso</div>
-            <div class="big-num numeral accent">25,2%</div>
+            <div class="stat-label">Share in the trust</div>
+            <div class="big-num numeral accent">25.2%</div>
           </div>
         </div>
 
-        <div class="section-title" style="margin-top:0;">Cómo se distribuye el retorno</div>
+        <div class="section-title" style="margin-top:0;">How the return is split</div>
         <div class="waterfall">
           <div class="waterfall-step">
             <div class="wf-num">1</div>
-            <h4>Retorno preferente</h4>
-            <p>6% anual en USD, devengado trimestralmente y de forma acumulativa hasta la venta o distribución de renta.</p>
+            <h4>Preferred return</h4>
+            <p>6% a year in USD, accrued quarterly and cumulative until the sale or a rental distribution.</p>
           </div>
           <div class="waterfall-step">
             <div class="wf-num">2</div>
-            <h4>Devolución del capital</h4>
-            <p>Se restituye el 100% del capital aportado por cada inversor antes de repartir cualquier plusvalía.</p>
+            <h4>Return of capital</h4>
+            <p>Each investor gets 100% of their contributed capital back before any capital gain is shared out.</p>
           </div>
           <div class="waterfall-step">
             <div class="wf-num">3</div>
-            <h4>Plusvalía restante</h4>
-            <p>Se reparte 80% para los inversores (a prorrata de su participación) y 20% para recoBA como gestora.</p>
+            <h4>Remaining capital gain</h4>
+            <p>Split 80% to the investors (pro rata to their share) and 20% to recoBA as manager.</p>
           </div>
         </div>
 
         <div class="scenarios-block">
-          <div class="section-title" style="margin:0;">Escenarios de TIR proyectada</div>
+          <div class="section-title" style="margin:0;">Projected IRR scenarios</div>
           <div class="scenario-chart">
             <div class="scenario-col">
-              <div class="scenario-value numeral">6,4%</div>
+              <div class="scenario-value numeral">6.4%</div>
               <div class="scenario-bar" data-bar-height="53"></div>
-              <div class="scenario-name" style="margin-top:10px;">Conservador</div>
+              <div class="scenario-name" style="margin-top:10px;">Conservative</div>
             </div>
             <div class="scenario-col">
-              <div class="scenario-value numeral">9,1%</div>
+              <div class="scenario-value numeral">9.1%</div>
               <div class="scenario-bar" data-bar-height="75"></div>
               <div class="scenario-name" style="margin-top:10px;">Base</div>
             </div>
             <div class="scenario-col">
-              <div class="scenario-value numeral">12,1%</div>
+              <div class="scenario-value numeral">12.1%</div>
               <div class="scenario-bar" data-bar-height="100"></div>
-              <div class="scenario-name" style="margin-top:10px;">Optimista</div>
+              <div class="scenario-name" style="margin-top:10px;">Optimistic</div>
             </div>
           </div>
         </div>
 
-        <div class="section-title">Cronograma estimado</div>
+        <div class="section-title">Estimated timeline</div>
         <div class="timeline-mini">
           <div class="timeline-mini-item">
-            <div class="tm-label">Inicio de renta temporal</div>
-            <div class="tm-value">Marzo 2027</div>
+            <div class="tm-label">Short-term rental starts</div>
+            <div class="tm-value">March 2027</div>
           </div>
           <div class="timeline-mini-item">
-            <div class="tm-label">Venta estimada</div>
+            <div class="tm-label">Estimated sale</div>
             <div class="tm-value">2031</div>
           </div>
         </div>
@@ -2153,55 +2153,55 @@ ul { margin: 0; padding: 0; list-style: none; }
         <ul class="doc-list">
           <li class="doc-item">
             <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
-            <div class="doc-info"><div class="doc-name">Contrato de fideicomiso</div><div class="doc-meta">PDF · firmado</div></div>
-            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled aria-describedby="doc-tip">Descargar</button><span class="tooltip-bubble" id="doc-tip">Disponible en la versión final</span></span>
+            <div class="doc-info"><div class="doc-name">Trust agreement</div><div class="doc-meta">PDF · signed</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled aria-describedby="doc-tip">Download</button><span class="tooltip-bubble" id="doc-tip">Available in the final version</span></span>
           </li>
           <li class="doc-item">
             <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
-            <div class="doc-info"><div class="doc-name">Boleto de compraventa</div><div class="doc-meta">PDF · firmado</div></div>
-            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+            <div class="doc-info"><div class="doc-name">Purchase agreement</div><div class="doc-meta">PDF · signed</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Download</button><span class="tooltip-bubble">Available in the final version</span></span>
           </li>
           <li class="doc-item">
             <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Z" stroke="currentColor" stroke-width="1.6"/></svg></span>
-            <div class="doc-info"><div class="doc-name">Escritura</div><div class="doc-meta">PDF · registrada</div></div>
-            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+            <div class="doc-info"><div class="doc-name">Title deed</div><div class="doc-meta">PDF · registered</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Download</button><span class="tooltip-bubble">Available in the final version</span></span>
           </li>
           <li class="doc-item">
             <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2 4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4Z" stroke="currentColor" stroke-width="1.6"/></svg></span>
-            <div class="doc-info"><div class="doc-name">Póliza de seguro de obra</div><div class="doc-meta">PDF · vigente</div></div>
-            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+            <div class="doc-info"><div class="doc-name">Site insurance policy</div><div class="doc-meta">PDF · in force</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Download</button><span class="tooltip-bubble">Available in the final version</span></span>
           </li>
           <li class="doc-item">
             <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
-            <div class="doc-info"><div class="doc-name">Informe de dominio</div><div class="doc-meta">PDF · sin gravámenes</div></div>
-            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+            <div class="doc-info"><div class="doc-name">Title search report</div><div class="doc-meta">PDF · no encumbrances</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Download</button><span class="tooltip-bubble">Available in the final version</span></span>
           </li>
           <li class="doc-item">
             <span class="doc-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.6"/><path d="M15 2v5h5" stroke="currentColor" stroke-width="1.6"/></svg></span>
-            <div class="doc-info"><div class="doc-name">Rendición trimestral Q2-2026</div><div class="doc-meta">PDF · publicada 10/07/2026</div></div>
-            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Descargar</button><span class="tooltip-bubble">Disponible en la versión final</span></span>
+            <div class="doc-info"><div class="doc-name">Quarterly report Q2-2026</div><div class="doc-meta">PDF · published 10 Jul 2026</div></div>
+            <span class="tooltip-wrap"><button class="btn btn-ghost" disabled>Download</button><span class="tooltip-bubble">Available in the final version</span></span>
           </li>
         </ul>
       </div>
 
       <div class="tab-panel" data-tab-panel="camara" role="tabpanel">
 
-        <div class="cam-selector" role="group" aria-label="Seleccionar cámara de obra">
-          <button class="cam-select-btn" data-cam="fachada" type="button" aria-pressed="false">Fachada</button>
-          <button class="cam-select-btn active" data-cam="living" type="button" aria-pressed="true">Living</button>
-          <button class="cam-select-btn" data-cam="bano" type="button" aria-pressed="false">Baño</button>
+        <div class="cam-selector" role="group" aria-label="Select site camera">
+          <button class="cam-select-btn" data-cam="fachada" type="button" aria-pressed="false">Facade</button>
+          <button class="cam-select-btn active" data-cam="living" type="button" aria-pressed="true">Living room</button>
+          <button class="cam-select-btn" data-cam="bano" type="button" aria-pressed="false">Bathroom</button>
         </div>
 
         <div class="cam-feed-wrap" id="cam-feed-wrap">
-          <canvas class="cam-canvas" id="cam-canvas" role="img" aria-label="Transmisión en vivo de la obra de Ayacucho 1400"></canvas>
+          <canvas class="cam-canvas" id="cam-canvas" role="img" aria-label="Live feed from the Ayacucho 1400 site"></canvas>
           <div class="cam-hud">
             <div class="cam-hud-top">
               <div class="cam-hud-left">
-                <span class="cam-pill cam-live" aria-hidden="true"><span class="cam-live-dot"></span>En vivo</span>
-                <span class="cam-pill" id="cam-label">CAM 02 · Living — Ayacucho 1400</span>
+                <span class="cam-pill cam-live" aria-hidden="true"><span class="cam-live-dot"></span>Live</span>
+                <span class="cam-pill" id="cam-label">CAM 02 · Living room — Ayacucho 1400</span>
               </div>
               <div class="cam-hud-right" aria-hidden="true">
-                <span class="cam-pill cam-signal" title="Señal 4G">
+                <span class="cam-pill cam-signal" title="4G signal">
                   <span class="cam-bar"></span><span class="cam-bar"></span><span class="cam-bar"></span><span class="cam-bar"></span>
                   <span class="cam-signal-txt">4G</span>
                 </span>
@@ -2209,7 +2209,7 @@ ul { margin: 0; padding: 0; list-style: none; }
               </div>
             </div>
             <div class="cam-hud-bottom">
-              <button class="cam-fs-btn" id="cam-fs-btn" type="button" aria-label="Ver en pantalla completa">
+              <button class="cam-fs-btn" id="cam-fs-btn" type="button" aria-label="View full screen">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9V5a1 1 0 0 1 1-1h4M15 4h4a1 1 0 0 1 1 1v4M20 15v4a1 1 0 0 1-1 1h-4M9 20H5a1 1 0 0 1-1-1v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </button>
             </div>
@@ -2218,10 +2218,10 @@ ul { margin: 0; padding: 0; list-style: none; }
 
         <p class="cam-meta">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.7"/></svg>
-          Cámara solar 4G instalada en obra · clip guardado cada 10 minutos · historial completo disponible para inversores
+          Solar-powered 4G camera on site · a clip saved every 10 minutes · full history available to investors
         </p>
 
-        <div class="section-title">Capturas recientes — hoy</div>
+        <div class="section-title">Recent stills — today</div>
         <div class="cam-shots" id="cam-shots">
           <figure class="cam-shot" data-shot-cam="living">
             <canvas width="320" height="180" aria-hidden="true"></canvas>
@@ -2253,19 +2253,19 @@ ul { margin: 0; padding: 0; list-style: none; }
     <div class="wrap">
       <a href="#" class="back-link" data-nav="dashboard">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Mis inversiones
+        My investments
       </a>
 
       <div class="detail-hero">
         <div class="detail-hero-photo ph-2">
-          <span class="photo-tag">Foto · Living terminado — 01/08/2026</span>
+          <span class="photo-tag">Photo · Finished living room — 1 Aug 2026</span>
         </div>
         <div class="detail-hero-info">
           <div class="top-row">
             <h1>Güemes 3800</h1>
-            <span class="chip chip-sage">En renta</span>
+            <span class="chip chip-sage">Rented</span>
           </div>
-          <p class="desc">Palermo · 44 m² · 2 ambientes · piso 2º</p>
+          <p class="desc">Palermo · 44 m² · 1 bedroom · 2nd floor</p>
         </div>
       </div>
 
@@ -2273,10 +2273,10 @@ ul { margin: 0; padding: 0; list-style: none; }
         <div class="stepper" id="stepper-guemes"></div>
       </div>
 
-      <div class="section-title" style="margin-top:0;">Estado de renta</div>
+      <div class="section-title" style="margin-top:0;">Rental status</div>
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Ocupación del trimestre</div>
+          <div class="stat-label">Occupancy this quarter</div>
           <div class="stat-value numeral">71%</div>
         </div>
         <div class="stat-card">
@@ -2284,33 +2284,33 @@ ul { margin: 0; padding: 0; list-style: none; }
           <div class="stat-value numeral">US$74</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Ingreso neto del trimestre</div>
-          <div class="stat-value numeral">US$2.140</div>
+          <div class="stat-label">Net income this quarter</div>
+          <div class="stat-value numeral">US$2,140</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Última distribución</div>
+          <div class="stat-label">Latest distribution</div>
           <div class="stat-value numeral accent">US$956</div>
-          <div class="stat-sub">pagada el 15/07/2026</div>
+          <div class="stat-sub">paid on 15 July 2026</div>
         </div>
       </div>
 
-      <div class="section-title">Historial de distribuciones — tu parte (20%)</div>
+      <div class="section-title">Distribution history — your share (20%)</div>
       <table class="dist-table">
         <thead>
-          <tr><th>Fecha de pago</th><th>Período</th><th>Monto</th><th>Estado</th></tr>
+          <tr><th>Payment date</th><th>Period</th><th>Amount</th><th>Status</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td>15/07/2026</td>
+            <td>15 Jul 2026</td>
             <td>Q2 2026</td>
             <td class="numeral">US$956</td>
-            <td class="dist-status">Pagada</td>
+            <td class="dist-status">Paid</td>
           </tr>
           <tr>
-            <td>15/04/2026</td>
+            <td>15 Apr 2026</td>
             <td>Q1 2026</td>
             <td class="numeral">US$956</td>
-            <td class="dist-status">Pagada</td>
+            <td class="dist-status">Paid</td>
           </tr>
         </tbody>
       </table>
@@ -2324,206 +2324,206 @@ ul { margin: 0; padding: 0; list-style: none; }
     <div class="wrap">
       <div class="oppx-head">
         <div class="greeting-block">
-          <h1>Oportunidades</h1>
-          <p class="greeting-sub">Nuevos flips abiertos a inversión. Cupos limitados por proyecto.</p>
+          <h1>Opportunities</h1>
+          <p class="greeting-sub">New flips open for investment. Places per project are limited.</p>
         </div>
         <div class="oppx-head-side">
-          <a class="oppx-radar-link" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Explorar el radar completo →</a>
-          <p class="oppx-radar-note">Nuestro radar detecta unidades 20–30% bajo mercado.</p>
+          <a class="oppx-radar-link" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Explore the full radar →</a>
+          <p class="oppx-radar-note">Our radar finds units 20–30% below market.</p>
         </div>
       </div>
 
-      <div class="oppx-filterbar" role="group" aria-label="Filtrar oportunidades por estado">
-        <button type="button" class="oppx-chip active" data-oppx-filter="all" aria-pressed="true">Todas</button>
-        <button type="button" class="oppx-chip" data-oppx-filter="open" aria-pressed="false">Abiertas</button>
-        <button type="button" class="oppx-chip" data-oppx-filter="soon" aria-pressed="false">Próximamente</button>
-        <button type="button" class="oppx-chip" data-oppx-filter="closed" aria-pressed="false">Cerradas</button>
-        <span class="oppx-count" id="oppx-count" aria-live="polite">5 de 5 oportunidades</span>
+      <div class="oppx-filterbar" role="group" aria-label="Filter opportunities by status">
+        <button type="button" class="oppx-chip active" data-oppx-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="oppx-chip" data-oppx-filter="open" aria-pressed="false">Open</button>
+        <button type="button" class="oppx-chip" data-oppx-filter="soon" aria-pressed="false">Coming soon</button>
+        <button type="button" class="oppx-chip" data-oppx-filter="closed" aria-pressed="false">Closed</button>
+        <span class="oppx-count" id="oppx-count" aria-live="polite">5 of 5 opportunities</span>
       </div>
 
       <!-- ABIERTA — Junín 600 (datos originales intactos) -->
       <article class="opp-card" data-oppx-status="open">
-        <span class="opp-badge">Abierto a inversión</span>
+        <span class="opp-badge">Open for investment</span>
         <div class="opp-top">
           <div>
             <h2>Junín 600 · Barrio Norte</h2>
-            <p class="desc">47 m² a reciclar · compra prevista US$45.900 · unidad con potencial de reconfiguración a 2 ambientes premium.</p>
-            <a class="oppx-card-radar" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Ver análisis en el radar →</a>
+            <p class="desc">47 m² to refurbish · purchase expected at US$45,900 · unit with scope to be reconfigured into a premium one-bedroom.</p>
+            <a class="oppx-card-radar" href="https://buscador.recoba.casa" target="_blank" rel="noopener">See the radar analysis →</a>
           </div>
           <div class="opp-score">
             <div class="score-num numeral">78</div>
-            <div class="score-label">Score radar</div>
+            <div class="score-label">Radar score</div>
           </div>
         </div>
 
         <div class="oppx-highlights">
-          <span class="oppx-highlight">US$/m² 18% bajo mediana de la zona</span>
-          <span class="oppx-highlight">3 comparables vendidos en menos de 90 días</span>
+          <span class="oppx-highlight">US$/m² 18% below the area median</span>
+          <span class="oppx-highlight">3 comparables sold in under 90 days</span>
         </div>
 
         <div class="opp-stats">
           <div class="opp-stat">
-            <div class="meta-label">Inversión objetivo</div>
-            <div class="meta-value">US$97.000</div>
+            <div class="meta-label">Target investment</div>
+            <div class="meta-value">US$97,000</div>
           </div>
           <div class="opp-stat">
-            <div class="meta-label">Ticket mínimo</div>
-            <div class="meta-value">US$25.000</div>
+            <div class="meta-label">Minimum ticket</div>
+            <div class="meta-value">US$25,000</div>
           </div>
           <div class="opp-stat">
-            <div class="meta-label">TIR proyectada (base)</div>
+            <div class="meta-label">Projected IRR (base)</div>
             <div class="meta-value">9 – 11%</div>
           </div>
           <div class="opp-stat">
-            <div class="meta-label">Cierre estimado</div>
-            <div class="meta-value">30/09/2026</div>
+            <div class="meta-label">Estimated close</div>
+            <div class="meta-value">30 Sep 2026</div>
           </div>
         </div>
 
         <div class="opp-progress">
-          <div class="opp-progress-label"><span>Comprometido</span><span>62% de US$97.000</span></div>
+          <div class="opp-progress-label"><span>Committed</span><span>62% of US$97,000</span></div>
           <div class="progress-track"><div class="progress-fill gold" data-progress="62"></div></div>
         </div>
 
         <div class="opp-actions">
-          <span class="opp-close">Quedan US$36.860 disponibles del objetivo</span>
-          <button type="button" class="btn btn-copper" data-opp="Junín 600 · Barrio Norte" data-min="25000">Quiero participar</button>
+          <span class="opp-close">US$36,860 of the target still available</span>
+          <button type="button" class="btn btn-copper" data-opp="Junín 600 · Barrio Norte" data-min="25000">Register interest</button>
         </div>
       </article>
 
       <!-- ABIERTA — Aguirre 1300 -->
       <article class="opp-card" data-oppx-status="open">
-        <span class="opp-badge">Abierto a inversión</span>
+        <span class="opp-badge">Open for investment</span>
         <div class="opp-top">
           <div>
             <h2>Aguirre 1300 · Villa Crespo</h2>
-            <p class="desc">38 m² a reciclar · compra prevista US$38.500 · unidad con potencial de puesta en valor integral.</p>
-            <a class="oppx-card-radar" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Ver análisis en el radar →</a>
+            <p class="desc">38 m² to refurbish · purchase expected at US$38,500 · unit with scope for a full upgrade.</p>
+            <a class="oppx-card-radar" href="https://buscador.recoba.casa" target="_blank" rel="noopener">See the radar analysis →</a>
           </div>
           <div class="opp-score">
             <div class="score-num numeral">71</div>
-            <div class="score-label">Score radar</div>
+            <div class="score-label">Radar score</div>
           </div>
         </div>
 
         <div class="oppx-highlights">
-          <span class="oppx-highlight">Zona gastronómica en expansión</span>
-          <span class="oppx-highlight">Reconfiguración a 2 ambientes</span>
+          <span class="oppx-highlight">Growing restaurant district</span>
+          <span class="oppx-highlight">Reconfiguration into a one-bedroom</span>
         </div>
 
         <div class="opp-stats">
           <div class="opp-stat">
-            <div class="meta-label">Inversión objetivo</div>
-            <div class="meta-value">US$68.000</div>
+            <div class="meta-label">Target investment</div>
+            <div class="meta-value">US$68,000</div>
           </div>
           <div class="opp-stat">
-            <div class="meta-label">Ticket mínimo</div>
-            <div class="meta-value">US$25.000</div>
+            <div class="meta-label">Minimum ticket</div>
+            <div class="meta-value">US$25,000</div>
           </div>
           <div class="opp-stat">
-            <div class="meta-label">TIR proyectada (base)</div>
+            <div class="meta-label">Projected IRR (base)</div>
             <div class="meta-value">9 – 11%</div>
           </div>
           <div class="opp-stat">
-            <div class="meta-label">Cierre estimado</div>
-            <div class="meta-value">31/10/2026</div>
+            <div class="meta-label">Estimated close</div>
+            <div class="meta-value">31 Oct 2026</div>
           </div>
         </div>
 
         <div class="opp-progress">
-          <div class="opp-progress-label"><span>Comprometido</span><span>24% de US$68.000</span></div>
+          <div class="opp-progress-label"><span>Committed</span><span>24% of US$68,000</span></div>
           <div class="progress-track"><div class="progress-fill gold" data-progress="24"></div></div>
         </div>
 
         <div class="opp-actions">
-          <span class="opp-close">Quedan US$51.680 disponibles del objetivo</span>
-          <button type="button" class="btn btn-copper" data-opp="Aguirre 1300 · Villa Crespo" data-min="25000">Quiero participar</button>
+          <span class="opp-close">US$51,680 of the target still available</span>
+          <button type="button" class="btn btn-copper" data-opp="Aguirre 1300 · Villa Crespo" data-min="25000">Register interest</button>
         </div>
       </article>
 
       <!-- PRÓXIMAMENTE — Retiro -->
       <article class="opp-card locked" data-oppx-status="soon">
-        <span class="opp-badge">Próximamente</span>
+        <span class="opp-badge">Coming soon</span>
         <div class="opp-top">
           <div>
             <h2>Retiro</h2>
-            <p class="desc">En estudio en el radar · score preliminar 74. Se habilitará la expresión de interés cuando el proyecto esté validado con visita y análisis de costos.</p>
+            <p class="desc">Under review on the radar · preliminary score 74. Expressions of interest will open once the project is validated with a site visit and a cost analysis.</p>
           </div>
           <div class="opp-score">
             <div class="score-num numeral">74</div>
-            <div class="score-label">Score preliminar</div>
+            <div class="score-label">Preliminary score</div>
           </div>
         </div>
         <div class="oppx-notify-wrap">
-          <button type="button" class="btn btn-ghost" data-oppx-notify>Avisarme cuando abra</button>
-          <span class="oppx-notify-ok" role="status">Listo. Te avisamos por email cuando abra.</span>
+          <button type="button" class="btn btn-ghost" data-oppx-notify>Notify me when it opens</button>
+          <span class="oppx-notify-ok" role="status">Done. We'll email you when it opens.</span>
         </div>
       </article>
 
       <!-- PRÓXIMAMENTE — Caballito Norte -->
       <article class="opp-card locked" data-oppx-status="soon">
-        <span class="opp-badge">Próximamente</span>
+        <span class="opp-badge">Coming soon</span>
         <div class="opp-top">
           <div>
             <h2>Caballito Norte</h2>
-            <p class="desc">En estudio en el radar · score preliminar 69. Unidad amplia a reconfigurar; estamos validando comparables y costo de obra antes de abrirla al fideicomiso.</p>
+            <p class="desc">Under review on the radar · preliminary score 69. A large unit to reconfigure; we are checking comparables and build costs before opening it to the trust.</p>
           </div>
           <div class="opp-score">
             <div class="score-num numeral">69</div>
-            <div class="score-label">Score preliminar</div>
+            <div class="score-label">Preliminary score</div>
           </div>
         </div>
         <div class="oppx-notify-wrap">
-          <button type="button" class="btn btn-ghost" data-oppx-notify>Avisarme cuando abra</button>
-          <span class="oppx-notify-ok" role="status">Listo. Te avisamos por email cuando abra.</span>
+          <button type="button" class="btn btn-ghost" data-oppx-notify>Notify me when it opens</button>
+          <span class="oppx-notify-ok" role="status">Done. We'll email you when it opens.</span>
         </div>
       </article>
 
       <!-- CERRADA — Güemes 3800 (track record) -->
       <article class="opp-card oppx-closed" data-oppx-status="closed">
-        <span class="opp-badge">Completada</span>
+        <span class="opp-badge">Completed</span>
         <div class="opp-top">
           <div>
             <h2>Güemes 3800 · Palermo</h2>
-            <p class="desc">44 m² reciclados a 2 ambientes premium. Hoy en renta temporal dentro de la cartera del fideicomiso.</p>
+            <p class="desc">44 m² refurbished into a premium one-bedroom. Now in short-term rental inside the trust's portfolio.</p>
           </div>
         </div>
-        <p class="oppx-track-note">Fondeada en nov 2024 · en renta desde nov 2025 · distribuciones trimestrales al día</p>
+        <p class="oppx-track-note">Funded in Nov 2024 · rented since Nov 2025 · quarterly distributions up to date</p>
         <div class="opp-actions">
-          <span class="opp-close">Cerrada a nuevas inversiones</span>
-          <button type="button" class="oppx-link-btn" data-open-project="guemes">Ver proyecto →</button>
+          <span class="opp-close">Closed to new investment</span>
+          <button type="button" class="oppx-link-btn" data-open-project="guemes">View project →</button>
         </div>
       </article>
 
       <!-- Banda: cómo se originan las oportunidades -->
       <div class="oppx-origin">
-        <h3>¿Cómo se originan estas oportunidades?</h3>
+        <h3>Where do these opportunities come from?</h3>
         <div class="oppx-origin-steps">
           <div class="oppx-origin-step">
             <span class="oppx-origin-num">1</span>
             <div>
-              <h4>El radar detecta</h4>
-              <p>Nuestra herramienta escanea publicaciones y marca unidades 20–30% bajo mercado con un score objetivo.</p>
+              <h4>The radar spots it</h4>
+              <p>Our own tool scans listings and flags units 20–30% below market with an objective score.</p>
             </div>
           </div>
           <div class="oppx-origin-step">
             <span class="oppx-origin-num">2</span>
             <div>
-              <h4>Análisis y visita</h4>
-              <p>Validamos comparables, estado real de la unidad y costo de obra con visita presencial.</p>
+              <h4>Analysis and site visit</h4>
+              <p>We check the comparables, the real condition of the unit and the build cost with an in-person visit.</p>
             </div>
           </div>
           <div class="oppx-origin-step">
             <span class="oppx-origin-num">3</span>
             <div>
-              <h4>Se abre al fideicomiso</h4>
-              <p>Si los números cierran, la oportunidad se publica acá con tickets desde US$25.000.</p>
+              <h4>It opens to the trust</h4>
+              <p>If the numbers stack up, the opportunity is published here with tickets from US$25,000.</p>
             </div>
           </div>
         </div>
         <div class="oppx-origin-foot">
-          <a class="oppx-card-radar" style="margin-top:0;" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Explorar el radar de deal-flow →</a>
-          <span class="oppx-disclaimer">TIRs proyectadas, no garantizadas · demo con datos ilustrativos</span>
+          <a class="oppx-card-radar" style="margin-top:0;" href="https://buscador.recoba.casa" target="_blank" rel="noopener">Explore the deal-flow radar →</a>
+          <span class="oppx-disclaimer">Projected IRRs, not guaranteed · demo with illustrative data</span>
         </div>
       </div>
     </div>
@@ -2531,8 +2531,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
   <footer class="app-footer">
     <div class="wrap">
-      <span class="footer-brand">reco<span style="color:var(--copper); font-family:var(--serif); font-weight:600;">BA</span> · Portal de inversores</span>
-      <span class="footer-note">Demo · datos ilustrativos</span>
+      <span class="footer-brand">reco<span style="color:var(--copper); font-family:var(--serif); font-weight:600;">BA</span> · Investor portal</span>
+      <span class="footer-note">Demo · illustrative data</span>
     </div>
   </footer>
 
@@ -2545,24 +2545,24 @@ ul { margin: 0; padding: 0; list-style: none; }
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div id="modal-form-state">
       <div class="modal-head">
-        <h3 id="modal-title">Quiero participar</h3>
-        <button class="modal-close" id="modal-close-btn" aria-label="Cerrar">&times;</button>
+        <h3 id="modal-title">Register interest</h3>
+        <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
       </div>
-      <p class="modal-desc">Junín 600 · Barrio Norte. Dejanos el monto que te gustaría comprometer; un asesor de recoBA te va a contactar para avanzar con la documentación.</p>
+      <p class="modal-desc">Junín 600 · Barrio Norte. Tell us how much you would like to commit and a recoBA advisor will get in touch to move ahead with the paperwork.</p>
       <div class="form-group">
-        <label for="interest-amount">Monto a invertir (USD)</label>
-        <input type="number" id="interest-amount" min="25000" step="1000" placeholder="25.000" value="25000">
+        <label for="interest-amount">Amount to invest (USD)</label>
+        <input type="number" id="interest-amount" min="25000" step="1000" placeholder="25,000" value="25000">
       </div>
-      <button class="btn btn-copper" id="btn-send-interest">Enviar expresión de interés</button>
+      <button class="btn btn-copper" id="btn-send-interest">Send expression of interest</button>
     </div>
     <div id="modal-confirm-state" style="display:none;">
       <div class="confirm-box">
         <div class="confirm-icon">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <h3>Interés registrado</h3>
-        <p id="confirm-text">Gracias, Martín. Recibimos tu interés por US$25.000 en Junín 600. Un asesor de recoBA se va a poner en contacto en las próximas 48 horas.</p>
-        <button class="btn btn-ghost" id="modal-done-btn">Cerrar</button>
+        <h3>Interest registered</h3>
+        <p id="confirm-text">Thank you, Martín. We have registered your interest of US$25,000 in Junín 600. A recoBA advisor will be in touch within the next 48 hours.</p>
+        <button class="btn btn-ghost" id="modal-done-btn">Close</button>
       </div>
     </div>
   </div>
@@ -2576,12 +2576,12 @@ ul { margin: 0; padding: 0; list-style: none; }
      Datos del pipeline (stepper)
      ------------------------------------------------------------ */
   var PIPELINE_STEPS = [
-    "En estudio", "Comprado", "Escriturado", "En obra",
-    "Equipamiento", "En renta", "En venta", "Vendido"
+    "Under review", "Purchased", "Deed signed", "Under construction",
+    "Furnishing", "Rented", "For sale", "Sold"
   ];
 
-  var ayacuchoDates = ["Feb 2026", "Abr 2026", "May 2026", "Jun 2026", "", "", "", ""];
-  var guemesDates = ["Nov 2024", "Ene 2025", "Feb 2025", "Mar 2025", "Oct 2025", "Nov 2025", "", ""];
+  var ayacuchoDates = ["Feb 2026", "Apr 2026", "May 2026", "Jun 2026", "", "", "", ""];
+  var guemesDates = ["Nov 2024", "Jan 2025", "Feb 2025", "Mar 2025", "Oct 2025", "Nov 2025", "", ""];
 
   function buildStepper(containerId, currentIndex, dates) {
     var el = document.getElementById(containerId);
@@ -2752,8 +2752,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   function formatNumber(value, decimals) {
     var fixed = value.toFixed(decimals || 0);
     var parts = fixed.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    return parts.join(",");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   }
 
   function animateCounter(el) {
@@ -2838,9 +2838,9 @@ ul { margin: 0; padding: 0; list-style: none; }
   var STATIC_MS = 420;          /* reconexión al cambiar de cámara */
 
   var CAM_INFO = {
-    fachada: { num: "CAM 01", name: "Fachada" },
-    living:  { num: "CAM 02", name: "Living" },
-    bano:    { num: "CAM 03", name: "Baño" }
+    fachada: { num: "CAM 01", name: "Facade" },
+    living:  { num: "CAM 02", name: "Living room" },
+    bano:    { num: "CAM 03", name: "Bathroom" }
   };
 
   /* lamp = foco de luz (fracciones), dust = partículas, pan = amplitud de paneo */
@@ -2869,11 +2869,11 @@ ul { margin: 0; padding: 0; list-style: none; }
      ------------------------------------------------------------ */
   function makeFormatters() {
     try {
-      timeFmt = new Intl.DateTimeFormat("es-AR", {
+      timeFmt = new Intl.DateTimeFormat("en-GB", {
         timeZone: "America/Argentina/Buenos_Aires",
         hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
       });
-      dateFmt = new Intl.DateTimeFormat("es-AR", {
+      dateFmt = new Intl.DateTimeFormat("en-GB", {
         timeZone: "America/Argentina/Buenos_Aires",
         day: "2-digit", month: "2-digit", year: "numeric"
       });
@@ -3496,7 +3496,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     c.fillStyle = day ? "rgba(255,252,248,0.95)" : "rgba(255,240,228,0.85)";
     c.font = "700 " + Math.max(8, h * 0.032) + "px Inter, sans-serif";
     c.textAlign = "center";
-    c.fillText("recoBA · obra", w * 0.50, fy + fh * 0.58);
+    c.fillText("recoBA · site", w * 0.50, fy + fh * 0.58);
     c.textAlign = "left";
 
     /* vereda y calle */
@@ -3820,7 +3820,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ============================================================
    OPPX — Módulo de la vista Oportunidades (recoBA)
    - Filtros con chips + contador
-   - "Avisarme cuando abra" con confirmación inline
+   - "Notify me when it opens" con confirmación inline
    - Modal #interest-modal PARAMETRIZADO por data-opp / data-min
    IMPORTANTE: este módulo REEMPLAZA el bloque viejo
    "Modal — expresión de interés" del IIFE original (ver
@@ -3836,13 +3836,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   var view = document.getElementById("view-opportunities");
   if (!view) return;
 
-  /* Formato es-AR: punto de miles, coma decimal (copia local,
-     el formatNumber original vive dentro del otro IIFE). */
+  /* English format: comma for thousands, dot for decimals (local copy,
+     the original formatNumber lives inside the other IIFE). */
   function formatNumber(value, decimals) {
     var fixed = value.toFixed(decimals || 0);
     var parts = fixed.split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    return parts.join(",");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   }
 
   /* ------------------------------------------------------------
@@ -3875,7 +3875,7 @@ ul { margin: 0; padding: 0; list-style: none; }
       chips[c].setAttribute("aria-pressed", active ? "true" : "false");
     }
     if (countEl) {
-      countEl.textContent = shown + " de " + cards.length + " oportunidades";
+      countEl.textContent = shown + " of " + cards.length + " opportunities";
     }
   }
 
@@ -3887,13 +3887,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   applyFilter("all");
 
   /* ------------------------------------------------------------
-     2) "Avisarme cuando abra" — confirmación inline, sin modal
+     2) "Notify me when it opens" — confirmación inline, sin modal
      ------------------------------------------------------------ */
   var notifyBtns = view.querySelectorAll("[data-oppx-notify]");
   for (var nb = 0; nb < notifyBtns.length; nb++) {
     notifyBtns[nb].addEventListener("click", function () {
       this.disabled = true;
-      this.textContent = "Aviso activado";
+      this.textContent = "Alert set";
       var ok = this.parentElement.querySelector(".oppx-notify-ok");
       if (ok) ok.classList.add("show");
     });
@@ -3917,7 +3917,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     currentOpp.name = name;
     currentOpp.min = min;
     if (modalDesc) {
-      modalDesc.textContent = name + ". Dejanos el monto que te gustaría comprometer; un asesor de recoBA te va a contactar para avanzar con la documentación.";
+      modalDesc.textContent = name + ". Tell us how much you would like to commit and a recoBA advisor will get in touch to move ahead with the paperwork.";
     }
     if (amountInput) {
       amountInput.min = min;
@@ -3934,7 +3934,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     modalOverlay.classList.remove("open");
   }
 
-  /* Cada botón "Quiero participar" declara data-opp y data-min.
+  /* Cada botón "Register interest" declara data-opp y data-min.
      Se bindea a nivel documento por si mañana hay cards en otras vistas. */
   var openBtns = document.querySelectorAll("[data-opp]");
   for (var ob = 0; ob < openBtns.length; ob++) {
@@ -3957,7 +3957,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     var raw = parseFloat(amountInput.value);
     if (isNaN(raw) || raw < currentOpp.min) raw = currentOpp.min;
     var formatted = formatNumber(raw, 0);
-    confirmText.textContent = "Gracias, Martín. Recibimos tu interés por US$" + formatted + " en " + currentOpp.name + ". Un asesor de recoBA se va a poner en contacto en las próximas 48 horas.";
+    confirmText.textContent = "Thank you, Martín. We have registered your interest of US$" + formatted + " in " + currentOpp.name + ". A recoBA advisor will be in touch within the next 48 hours.";
     modalFormState.style.display = "none";
     modalConfirmState.style.display = "block";
   });
@@ -4046,7 +4046,7 @@ ul { margin: 0; padding: 0; list-style: none; }
           }
         }
         bellBtn.setAttribute("aria-label",
-          unread > 0 ? "Notificaciones (" + unread + " sin leer)" : "Notificaciones");
+          unread > 0 ? "Notifications (" + unread + " unread)" : "Notifications");
       }
 
       function markItemRead(li) {
@@ -4068,7 +4068,7 @@ ul { margin: 0; padding: 0; list-style: none; }
         });
       }
 
-      /* Marcar todas como leídas */
+      /* Mark all as read */
       if (markReadBtn) {
         markReadBtn.addEventListener("click", function () {
           var unreadItems = dropdown.querySelectorAll(".ntf-unread");
@@ -4084,7 +4084,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     }
 
     /* ------------------------------------------------------------
-       Banda "Últimas novedades" — links "Ver →"
+       Banda "Latest news" — links "View →"
        ------------------------------------------------------------ */
     var newsLinks = document.querySelectorAll("[data-adv-nav]");
     for (var k = 0; k < newsLinks.length; k++) {
@@ -4110,7 +4110,7 @@ ul { margin: 0; padding: 0; list-style: none; }
      Lee lo que el panel dejó guardado en el navegador (mismo
      dominio, clave "recoba-demo-v1") y lo suma a lo que ya existe:
      avances arriba de la línea de tiempo, documentos visibles para
-     inversores, partidas de gastos, campana y "Últimas novedades".
+     inversores, partidas de gastos, campana y "Latest news".
      Si no hay nada guardado —o el navegador bloquea el
      almacenamiento— no toca absolutamente nada del portal.
      ============================================================ -->
@@ -4128,8 +4128,8 @@ ul { margin: 0; padding: 0; list-style: none; }
      ------------------------------------------------------------ */
   var MARCA = "data-demo-panel";   /* marca todo lo que inyectamos */
   var TOPE_AVISOS = 5;             /* no inundar campana ni novedades */
-  var MESES = ["enero", "febrero", "marzo", "abril", "mayo", "junio",
-               "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  var MESES = ["January", "February", "March", "April", "May", "June",
+               "July", "August", "September", "October", "November", "December"];
 
   var OBRAS = [
     { id: "ayacucho", nombre: "Ayacucho 1400" },
@@ -4176,22 +4176,22 @@ ul { margin: 0; padding: 0; list-style: none; }
     return isNaN(d.getTime()) ? null : d;
   }
 
-  function fechaLarga(valor) {          /* 22 de agosto, 2026 */
+  function fechaLarga(valor) {          /* 22 August 2026 */
     var d = aFecha(valor);
     if (!d) return String(valor || "");
-    return dd(d.getDate()) + " de " + MESES[d.getMonth()] + ", " + d.getFullYear();
+    return d.getDate() + " " + MESES[d.getMonth()] + " " + d.getFullYear();
   }
 
-  function fechaCorta(valor) {          /* 22/08 */
+  function fechaCorta(valor) {          /* 22 Aug */
     var d = aFecha(valor);
     if (!d) return String(valor || "");
-    return dd(d.getDate()) + "/" + dd(d.getMonth() + 1);
+    return d.getDate() + " " + MESES[d.getMonth()].slice(0, 3);
   }
 
-  function fechaPlena(valor) {          /* 22/08/2026 */
+  function fechaPlena(valor) {          /* 22 Aug 2026 */
     var d = aFecha(valor);
     if (!d) return String(valor || "");
-    return dd(d.getDate()) + "/" + dd(d.getMonth() + 1) + "/" + d.getFullYear();
+    return d.getDate() + " " + MESES[d.getMonth()].slice(0, 3) + " " + d.getFullYear();
   }
 
   function orden(valor) {
@@ -4201,7 +4201,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
   function miles(n) {
     return String(Math.round(Math.abs(Number(n) || 0)))
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   function usd(n) {
@@ -4210,7 +4210,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   }
 
   function pct1(n) {
-    return String(Math.round((Number(n) || 0) * 10) / 10).replace(".", ",");
+    return String(Math.round((Number(n) || 0) * 10) / 10);
   }
 
   function normPh(ph, i) {
@@ -4233,7 +4233,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     for (var i = 0; i < fotos.length && i < 6; i++) {
       var f = fotos[i] || {};
       var ph = normPh(f.ph, i);
-      var etiqueta = esc(f.etiqueta || f.nombre || "Obra");
+      var etiqueta = esc(f.etiqueta || f.nombre || "Site");
       if (String(f.tipo || "").toLowerCase() === "video") {
         out += '<div class="media-ph video ' + ph + '">' +
                  '<span class="play-circle">' + SVG_PLAY + '</span>' +
@@ -4242,7 +4242,7 @@ ul { margin: 0; padding: 0; list-style: none; }
       } else {
         out += '<div class="media-ph ' + ph + '">' +
                  '<span class="media-icon">' + SVG_FOTO + '</span>' +
-                 '<span class="media-label">Foto · ' + etiqueta + '</span></div>';
+                 '<span class="media-label">Photo · ' + etiqueta + '</span></div>';
       }
     }
     return '<div class="media-row">' + out + '</div>';
@@ -4254,7 +4254,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     el.setAttribute(MARCA, "avance");
     el.innerHTML =
       '<div class="timeline-date">' + esc(fechaLarga(av.fecha)) +
-        '<span class="chip chip-copper demo-nuevo">Nuevo</span></div>' +
+        '<span class="chip chip-copper demo-nuevo">New</span></div>' +
       (av.titulo ? '<div class="demo-avance-titulo">' + esc(av.titulo) + '</div>' : "") +
       (av.texto ? '<p class="timeline-text">' + esc(av.texto) + '</p>' : "") +
       htmlMedia(av.fotos || av.media);
@@ -4274,18 +4274,18 @@ ul { margin: 0; padding: 0; list-style: none; }
     li.className = "doc-item";
     li.setAttribute(MARCA, "documento");
     var estado = doc.estado ? String(doc.estado) : "";
-    estado = estado ? estado.charAt(0).toLowerCase() + estado.slice(1) : "publicado";
+    estado = estado ? estado.charAt(0).toLowerCase() + estado.slice(1) : "published";
     var meta = esc(doc.tipo || "PDF") + " · " + esc(estado) +
                (doc.fecha ? " " + esc(fechaPlena(doc.fecha)) : "");
     li.innerHTML =
       '<span class="doc-icon">' + SVG_DOC + '</span>' +
       '<div class="doc-info">' +
-        '<div class="doc-name">' + esc(doc.nombre || "Documento") +
-          '<span class="chip chip-copper demo-nuevo">Nuevo</span></div>' +
+        '<div class="doc-name">' + esc(doc.nombre || "Document") +
+          '<span class="chip chip-copper demo-nuevo">New</span></div>' +
         '<div class="doc-meta">' + meta + '</div>' +
       '</div>' +
-      '<span class="tooltip-wrap"><button class="btn btn-ghost" type="button" disabled>Descargar</button>' +
-      '<span class="tooltip-bubble">Disponible en la versión final</span></span>';
+      '<span class="tooltip-wrap"><button class="btn btn-ghost" type="button" disabled>Download</button>' +
+      '<span class="tooltip-bubble">Available in the final version</span></span>';
     return li;
   }
 
@@ -4313,13 +4313,13 @@ ul { margin: 0; padding: 0; list-style: none; }
   function lineaDeTiempo(vista) {
     return vista.querySelector('[data-tab-panel="avances"] .timeline') ||
            vista.querySelector(".timeline") ||
-           crearSeccion(vista, "Avances de obra", '<div class="timeline"></div>', ".timeline");
+           crearSeccion(vista, "Site updates", '<div class="timeline"></div>', ".timeline");
   }
 
   function listaDocumentos(vista) {
     return vista.querySelector('[data-tab-panel="documentos"] .doc-list') ||
            vista.querySelector(".doc-list") ||
-           crearSeccion(vista, "Documentos", '<ul class="doc-list"></ul>', ".doc-list");
+           crearSeccion(vista, "Documents", '<ul class="doc-list"></ul>', ".doc-list");
   }
 
   /* ------------------------------------------------------------
@@ -4361,7 +4361,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     var pct = pre > 0 ? Math.round((eje / pre) * 100) : (eje > 0 ? 100 : 0);
     var ancho = Math.max(0, Math.min(100, pct));
     var extra = pct >= 100 ? " full" : (eje <= 0 ? " zero" : "");
-    var nombre = esc(p.nombre || p.id || "Partida");
+    var nombre = esc(p.nombre || p.id || "Cost line");
     if (p.detalle) {
       nombre += ' <span style="color:var(--ink-mute); font-weight:400;">(' + esc(p.detalle) + ')</span>';
     }
@@ -4407,19 +4407,19 @@ ul { margin: 0; padding: 0; list-style: none; }
 
     var cards = panel.querySelectorAll(".budget-summary .stat-card");
     ponerCifra(cards[0], usd(total));
-    ponerCifra(cards[1], usd(ejec), total > 0 ? pct1((ejec / total) * 100) + "% del presupuesto" : "");
+    ponerCifra(cards[1], usd(ejec), total > 0 ? pct1((ejec / total) * 100) + "% of the budget" : "");
     ponerCifra(cards[2], usd(total - ejec));
 
     var nota = panel.querySelector(".budget-note");
     if (nota) {
       var f = aFecha(sello) || new Date();
-      nota.textContent = nota.textContent.replace(/\d{2}\/\d{2}\/\d{4}/,
-        dd(f.getDate()) + "/" + dd(f.getMonth() + 1) + "/" + f.getFullYear());
+      nota.textContent = nota.textContent.replace(/\d{1,2} [A-Z][a-z]+ \d{4}/,
+        f.getDate() + " " + MESES[f.getMonth()] + " " + f.getFullYear());
     }
   }
 
   /* ------------------------------------------------------------
-     Campana y banda "Últimas novedades"
+     Campana y banda "Latest news"
      ------------------------------------------------------------ */
   function irA(destino) {
     var nav = window.recobaNav;
@@ -4445,7 +4445,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     }
     if (btn) {
       btn.setAttribute("aria-label",
-        sinLeer > 0 ? "Notificaciones (" + sinLeer + " sin leer)" : "Notificaciones");
+        sinLeer > 0 ? "Notifications (" + sinLeer + " unread)" : "Notifications");
     }
   }
 
@@ -4459,7 +4459,7 @@ ul { margin: 0; padding: 0; list-style: none; }
         '<span class="ntf-item-body">' +
           '<span class="ntf-item-title">' + esc(aviso.titulo) + '</span>' +
           '<span class="ntf-item-text">' + esc(aviso.texto) + '</span>' +
-          '<span class="ntf-item-time">recién</span>' +
+          '<span class="ntf-item-time">just now</span>' +
         '</span>' +
       '</button>';
     li.querySelector(".ntf-item").addEventListener("click", function () {
@@ -4481,7 +4481,7 @@ ul { margin: 0; padding: 0; list-style: none; }
     li.innerHTML =
       '<span class="adv-news-date numeral">' + esc(fechaCorta(nv.fecha)) + '</span>' +
       '<span class="adv-news-text">' + esc(nv.texto) + '</span>' +
-      '<a href="#" class="adv-news-link">Ver →</a>';
+      '<a href="#" class="adv-news-link">View →</a>';
     li.querySelector("a").addEventListener("click", function (e) {
       e.preventDefault();
       irA(nv.obra);
@@ -4542,13 +4542,13 @@ ul { margin: 0; padding: 0; list-style: none; }
           novedades.push({
             fecha: avances[a].fecha,
             obra: obra.id,
-            texto: "Nuevo avance de obra en " + obra.nombre + ": " +
+            texto: "New site update at " + obra.nombre + ": " +
                    frase(avances[a].titulo || avances[a].texto)
           });
           if (avances[a].avisar !== false) {
             avisos.push({
               fecha: avances[a].fecha, obra: obra.id, tipo: "avance",
-              titulo: "Nuevo avance de obra",
+              titulo: "New site update",
               texto: obra.nombre + ": " + (avances[a].titulo || avances[a].texto || "")
             });
           }
@@ -4562,11 +4562,11 @@ ul { margin: 0; padding: 0; list-style: none; }
           nodosDoc.push(nodoDocumento(docs[k]));
           novedades.push({
             fecha: docs[k].fecha, obra: obra.id,
-            texto: "Nuevo documento en " + obra.nombre + ": " + frase(docs[k].nombre)
+            texto: "New document at " + obra.nombre + ": " + frase(docs[k].nombre)
           });
           avisos.push({
             fecha: docs[k].fecha, obra: obra.id, tipo: "documento",
-            titulo: "Nuevo documento disponible",
+            titulo: "New document available",
             texto: obra.nombre + ": " + (docs[k].nombre || "")
           });
         }
@@ -4592,7 +4592,7 @@ ul { margin: 0; padding: 0; list-style: none; }
       actualizarBadge();
     }
 
-    /* Banda "Últimas novedades" */
+    /* Banda "Latest news" */
     novedades.sort(porFechaDesc);
     novedades = novedades.slice(0, TOPE_AVISOS);
     var bandaNov = document.querySelector(".adv-news");

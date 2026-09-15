@@ -1,0 +1,65 @@
+{
+  "   recoBA · Panel de administración (maqueta navegable)\n   Shell compartido por todas las pantallas: barra lateral, barra\n   superior, iconos, modales, pestañas, zonas de subida, avisos y\n   formateadores. Sin backend: los datos salen de assets/data.js\n   y las acciones son de demostración (no se guarda nada).": "   recoBA · Admin panel (interactive prototype)\n   Shell shared by every screen: sidebar, top bar, icons, modals,\n   tabs, upload zones, toasts and formatters. No backend: the data\n   comes from assets/data.js and the actions are for demonstration\n   only (nothing is saved).",
+
+  "'Falta assets/data.js antes de assets/admin.js'": "'assets/data.js must be loaded before assets/admin.js'",
+
+  "Iconos (trazo 24×24)": "Icons (24×24 stroke)",
+  "Formateadores (es-ES, con punto de miles siempre)": "Formatters (en, always a thousands separator)",
+  "Consultas sobre los datos": "Queries over the data",
+  "Piezas de interfaz reutilizables": "Reusable interface pieces",
+  "Shell: barra lateral y barra superior": "Shell: sidebar and top bar",
+  "Avisos flotantes": "Floating toasts",
+  "---------- Modales ----------": "---------- Modals ----------",
+  "Pestañas: [data-tabs]": "Tabs: [data-tabs]",
+  "Selector segmentado: [data-segmented]": "Segmented control: [data-segmented]",
+  "Zonas de subida: .dropzone (+ .file-list opcional en el mismo contenedor)": "Upload zones: .dropzone (+ optional .file-list in the same container)",
+  "Iconos declarativos: <span data-icon=\"upload\"></span>": "Declarative icons: <span data-icon=\"upload\"></span>",
+
+  "int.replace(/\\B(?=(\\d{3})+(?!\\d))/g, '.') + (dec ? ',' + dec : '')": "int.replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',') + (dec ? '.' + dec : '')",
+  "return cur === 'EUR' ? `${sign}${abs} €` : `${sign}US$${abs}`;": "return cur === 'EUR' ? `${sign}€${abs}` : `${sign}US$${abs}`;",
+
+  "const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];": "const MESES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];",
+  "const MESES_C = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];": "const MESES_C = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];",
+
+  "style: 'short' 22/08/2026 · 'medium' 22 ago 2026 · 'long' 22 de agosto de 2026\n            'month' Ago 2026 · 'day' 22/08 · 'time' 08:12 · 'datetime' 22/08/2026 08:12": "style: 'short' 22/08/2026 · 'medium' 22 Aug 2026 · 'long' 22 August 2026\n            'month' Aug 2026 · 'day' 22/08 · 'time' 08:12 · 'datetime' 22/08/2026 08:12",
+  "if (style === 'long') return `${p.d} de ${MESES[p.m - 1]} de ${p.y}`;": "if (style === 'long') return `${p.d} ${MESES[p.m - 1]} ${p.y}`;",
+
+  "return `hoy${hora}`;": "return `today${hora}`;",
+  "return `ayer${hora}`;": "return `yesterday${hora}`;",
+  "return `hace ${diff} días`;": "return `${diff} days ago`;",
+
+  "Trabajo pendiente dentro de las obras: borradores por publicar + entradas ya asignadas.\n     Lo que llega sin asignar se cuenta aparte, en la bandeja de la portada.": "Work still pending inside the projects: drafts to publish + entries already assigned.\n     Whatever arrives unassigned is counted separately, in the inbox on the home screen.",
+
+  "'En estudio': 'chip-gold', Comprado: 'chip-ink', Escriturado: 'chip-ink', 'En obra': 'chip-copper',": "'Under review': 'chip-gold', 'Purchased': 'chip-ink', 'Deed signed': 'chip-ink', 'Under construction': 'chip-copper',",
+  "Equipamiento: 'chip-copper', 'En renta': 'chip-sage', 'En venta': 'chip-gold', Vendido: 'chip-ink'": "'Furnishing': 'chip-copper', 'Rented': 'chip-sage', 'For sale': 'chip-gold', 'Sold': 'chip-ink'",
+
+  "{ group: 'Obras', items: [": "{ group: 'Projects', items: [",
+  "{ group: 'Configuración', items: [": "{ group: 'Configuration', items: [",
+  "label: 'Todas las obras'": "label: 'All projects'",
+  "label: 'Carga desde el móvil'": "label: 'Mobile upload'",
+  "label: 'Ajustes'": "label: 'Settings'",
+  "label: 'Ver portal del inversor'": "label: 'View investor portal'",
+  "obras: 'Obras', obra: 'Obra', movil: 'Carga desde el móvil', ajustes: 'Ajustes'": "obras: 'Projects', obra: 'Project', movil: 'Mobile upload', ajustes: 'Settings'",
+
+  "title=\"Entradas pendientes de revisar\"": "title=\"Entries pending review\"",
+  "aria-label=\"Inicio del panel\"": "aria-label=\"Panel home\"",
+  "Administración</span>": "Administration</span>",
+  "Administración</a>": "Administration</a>",
+  ">Obras</a>": ">Projects</a>",
+  "<nav aria-label=\"Secciones del panel\">": "<nav aria-label=\"Panel sections\">",
+  ">Maqueta navegable · datos ilustrativos<": ">Interactive prototype · illustrative data<",
+  "title=\"Borra lo publicado en la demostración\">Reiniciar<": "title=\"Clears what has been published in the demo\">Reset<",
+  "toast('Demostración reiniciada', 'refresh');": "toast('Demo reset', 'refresh');",
+
+  "aria-label=\"Ruta\"": "aria-label=\"Breadcrumb\"",
+  "placeholder=\"Buscar en el panel\" aria-label=\"Buscar\"": "placeholder=\"Search the panel\" aria-label=\"Search\"",
+  "aria-label=\"Idioma\"": "aria-label=\"Language\"",
+  "aria-label=\"Avisos\"": "aria-label=\"Notifications\"",
+  "<span>Avisos</span>": "<span>Notifications</span>",
+  "aria-label=\"Publicar avance\"": "aria-label=\"Publish update\"",
+  "<span class=\"btn-label\">Publicar avance</span>": "<span class=\"btn-label\">Publish update</span>",
+  "toast('La búsqueda global estará en la versión real', 'search');": "toast('Global search will be available in the production version', 'search');",
+
+  "Formularios de demostración: <form data-demo=\"Mensaje del aviso\">.\n     Los listeners propios de la página sobre 'submit' corren antes que este.": "Demonstration forms: <form data-demo=\"Toast message\">.\n     The page's own 'submit' listeners run before this one.",
+  "toast(f.dataset.demo || 'Guardado');": "toast(f.dataset.demo || 'Saved');"
+}
